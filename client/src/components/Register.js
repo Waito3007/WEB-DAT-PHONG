@@ -68,14 +68,6 @@ const Register = () => {
             required
           />
         </div>
-        <div>
-          <label>Vai trò:</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="Customer">Khách hàng</option>
-            <option value="HotelManager">Quản lý khách sạn</option>
-            <option value="Admin">Quản trị viên</option>
-          </select>
-        </div>
         <button type="submit">Đăng Ký</button>
       </form>
       {error && <p style={{ color: 'red' }}>{error}</p>} {/* Hiển thị thông báo lỗi */}
