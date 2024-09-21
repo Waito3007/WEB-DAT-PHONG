@@ -5,7 +5,7 @@ const User = require('../models/User');
 // Route Đăng ký người dùng
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, registrationDate } = req.body;
 
     // Kiểm tra xem email có tồn tại không
     let user = await User.findOne({ email });
@@ -14,7 +14,7 @@ router.post('/register', async (req, res) => {
     }
 
     // Tạo người dùng mới
-    user = new User({ name, email, password, role });
+    user = new User({ name, email, password, role, registrationDate });
 
     // Lưu người dùng vào database
     await user.save();

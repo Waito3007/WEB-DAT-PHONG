@@ -3,6 +3,7 @@ const express = require('express');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/register'); // Nhập route người dùng
 const loginRoute = require('./routes/login');
+const userTableRouter = require('./routes/usertable');
 const app = express();
 
 // Kết nối đến MongoDB
@@ -14,7 +15,7 @@ app.use(express.json());
 // Routes
 app.use('/api/users', userRoutes); // Đăng ký route
 app.use('/api/users', loginRoute); // Route cho đăng nhập
-
+app.use('/api/usertable', userTableRouter); // Router lấy list người dùng
 app.get('/', (req, res) => {
   res.send('Welcome to Hotel Booking API');
 });

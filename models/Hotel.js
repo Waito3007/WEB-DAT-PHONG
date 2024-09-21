@@ -6,6 +6,7 @@ const hotelSchema = new mongoose.Schema({
   description: { type: String },
   manager: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Room' }],
+  hotelSlot: { type: Number, default: 1 } // Mặc định là 1
 });
 
 module.exports = mongoose.model('Hotel', hotelSchema);
