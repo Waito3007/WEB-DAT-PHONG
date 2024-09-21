@@ -1,4 +1,3 @@
-// src/components/Register.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,7 +6,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('Customer'); // Mặc định là 'Customer'
-  const [error, setError] = useState(null); // Trạng thái lỗi
+  const [error, setError] = useState(null);
   const navigate = useNavigate(); // Hook để chuyển hướng
 
   const handleRegister = async (e) => {
@@ -19,20 +18,19 @@ const Register = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, role }),
       });
-  
+
       const data = await response.json();
       if (response.ok) {
         alert('Đăng ký thành công');
         navigate('/login'); // Chuyển hướng đến trang đăng nhập
       } else {
-        setError(data.msg || 'Có lỗi xảy ra'); // Cập nhật lỗi từ server hoặc thông báo lỗi chung
+        setError(data.msg || 'Có lỗi xảy ra'); // Cập nhật lỗi từ server
       }
     } catch (err) {
       console.error('Lỗi mạng hoặc server:', err);
-      setError('Có lỗi xảy ra, vui lòng thử lại sau.'); // Thông báo lỗi chung
+      setError('Có lỗi xảy ra, vui lòng thử lại sau.');
     }
   };
-  
 
   return (
     <div>
