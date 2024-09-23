@@ -6,6 +6,7 @@ import ContactPage from './pages/ContactPage';
 import NotFoundPage from './pages/NotFoundPage';
 import Login from './components/account/Login';
 import Register from './components/account/Register';
+import AddHotel from './components/AddHotel';
 // Admin
 import Sidebar from "./components/common/Sidebar";
 import OverviewPage from "./pages/OverviewPage";
@@ -45,6 +46,7 @@ const AppContent = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/register" element={<Register />} />
+        <Route path="/add-hotel" element={<AddHotel />} />
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/users" element={<UsersPage />} />
