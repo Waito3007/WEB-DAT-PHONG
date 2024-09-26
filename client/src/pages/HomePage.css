@@ -1,0 +1,256 @@
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: black;
+}
+
+.homepage {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.hero-text {
+  display: flex;
+  align-items: center; /* Căn giữa theo chiều dọc */
+  justify-content: space-between; /* Để căn giữa và dàn đều các phần tử */
+  padding: 20px 40px; /* Khoảng cách xung quanh hero-text */
+  margin-bottom: 100px;
+}
+
+.header-left {
+  text-align: left; /* Căn trái nội dung */
+}
+
+.find-stays {
+  font-size: 24px; /* Kích thước chữ cho "Find Stays" */
+  color: black; /* Màu chữ */
+}
+
+.hotel-title {
+  font-size: 60px; /* Kích thước chữ cho "Clara Hotel" */
+  font-weight: bold;
+  margin: 0 40px; /* Khoảng cách bên trái và bên phải */
+  text-align: center; /* Căn giữa chữ "Clara Hotel" */
+  color: black;
+}
+
+.auth-buttons {
+  display: flex; /* Sử dụng flexbox cho các nút */
+  gap: 20px; /* Khoảng cách giữa các nút */
+}
+
+.login-btn,
+.signup-btn {
+  background-color: #f0f0f0; /* Màu nền của nút */
+  border: 2px solid black; /* Đường viền */
+  padding: 12px 24px; /* Padding cho nút */
+  font-size: 18px;
+  color: black;
+}
+
+.login-btn:hover,
+.signup-btn:hover {
+  background-color: black;
+  color: black; /* Thay đổi màu chữ khi hover */
+}
+/* Search Flights Section */
+.search-flights {
+  background-color: #f5f5f5;
+  padding: 60px;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.search-container input,
+.search-container select {
+  padding: 10px;
+  font-size: 24px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 400px;
+  color: black; /* Text in search inputs black */
+}
+
+.show-flights-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.promo-btn {
+  background-color: transparent;
+  color: #007bff;
+}
+
+/* Popular Destinations Section */
+.popular-destinations {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.popular-destinations h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: black; /* Headings in black */
+}
+
+.destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.destination-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s;
+  color: black; /* Text in destination cards black */
+}
+
+.destination-card img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.destination-card:hover {
+  transform: scale(1.05);
+}
+
+.see-more-btn {
+  margin-top: 20px;
+  background-color: #007bff;
+  color: white;
+}
+
+/* Reviews Section */
+.reviews-section {
+  background-color: #f9f9f9;
+  padding: 60px;
+  text-align: center;
+  color: black; /* Text in reviews black */
+}
+
+.reviews-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.review-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 30%;
+  color: black; /* Text in review cards black */
+}
+
+.review-text {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: black; /* Review text in black */
+}
+
+.reviewer {
+  font-style: italic;
+  margin-bottom: 5px;
+  color: black; /* Reviewer name in black */
+}
+
+.rating {
+  font-size: 20px;
+  color: #f39c12;
+}
+
+.review-source {
+  margin-bottom: 10px;
+  color: black; /* Review source in black */
+}
+
+.see-all-btn {
+  margin-top: 20px;
+  background-color: #007bff;
+  color: white;
+}
+
+/* Footer Section */
+.footer {
+  background-color: #b3e2dc;
+  padding: 40px 20px;
+  text-align: center;
+  color: black; /* Footer text in black */
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.footer h3 {
+  margin-bottom: 20px;
+  color: black; /* Footer headings in black */
+}
+
+.footer p {
+  margin: 0;
+  color: black; /* Footer paragraphs in black */
+}
+
+.footer-links {
+  display: flex; /* Sử dụng flexbox */
+  justify-content: space-around; /* Đảm bảo các mục cách đều nhau */
+  flex-wrap: wrap; /* Cho phép các mục chuyển xuống hàng mới nếu không đủ không gian */
+}
+
+.footer-links div {
+  flex: 1; /* Đảm bảo mỗi phần chiếm đều không gian */
+  min-width: 150px; /* Đặt chiều rộng tối thiểu cho các phần */
+  text-align: left; /* Căn trái cho văn bản */
+}
+
+.social-icons a {
+  margin: 0 10px;
+  color: black;
+}
+
+.social-icons a:hover {
+  color: #007bff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .destinations-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .reviews-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .review-card {
+    max-width: 80%;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .destinations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hotel-title {
+    font-size: 50px;
+  }
+}
