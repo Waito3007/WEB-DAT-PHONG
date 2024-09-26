@@ -1,15 +1,19 @@
-// middleware/auth.js
 const jwt = require('jsonwebtoken');
 
-module.exports = function(req, res, next) {
-  const token = req.header('x-auth-token');
-  if (!token) return res.status(401).json({ msg: 'Không có token, quyền truy cập bị từ chối' });
+const auth = (req, res, next) => {
+  const token = req.cookies.token; // Kiểm tra token trong cookie
+
+  if (!token) {
+    return res.status(401).json({ msg: 'Không có token, xác thực bị từ chối' });
+  }
 
   try {
-    const decoded = jwt.verify(token, 'your_jwt_secret');
-    req.user = decoded;
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified; // Lưu thông tin user vào request
     next();
   } catch (err) {
-    res.status(401).json({ msg: 'Token không hợp lệ' });
+    return res.status(400).json({ msg: 'Token không hợp lệ' });
   }
 };
+
+module.exports = auth;

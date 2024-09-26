@@ -1,12 +1,12 @@
-import Header from "../components/common/Header";
+import Header from "../components/dashboard/common/Header";
 
-import OverviewCards from "../components/analytics/OverviewCards";
-import RevenueChart from "../components/analytics/RevenueChart";
-import ChannelPerformance from "../components/analytics/ChannelPerformance";
-import ProductPerformance from "../components/analytics/ProductPerformance";
-import UserRetention from "../components/analytics/UserRetention";
-import CustomerSegmentation from "../components/analytics/CustomerSegmentation";
-import AIPoweredInsights from "../components/analytics/AIPoweredInsights";
+import OverviewCards from "../components/dashboard/analytics/OverviewCards";
+import RevenueChart from "../components/dashboard/analytics/RevenueChart";
+import ChannelPerformance from "../components/dashboard/analytics/ChannelPerformance";
+import ProductPerformance from "../components/dashboard/analytics/ProductPerformance";
+import UserRetention from "../components/dashboard/analytics/UserRetention";
+import CustomerSegmentation from "../components/dashboard/analytics/CustomerSegmentation";
+import AIPoweredInsights from "../components/dashboard/analytics/AIPoweredInsights";
 
 const AnalyticsPage = () => {
 	return (
