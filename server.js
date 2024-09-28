@@ -5,7 +5,6 @@ const connectDB = require('./config/db');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/register'); // Nhập route người dùng
 const loginRoute = require('./routes/login');
-const hotelRoutes = require('./routes/hotelRoutes'); // Đường dẫn chính xác đến file hotelRoutes
 const userTableRouter = require('./routes/usertable');
 const hotelRoutes = require('./routes/hotel');
 const dotenv = require('dotenv');
