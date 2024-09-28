@@ -5,7 +5,9 @@ const hotelSchema = new mongoose.Schema({
   location: { type: String, required: true },
   description: { type: String },
   manager: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Room' }]
+  rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Room' }],
+  imagehotel: [{ type: String }]
 });
 
+// Xuất mô hình Hotel
 module.exports = mongoose.model('Hotel', hotelSchema);

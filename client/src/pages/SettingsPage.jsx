@@ -1,9 +1,9 @@
-import Header from "../components/common/Header";
-import ConnectedAccounts from "../components/settings/ConnectedAccounts";
-import DangerZone from "../components/settings/DangerZone";
-import Notifications from "../components/settings/Notifications";
-import Profile from "../components/settings/Profile";
-import Security from "../components/settings/Security";
+import Header from "../components/dashboard/common/Header";
+import ConnectedAccounts from "../components/dashboard/settings/ConnectedAccounts";
+import DangerZone from "../components/dashboard/settings/DangerZone";
+import Notifications from "../components/dashboard/settings/Notifications";
+import Profile from "../components/dashboard/settings/Profile";
+import Security from "../components/dashboard/settings/Security";
 
 const SettingsPage = () => {
 	return (
