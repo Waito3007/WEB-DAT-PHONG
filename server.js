@@ -23,7 +23,6 @@ app.use(express.json());
 // Routes
 app.use('/api/users', userRoutes); // Đăng ký route
 app.use('/api/users', loginRoute); // Route cho đăng nhập
-app.use('/api/hotels', hotelRoutes);
 app.use('/api/usertable', userTableRouter); // Router lấy list người dùng
 app.use('/api/hotel', hotelRoutes);
 // up anh
