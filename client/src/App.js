@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import ContactPage from './pages/ContactPage';
 import NotFoundPage from './pages/NotFoundPage';
 import Login from './components/account/Login';
 import Register from './components/account/Register';
@@ -41,7 +40,6 @@ const AppContent = () => {
       {isAdminPage && <Sidebar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/contact" element={<ContactPage />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/register" element={<Register />} />
         <Route path="/overview" element={<OverviewPage />} />
