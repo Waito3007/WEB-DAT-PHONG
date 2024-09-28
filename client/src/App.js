@@ -1,14 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import NotFoundPage from './pages/NotFoundPage';
 import Login from './components/account/Login';
 import Register from './components/account/Register';
-import AddHotel from './components/AddHotel';
 // Admin
-import Sidebar from "./components/common/Sidebar";
+import Sidebar from "./components/dashboard/common/Sidebar";
 import OverviewPage from "./pages/OverviewPage";
 import ProductsPage from "./pages/ProductsPage";
 import UsersPage from "./pages/UsersPage";
@@ -16,7 +14,8 @@ import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
-
+// Hotel Add
+import HotelAdd from './components/hotel_manager/AddHotel';
 const AppContent = () => {
   const location = useLocation();
 
@@ -42,11 +41,9 @@ const AppContent = () => {
       {isAdminPage && <Sidebar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/register" element={<Register />} />
-        <Route path="/add-hotel" element={<AddHotel />} />
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/users" element={<UsersPage />} />
@@ -54,6 +51,7 @@ const AppContent = () => {
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/addhotel" element={<HotelAdd />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

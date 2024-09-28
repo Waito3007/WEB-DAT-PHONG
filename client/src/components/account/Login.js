@@ -20,9 +20,10 @@ const Login = () => {
 
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('token', data.token); // Lưu token vào localStorage
+        localStorage.setItem('token', data.token); // Store token
+        localStorage.setItem('user', JSON.stringify(data.user)); // Store user info
         alert('Đăng nhập thành công');
-        navigate('/'); // Chuyển về trang chủ
+        navigate('/profile'); // Redirect to profile page
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
       }
@@ -73,4 +74,3 @@ const Login = () => {
 };
 
 export default Login;
-

@@ -24,8 +24,10 @@ const Register = () => {
 
       const data = await response.json();
       if (response.ok) {
+        localStorage.setItem('token', data.token); // Store token
+        localStorage.setItem('user', JSON.stringify(data.user)); // Store user info
         alert('Đăng ký thành công');
-        navigate('/login');
+        navigate('/profile'); // Redirect to profile page
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
       }
