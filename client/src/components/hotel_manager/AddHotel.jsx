@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Form, Input, Button, Typography } from 'antd';
+import { Form, Input, Button, Typography, message, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -11,22 +12,41 @@ const AddHotel = () => {
     location: '',
     description: '',
     rooms: [],
-    imagehotel: []
   });
+  const [fileList, setFileList] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setHotelData({ ...hotelData, [name]: value });
   };
 
+  // Xử lý file upload từ Upload component
+  const handleUpload = ({ fileList }) => {
+    setFileList(fileList);
+  };
+
   const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append('name', hotelData.name);
+    formData.append('location', hotelData.location);
+    formData.append('description', hotelData.description);
+    
+    // Thêm từng ảnh vào formData
+    fileList.forEach(file => {
+      formData.append('imagehotel', file.originFileObj);
+    });
+
     try {
-      const response = await axios.post('/api/hotel/addhotel', hotelData, {
+      const response = await axios.post('/api/hotel/addhotel', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
         withCredentials: true
       });
-      console.log(response.data);
+      message.success('Thêm khách sạn thành công!');
     } catch (error) {
-      console.error('Lỗi khi thêm khách sạn:', error.response.data);
+      console.error('Lỗi khi thêm khách sạn:', error.response?.data);
+      message.error('Đã xảy ra lỗi khi thêm khách sạn');
     }
   };
 
@@ -42,7 +62,7 @@ const AddHotel = () => {
             onChange={handleChange} 
           />
         </Form.Item>
-        
+
         <Form.Item label="Địa điểm" required>
           <Input 
             name="location" 
@@ -60,6 +80,17 @@ const AddHotel = () => {
             value={hotelData.description} 
             onChange={handleChange} 
           />
+        </Form.Item>
+
+        <Form.Item label="Ảnh khách sạn">
+          <Upload
+            listType="picture"
+            maxCount={5}
+            onChange={handleUpload}
+            beforeUpload={() => false}
+          >
+            <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
+          </Upload>
         </Form.Item>
 
         <Form.Item>
