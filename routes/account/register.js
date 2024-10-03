@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+const User = require('../../models/User');
 
 // Route Đăng ký người dùng
 router.post('/register', async (req, res) => {
