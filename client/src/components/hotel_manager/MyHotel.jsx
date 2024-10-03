@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { List, Typography, message } from 'antd';
+import { List, Typography, message, Spin } from 'antd';
 import { Link } from 'react-router-dom';
 
 const { Title } = Typography;
@@ -26,7 +26,11 @@ const MyHotels = () => {
   }, []);
 
   if (loading) {
-    return <p>Đang tải danh sách khách sạn...</p>;
+    return (
+      <div className="flex justify-center items-center">
+        <Spin size="large" tip="Đang tải danh sách khách sạn..." />
+      </div>
+    );
   }
 
   return (
@@ -38,13 +42,12 @@ const MyHotels = () => {
         renderItem={(hotel) => (
           <List.Item key={hotel._id} className="border-b py-4">
             <List.Item.Meta
-  title={
-    <Link to={`/hotels/${hotel._id}`} className="text-xl font-semibold">
-      {hotel.name}
-    </Link>
-  }
-/>
-
+              title={
+                <Link to={`/hotels/${hotel._id}`} className="text-xl font-semibold">
+                  {hotel.name}
+                </Link>
+              }
+            />
           </List.Item>
         )}
       />

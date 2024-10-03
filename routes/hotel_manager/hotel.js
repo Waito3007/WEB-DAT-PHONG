@@ -51,24 +51,19 @@ router.get('/myhotels', auth, async (req, res) => {
 
 const mongoose = require('mongoose');
 
-// Route để lấy thông tin chi tiết của một khách sạn
-router.get('/hotels/:hotelId', auth, async (req, res) => {
-  const { hotelId } = req.params;
-
-  // Kiểm tra xem ID có phải là một ObjectId hợp lệ không
-  if (!mongoose.Types.ObjectId.isValid(hotelId)) {
-      return res.status(400).json({ message: 'ID khách sạn không hợp lệ' });
-  }
-
+// Route lấy thông tin khách sạn cụ thể
+router.get('/:hotelId', auth, async (req, res) => {
   try {
-      const hotel = await Hotel.findById(hotelId);
-      if (!hotel) {
-          return res.status(404).json({ message: 'Khách sạn không tồn tại' });
-      }
-      res.json(hotel);
+    const hotelId = req.params.hotelId;
+    const hotel = await Hotel.findById(hotelId);
+
+    if (!hotel) {
+      return res.status(404).json({ msg: 'Không tìm thấy khách sạn' });
+    }
+
+    res.json(hotel);
   } catch (error) {
-      console.error('Error fetching hotel details:', error);
-      res.status(500).json({ message: 'Đã xảy ra lỗi khi lấy thông tin khách sạn' });
+    res.status(500).json({ msg: 'Lỗi server', error });
   }
 });
 
