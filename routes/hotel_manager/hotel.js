@@ -1,4 +1,5 @@
 // routes/hotel_mangager/hotel.js
+const User = require('../../models/User'); // Import model User
 const express = require('express');
 const router = express.Router();
 const Hotel = require('../../models/Hotel');
@@ -66,6 +67,34 @@ router.get('/:hotelId', auth, async (req, res) => {
     res.status(500).json({ msg: 'Lỗi server', error });
   }
 });
+// Route xóa khách sạn
+router.delete('/:id', auth, async (req, res) => {
+  const hotelId = req.params.id; // Lấy ID khách sạn từ tham số URL
+  const { password } = req.body; // Lấy mật khẩu từ body yêu cầu
 
+  try {
+    // Tìm user theo ID đã xác thực
+    const user = await User.findById(req.user.userId); // Đảm bảo sử dụng req.user.userId để lấy ID người dùng đã xác thực
+    if (!user) {
+      return res.status(404).json({ msg: 'Người dùng không tìm thấy' });
+    }
 
+    // Kiểm tra mật khẩu
+    const isMatch = await user.comparePassword(password); // So sánh mật khẩu
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Mật khẩu không chính xác' });
+    }
+
+    // Xóa khách sạn
+    const hotel = await Hotel.findByIdAndDelete(hotelId);
+    if (!hotel) {
+      return res.status(404).json({ msg: 'Khách sạn không tìm thấy' });
+    }
+
+    res.json({ msg: 'Xóa khách sạn thành công' });
+  } catch (error) {
+    console.error('Lỗi khi xóa khách sạn:', error);
+    res.status(500).json({ msg: 'Đã xảy ra lỗi trong quá trình xóa khách sạn' });
+  }
+});
 module.exports = router;
