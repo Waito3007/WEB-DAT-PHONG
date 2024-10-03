@@ -7,7 +7,7 @@ import Register from './components/account/Register';
 // Admin
 import Sidebar from "./components/dashboard/common/Sidebar";
 import OverviewPage from "./pages/OverviewPage";
-import ProductsPage from "./pages/ProductsPage";
+import HotelManagerPage from "./pages/HotelManagerPage";
 import UsersPage from "./pages/UsersPage";
 import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
@@ -27,7 +27,7 @@ const AppContent = () => {
     '/orders',
     '/sales',
     '/users',
-    '/products',
+    '/hotelmanager',
     '/overview'
   ].includes(location.pathname);
 
@@ -45,7 +45,7 @@ const AppContent = () => {
         <Route path="/login" element={<Login />} /> 
         <Route path="/register" element={<Register />} />
         <Route path="/overview" element={<OverviewPage />} />
-        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/hotelmanager" element={<HotelManagerPage />} />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/sales" element={<SalesPage />} />
         <Route path="/orders" element={<OrdersPage />} />

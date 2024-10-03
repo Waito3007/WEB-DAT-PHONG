@@ -6,9 +6,9 @@ import StatCard from "../components/dashboard/common/StatCard";
 import { AlertTriangle, DollarSign, Package, TrendingUp } from "lucide-react";
 import CategoryDistributionChart from "../components/dashboard/overview/CategoryDistributionChart";
 import SalesTrendChart from "../components/dashboard/products/SalesTrendChart";
-import ProductsTable from "../components/dashboard/products/ProductsTable";
+import ProductsTable from "../components/dashboard/products/HotelTable";
 
-const ProductsPage = () => {
+const HotelManagerPage = () => {
 	return (
 		<div className='flex-1 overflow-auto relative z-10'>
 			<Header title='Products' />
@@ -38,4 +38,4 @@ const ProductsPage = () => {
 		</div>
 	);
 };
-export default ProductsPage;
+export default HotelManagerPage;

@@ -10,7 +10,7 @@ const PRODUCT_DATA = [
 	{ id: 5, name: "Coffee Maker", category: "Home", price: 79.99, stock: 78, sales: 720 },
 ];
 
-const ProductsTable = () => {
+const HotelTable = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredProducts, setFilteredProducts] = useState(PRODUCT_DATA);
 
@@ -112,4 +112,4 @@ const ProductsTable = () => {
 		</motion.div>
 	);
 };
-export default ProductsTable;
+export default HotelTable;
