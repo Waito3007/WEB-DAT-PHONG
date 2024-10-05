@@ -17,6 +17,7 @@ import SettingsPage from "./pages/SettingsPage";
 import HotelAdd from './components/hotel_manager/AddHotel';
 import MyHotel from './components/hotel_manager/MyHotel';
 import HotelDetail from './components/hotel_manager/HotelDetail'; // Nhập HotelDetail
+import AddRoom from './components/hotel_manager/AddRoom';
 
 const AppContent = () => {
   const location = useLocation();
@@ -52,6 +53,7 @@ const AppContent = () => {
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/addhotel" element={<HotelAdd />} />
+        <Route path="/hotels/:hotelId/add-room" element={<AddRoom />} />
         <Route path="/myhotel" element={<MyHotel />} />
         <Route path="/hotels/:hotelId" element={<HotelDetail />} /> {/* Route cho HotelDetail */}
         <Route path="*" element={<NotFoundPage />} />
