@@ -97,4 +97,26 @@ router.delete('/:id', auth, async (req, res) => {
     res.status(500).json({ msg: 'Đã xảy ra lỗi trong quá trình xóa khách sạn' });
   }
 });
+// Route cập nhật thông tin khách sạn
+router.put('/:hotelId', auth, async (req, res) => {
+  const { name, location, description } = req.body;
+  const hotelId = req.params.hotelId;
+
+  try {
+    const updatedHotel = await Hotel.findByIdAndUpdate(
+      hotelId,
+      { name, location, description }, // Chỉ cập nhật các trường này
+      { new: true } // Trả về dữ liệu đã cập nhật
+    );
+
+    if (!updatedHotel) {
+      return res.status(404).json({ msg: 'Khách sạn không tìm thấy' });
+    }
+
+    res.json(updatedHotel); // Trả về thông tin đã cập nhật
+  } catch (error) {
+    console.error('Lỗi khi cập nhật khách sạn:', error);
+    res.status(500).json({ msg: 'Lỗi server' });
+  }
+});
 module.exports = router;

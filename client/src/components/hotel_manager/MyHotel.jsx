@@ -29,7 +29,7 @@ const MyHotels = () => {
   }, []);
 
   const handleEdit = (hotelId) => {
-    window.location.href = `/hotels/edit/${hotelId}`;
+    window.location.href = `/hotels/${hotelId}`;
   };
 
   const showDeleteModal = (hotelId) => {

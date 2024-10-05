@@ -1,4 +1,4 @@
-// upload.js
+//upload.js
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary'); // Kiểm tra đường dẫn
