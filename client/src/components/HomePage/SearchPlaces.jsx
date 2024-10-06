@@ -31,7 +31,6 @@ const SearchPlaces = () => {
         </div>
         <div className="button-group">
           <button className="show-places-btn">Tìm</button>
-          <button className="promo-code-btn">Thêm mã khuyến mãi</button>
         </div>
       </div>
     </section>
