@@ -5,7 +5,8 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <h3>Clara Hotel</h3>
+        {/* Đặt Stay Night trong cùng một thẻ h3 để chúng nằm ngang */}
+        <h3 className="footer-title">Stay Night</h3>
         <div className="social-icons">
           <a
             href="https://www.facebook.com"
@@ -38,55 +39,55 @@ const Footer = () => {
         </div>
         <div className="footer-links">
           <div>
-            <h4>Our Destinations</h4>
+            <h4>Điểm đến</h4>
             <p>
-              Canada
+              Hà Nội
               <br />
-              Alaska
+              HCM
               <br />
-              France
+              Cần thơ
               <br />
-              Iceland
+              Spa
             </p>
           </div>
           <div>
-            <h4>Our Activities</h4>
+            <h4>Hoạt động</h4>
             <p>
-              Northern Lights
+              Dinh Độc Lập
               <br />
-              Cruising & Sailing
+              Ẩm thực đường phố
               <br />
-              Multi-activities
+              Chợ nổi Cái Răng
               <br />
-              Kayaking
+              Nhà thờ Đức Bà
             </p>
           </div>
           <div>
-            <h4>Travel Blogs</h4>
+            <h4>Blog du lịch</h4>
             <p>
-              Bali Travel Guide
+              Hướng dẫn du lịch Huy
               <br />
-              Sri Lanka Travel Guide
+              Hướng dẫn du lịch Seng
               <br />
-              Peru Travel Guide
+              Hướng dẫn du lịch Nghĩa
               <br />
-              Bali Travel Guide
+              Hướng dẫn du lịch Nhân
             </p>
           </div>
           <div>
-            <h4>About Us</h4>
+            <h4>Về chung tôi</h4>
             <p>
-              Our Story
+              Du lịch bền vững
               <br />
-              Work with us
+              Truyền thông
             </p>
           </div>
           <div>
-            <h4>Contact Us</h4>
+            <h4>Liên hệ với chung tôi</h4>
             <p>
-              Our Story
+              Du lịch bền vững
               <br />
-              Work with us
+              Truyền thông
             </p>
           </div>
         </div>
