@@ -4,29 +4,30 @@ import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 import Login from './components/account/Login';
 import Register from './components/account/Register';
-import Profile from './components/account/Profile';
 // Admin
 import Sidebar from "./components/dashboard/common/Sidebar";
 import OverviewPage from "./pages/OverviewPage";
-import ProductsPage from "./pages/ProductsPage";
+import HotelManagerPage from "./pages/HotelManagerPage";
 import UsersPage from "./pages/UsersPage";
 import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
-// Hotel Add
+// Hotel Manager
 import HotelAdd from './components/hotel_manager/AddHotel';
+import MyHotel from './components/hotel_manager/MyHotel';
+import HotelDetail from './components/hotel_manager/HotelDetail'; // Nhập HotelDetail
+
 const AppContent = () => {
   const location = useLocation();
 
-  // Kiểm tra xem đường dẫn có phải là một trong những trang admin không
   const isAdminPage = [
     '/settings',
     '/analytics',
     '/orders',
     '/sales',
     '/users',
-    '/products',
+    '/hotelmanager',
     '/overview'
   ].includes(location.pathname);
 
@@ -43,15 +44,16 @@ const AppContent = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
         <Route path="/overview" element={<OverviewPage />} />
-        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/hotelmanager" element={<HotelManagerPage />} />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/sales" element={<SalesPage />} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/addhotel" element={<HotelAdd />} />
+        <Route path="/myhotel" element={<MyHotel />} />
+        <Route path="/hotels/:hotelId" element={<HotelDetail />} /> {/* Route cho HotelDetail */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

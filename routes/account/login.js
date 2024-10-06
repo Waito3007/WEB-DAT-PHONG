@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 
@@ -16,7 +16,6 @@ router.post('/login', async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ msg: 'Vui lòng nhập email và mật khẩu' });
     }
-
     // Tìm người dùng trong cơ sở dữ liệu
     const user = await User.findOne({ email });
     if (!user) {
