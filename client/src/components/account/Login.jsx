@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Typography, message } from 'antd';
+import { Form, Input, Button, Typography, message, Flex } from 'antd';
+import '../../App.css';
+import { Content } from 'antd/es/layout/layout';
 
 const { Title } = Typography;
 
@@ -36,9 +38,9 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-auto">
-        <Title level={2} style={{ textAlign: 'center', color: 'black' }}>
+    <div className="background flex items-center justify-center" > {/* Thêm class background ở đây */}
+      <div style={{ backgroundColor: 'rgb(1 2 2 / 42%)' }} className="bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-auto ">
+        <Title level={2} style={{ textAlign: 'center', color: 'yellow' }}>
           Đăng nhập
         </Title>
         <Form
@@ -75,19 +77,23 @@ const Login = () => {
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
+          <div className="buttonLogin">
           <Form.Item>
             <Button
               type="primary"
               htmlType="submit"
               style={{
                 width: '100%',
-                backgroundColor: '#007bff',
+                backgroundColor: '#ffffff',
+                color: 'white',
                 borderColor: 'black', // Viền màu đen
+                textAlign:'center',
               }}
             >
               Đăng nhập
             </Button>
           </Form.Item>
+          </div>
         </Form>
       </div>
     </div>

@@ -4,6 +4,7 @@ body {
   padding: 0;
   box-sizing: border-box;
   color: black;
+
 }
 
 .homepage {
@@ -127,6 +128,8 @@ label {
 }
 
 input[type="text"],
+input[type="email"],
+input[type="password"],
 input[type="date"],
 select {
   padding: 12px; /* Đệm bên trong */
@@ -134,10 +137,13 @@ select {
   border-radius: 5px; /* Bo góc */
   font-size: 16px; /* Kích thước chữ */
   color: black; /* Đặt màu chữ là đen */
+  background-color: #000000;
   transition: border-color 0.3s; /* Hiệu ứng chuyển đổi màu viền */
 }
 
 input[type="text"]:focus,
+input[type="email"],
+input[type="password"],
 input[type="date"]:focus,
 select:focus {
   border-color: #007bff; /* Thay đổi màu viền khi được chọn */

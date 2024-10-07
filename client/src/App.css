@@ -26,6 +26,7 @@
 
 .App-link {
   color: #61dafb;
+  background-color: #f2f2f2;
 }
 
 @keyframes App-logo-spin {
@@ -35,4 +36,17 @@
   to {
     transform: rotate(360deg);
   }
+}
+.background {
+  width: 100%;
+  background-image: url('https://pistachiohotel.com/UploadFile/Gallery/Overview/a2.jpg'); /* Thay URL_CỦA_HÌNH bằng đường dẫn hình của bạn */
+  background-size: cover; /* Để hình nền phủ kín toàn bộ */
+  background-position: center; /* Để hình nền căn giữa */
+  height: auto; /* Chiều cao toàn bộ màn hình */
+ 
+}
+.buttonLogin{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
