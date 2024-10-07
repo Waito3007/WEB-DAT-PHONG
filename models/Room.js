@@ -5,6 +5,7 @@ const roomSchema = new mongoose.Schema({
   type: { type: String, required: true }, // ví dụ: 'Deluxe', 'Standard'
   price: { type: Number, required: true },
   availability: { type: Boolean, default: true },
+  imageroom: [{ type: String }], // Mảng các URL ảnh
 });
 
 module.exports = mongoose.model('Room', roomSchema);
