@@ -16,7 +16,7 @@ const HomeNavbar = () => {
     <div
       className="navbar"
       style={{
-        backgroundImage: `url(/Hp.png)`, // Đường dẫn đến ảnh trong thư mục public
+        backgroundImage: `url(/image.png)`, // Đường dẫn đến ảnh trong thư mục public
         backgroundSize: "cover", // Đảm bảo ảnh phủ đầy
         backgroundPosition: "center", // Căn giữa ảnh
         backgroundRepeat: "no-repeat", // Không lặp lại ảnh
@@ -37,8 +37,7 @@ const HomeNavbar = () => {
         <h1
           className="hotel-title"
           style={{ color: "white", fontSize: "30px", margin: 0 }}
-        >
-          Stay Night
+        >staynight
         </h1>
       </div>
       <div className="navbar-buttons" style={{ marginTop: "10px" }}>
