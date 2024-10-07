@@ -57,9 +57,7 @@ const AppContent = () => {
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/addhotel" element={<HotelAdd />} />
-        <Route path="/hotels/:hotelId/rooms" element={<RoomList />} />
         <Route path="/hotels/:hotelId/add-room" element={<AddRoom />} />
-        <Route path="/edit-room/:roomId" element={<EditRoom />} />
         <Route path="/myhotel" element={<MyHotel />} />
         <Route path="/hotels/:hotelId" element={<HotelDetail />} /> {/* Route cho HotelDetail */}
         <Route path="*" element={<NotFoundPage />} />
