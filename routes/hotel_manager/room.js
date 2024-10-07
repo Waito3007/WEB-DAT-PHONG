@@ -76,16 +76,17 @@ router.get('/api/room/:roomId', async (req, res) => {
 });
 
 
-// Route để chỉnh sửa thông tin phòng
-router.put('/api/room/:roomId', auth, async (req, res) => {
+
+// Route cập nhật thông tin phòng
+router.put('/:hotelId/rooms/:roomId', auth, async (req, res) => {
   const { roomId } = req.params;
   const { type, price, availability, imageroom } = req.body;
 
   try {
     const updatedRoom = await Room.findByIdAndUpdate(
       roomId,
-      { type, price, availability, imageroom },
-      { new: true }
+      { type, price, availability, imageroom }, // Chỉ cập nhật các trường này
+      { new: true } // Trả về dữ liệu đã cập nhật
     );
 
     if (!updatedRoom) {
