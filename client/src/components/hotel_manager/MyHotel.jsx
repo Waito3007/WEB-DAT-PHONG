@@ -30,7 +30,7 @@ const MyHotels = () => {
   }, []);
 
   const handleEdit = (hotelId) => {
-    navigate(`/hotels/edit/${hotelId}`);
+    window.location.href = `/hotels/${hotelId}`;
   };
 
   const showDeleteModal = (hotelId) => {
