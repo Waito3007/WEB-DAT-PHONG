@@ -18,9 +18,8 @@ import HotelAdd from './components/hotel_manager/AddHotel';
 import MyHotel from './components/hotel_manager/MyHotel';
 import HotelDetail from './components/hotel_manager/HotelDetail'; // Nhập HotelDetail
 import AddRoom from './components/hotel_manager/AddRoom';
-import RoomList from './components/hotel_manager/RoomsList'; // Đường dẫn component RoomList
-import EditRoom from './components/hotel_manager/EditRoom';
-
+import HotelRooms from './components/hotel_manager/HotelRooms'; // Đường dẫn component RoomList
+import RoomDetail from './components/hotel_manager/RoomDetail';
 
 
 const AppContent = () => {
@@ -59,6 +58,8 @@ const AppContent = () => {
         <Route path="/addhotel" element={<HotelAdd />} />
         <Route path="/hotels/:hotelId/add-room" element={<AddRoom />} />
         <Route path="/myhotel" element={<MyHotel />} />
+        <Route path="/hotels/:hotelId/rooms" element={<HotelRooms />} />
+        <Route path="/room/:roomId" element={<RoomDetail />} />
         <Route path="/hotels/:hotelId" element={<HotelDetail />} /> {/* Route cho HotelDetail */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
