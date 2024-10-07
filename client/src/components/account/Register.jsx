@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import '../../App.css';
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -38,13 +38,13 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <div className="background flex items-center justify-center min-h-screen bg-gray-800 w-full">
+      <div style={{ backgroundColor: 'rgb(1 2 2 / 42%)' }}  className=" p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center mb-6">Đăng Ký</h2>
         {error && <div className="text-red-500 mb-4">{error}</div>}
         <form onSubmit={handleRegister}>
           <div className="mb-4">
-            <label className="block text-gray-700">Họ Tên</label>
+            <label className="block text-gray-300">Họ Tên</label>
             <input
               type="text"
               value={name}
@@ -73,12 +73,10 @@ const Register = () => {
               required
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-200"
-          >
-            Đăng Ký
-          </button>
+          <div className="phuong flex items-center justify-center ">
+            <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-gradient-to-r hover:from-pink-200 hover:to-pink-600 transition duration-800 ease-in-out">Đăng Ký</button>
+
+          </div>          
         </form>
       </div>
     </div>
