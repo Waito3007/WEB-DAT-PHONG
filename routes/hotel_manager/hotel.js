@@ -67,6 +67,8 @@ router.get('/:hotelId', auth, async (req, res) => {
     res.status(500).json({ msg: 'Lỗi server', error });
   }
 });
+
+
 // Route xóa khách sạn
 router.delete('/:id', auth, async (req, res) => {
   const hotelId = req.params.id; // Lấy ID khách sạn từ tham số URL
