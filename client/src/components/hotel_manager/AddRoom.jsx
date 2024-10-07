@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Form, Input, Button, message, InputNumber, Switch, Upload } from 'antd';
+import { Form, Input, Button, message, InputNumber, Switch, Upload, Spin } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 const AddRoom = () => {
@@ -10,36 +10,38 @@ const AddRoom = () => {
   const [price, setPrice] = useState(0);
   const [availability, setAvailability] = useState(true);
   const [images, setImages] = useState([]); // Đổi thành images cho nhất quán
+  const [loading, setLoading] = useState(false); // Trạng thái loading
   const navigate = useNavigate();
 
   const handleAddRoom = async () => {
-  const formData = new FormData();
-  formData.append('type', type);
-  formData.append('price', price);
-  formData.append('availability', availability);
+    setLoading(true); // Bắt đầu loading
+    const formData = new FormData();
+    formData.append('type', type);
+    formData.append('price', price);
+    formData.append('availability', availability);
 
-  // Thêm từng ảnh vào formData với tên trường 'imageroom'
-  images.forEach((file) => {
-    formData.append('imageroom', file);
-  });
-
-  try {
-    await axios.post(`/api/room/${hotelId}/add-room`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      withCredentials: true,
+    // Thêm từng ảnh vào formData với tên trường 'imageroom'
+    images.forEach((file) => {
+      formData.append('imageroom', file);
     });
 
-    message.success('Phòng đã được thêm thành công');
-    navigate(`/hotel/${hotelId}`);
-  } catch (error) {
-    console.error('Lỗi khi thêm phòng:', error.response?.data);
-    message.error('Đã xảy ra lỗi khi thêm phòng');
-  }
-};
+    try {
+      await axios.post(`/api/room/${hotelId}/add-room`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
+      });
 
-  
+      message.success('Phòng đã được thêm thành công');
+      navigate(`/myhotel`); // Chuyển hướng về trang My Hotel
+    } catch (error) {
+      console.error('Lỗi khi thêm phòng:', error.response?.data);
+      message.error('Đã xảy ra lỗi khi thêm phòng');
+    } finally {
+      setLoading(false); // Kết thúc loading
+    }
+  };
 
   const handleFileChange = ({ fileList }) => {
     setImages(fileList.map(file => file.originFileObj)); // Lưu ảnh dưới dạng file gốc
@@ -84,8 +86,8 @@ const AddRoom = () => {
             <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
           </Upload>
         </Form.Item>
-        <Button type="primary" htmlType="submit">
-          Thêm Phòng
+        <Button type="primary" htmlType="submit" loading={loading}>
+          {loading ? 'Đang thêm phòng...' : 'Thêm Phòng'}
         </Button>
       </Form>
     </div>

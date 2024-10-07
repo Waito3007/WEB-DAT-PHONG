@@ -1,14 +1,13 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { message, Spin, List, Typography, Button, Popconfirm, Modal } from 'antd';
+import { message, Spin, List, Typography, Button, Modal } from 'antd';
 import { useParams } from 'react-router-dom';
 import EditRoom from './EditRoom'; // Import component EditRoom
 
 const { Title } = Typography;
 
 const HotelRooms = () => {
-  const { hotelId } = useParams(); 
+  const { hotelId } = useParams();
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -54,6 +53,16 @@ const HotelRooms = () => {
   const handleEditModalClose = () => {
     setIsEditModalVisible(false);
     setSelectedRoomId(null);
+    // Reload rooms after edit
+    const fetchRooms = async () => {
+      try {
+        const response = await axios.get(`/api/room/${hotelId}/rooms`, { withCredentials: true });
+        setRooms(response.data);
+      } catch (error) {
+        console.error('Lỗi khi lấy danh sách phòng:', error.response?.data);
+      }
+    };
+    fetchRooms();
   };
 
   if (loading) {
