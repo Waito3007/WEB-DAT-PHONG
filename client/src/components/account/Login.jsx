@@ -53,9 +53,7 @@ const Login = () => {
           >
             <Input
               type="email"
-              style={{
-                borderColor: 'black', // Viền màu đen
-              }}
+              className="border-gray-300 focus:border-pink-500 focus:ring-pink-500"
               required
             />
           </Form.Item>
