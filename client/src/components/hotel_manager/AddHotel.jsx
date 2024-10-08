@@ -3,50 +3,69 @@ import axios from 'axios';
 import { Form, Input, Button, Typography, message, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
+
 const { TextArea } = Input;
 const { Title } = Typography;
 
-const AddHotel = () => {
+const AddHotel = ({ onHotelAdded }) => {
   const [hotelData, setHotelData] = useState({
     name: '',
     location: '',
     description: '',
-    rooms: [],
   });
   const [fileList, setFileList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setHotelData({ ...hotelData, [name]: value });
   };
 
-  // Xử lý file upload từ Upload component
   const handleUpload = ({ fileList }) => {
     setFileList(fileList);
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const formData = new FormData();
     formData.append('name', hotelData.name);
     formData.append('location', hotelData.location);
     formData.append('description', hotelData.description);
-    
-    // Thêm từng ảnh vào formData
+
     fileList.forEach(file => {
       formData.append('imagehotel', file.originFileObj);
     });
 
     try {
       const response = await axios.post('/api/hotel/addhotel', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true
+        headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true,
       });
+      console.log('Response from server:', response.data); // Thêm log này
+
       message.success('Thêm khách sạn thành công!');
+
+      // Giả sử bạn nhận được đường dẫn ảnh từ API
+      const newHotel = {
+        name: hotelData.name,
+        location: hotelData.location,
+        description: hotelData.description,
+        imageUrl: response.data.imageUrl, // Đảm bảo đường dẫn ảnh chính xác
+      };
+      onHotelAdded(newHotel); 
+
+      // Đặt lại biểu mẫu
+      setHotelData({
+        name: '',
+        location: '',
+        description: '',
+      });
+      setFileList([]);
     } catch (error) {
       console.error('Lỗi khi thêm khách sạn:', error.response?.data);
       message.error('Đã xảy ra lỗi khi thêm khách sạn');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,14 +106,15 @@ const AddHotel = () => {
             listType="picture"
             maxCount={5}
             onChange={handleUpload}
-            beforeUpload={() => false}
+            beforeUpload={() => false} // Ngăn chặn upload tự động
+            fileList={fileList}
           >
             <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
           </Upload>
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+          <Button type="primary" htmlType="submit" block loading={loading}>
             Thêm Khách Sạn
           </Button>
         </Form.Item>
