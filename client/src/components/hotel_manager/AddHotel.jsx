@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Form, Input, Button, Typography, message, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import 'animate.css'; // Nếu cần dùng animate.css
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -14,24 +16,25 @@ const AddHotel = () => {
     rooms: [],
   });
   const [fileList, setFileList] = useState([]);
+  const [loading, setLoading] = useState(false); // Thêm state loading
+  const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng trang
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setHotelData({ ...hotelData, [name]: value });
   };
 
-  // Xử lý file upload từ Upload component
   const handleUpload = ({ fileList }) => {
     setFileList(fileList);
   };
 
   const handleSubmit = async () => {
+    setLoading(true); // Bật loading khi bắt đầu gửi form
     const formData = new FormData();
     formData.append('name', hotelData.name);
     formData.append('location', hotelData.location);
     formData.append('description', hotelData.description);
     
-    // Thêm từng ảnh vào formData
     fileList.forEach(file => {
       formData.append('imagehotel', file.originFileObj);
     });
@@ -44,22 +47,26 @@ const AddHotel = () => {
         withCredentials: true
       });
       message.success('Thêm khách sạn thành công!');
+      navigate('/myhotel'); // Chuyển đến trang /myhotel sau khi thêm thành công
     } catch (error) {
       console.error('Lỗi khi thêm khách sạn:', error.response?.data);
       message.error('Đã xảy ra lỗi khi thêm khách sạn');
+    } finally {
+      setLoading(false); // Tắt loading khi hoàn thành
     }
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-      <Title level={2}>Thêm Khách Sạn</Title>
+    <div className="max-w-lg mx-auto p-8 bg-white shadow-lg rounded-lg mt-10 animate__animated animate__fadeIn">
+      <Title level={2} className="text-center text-gray-800 mb-6">Thêm Khách Sạn</Title>
       <Form layout="vertical" onFinish={handleSubmit}>
         <Form.Item label="Tên khách sạn" required>
           <Input 
             name="name" 
             placeholder="Nhập tên khách sạn" 
             value={hotelData.name} 
-            onChange={handleChange} 
+            onChange={handleChange}
+            className="border-gray-300 focus:border-pink-500 focus:ring-pink-500"
           />
         </Form.Item>
 
@@ -68,7 +75,8 @@ const AddHotel = () => {
             name="location" 
             placeholder="Nhập địa điểm" 
             value={hotelData.location} 
-            onChange={handleChange} 
+            onChange={handleChange}
+            className="border-gray-300 focus:border-pink-500 focus:ring-pink-500"
           />
         </Form.Item>
 
@@ -78,7 +86,8 @@ const AddHotel = () => {
             placeholder="Nhập mô tả" 
             rows={4} 
             value={hotelData.description} 
-            onChange={handleChange} 
+            onChange={handleChange}
+            className="border-gray-300 focus:border-pink-500 focus:ring-pink-500"
           />
         </Form.Item>
 
@@ -94,8 +103,14 @@ const AddHotel = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
-            Thêm Khách Sạn
+          <Button 
+            type="primary" 
+            htmlType="submit" 
+            block
+            loading={loading} // Thêm loading vào button
+            className="bg-pink-500 hover:bg-pink-600 transition-all duration-300"
+          >
+            {loading ? 'Đang xử lý...' : 'Thêm Khách Sạn'}
           </Button>
         </Form.Item>
       </Form>

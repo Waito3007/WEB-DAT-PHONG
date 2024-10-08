@@ -121,4 +121,14 @@ router.put('/:hotelId', auth, async (req, res) => {
     res.status(500).json({ msg: 'Lỗi server' });
   }
 });
+
+// Route để lấy tất cả khách sạn
+router.get('/', async (req, res) => {
+  try {
+    const hotels = await Hotel.find() 
+    res.json(hotels);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi khi lấy danh sách khách sạn', error });
+  }
+});
 module.exports = router;
