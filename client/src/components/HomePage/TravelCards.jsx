@@ -8,25 +8,25 @@ const TravelCards = () => {
     {
       name: "Hồ Chí Minh",
       description: "Một cuộc hành trình tuyệt vời",
-      price: "$700",
+      price: "500000vnd",
       image: "phong1.png",
     },
     {
       name: "Hà Nội",
       description: "Một cuộc phiêu lưu",
-      price: "$600",
+      price: "500000vnd",
       image: "phong1.png",
     },
     {
       name: "Cần thơ",
       description: "Những con đường tuyệt vời",
-      price: "$350",
+      price: "500000vnd",
       image: "phong1.png",
     },
     {
       name: "spa",
       description: "Thiên nhiên miền núi",
-      price: "$700",
+      price: "500000vnd",
       image: "phong1.png",
     },
   ];
@@ -66,7 +66,7 @@ const TravelCards = () => {
                     {destination.price}
                   </span>
                   <Button type="primary" className="book-btn">
-                    Book a Hotel
+                    Đặt phòng
                   </Button>
                 </div>
               </Card>

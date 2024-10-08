@@ -5,7 +5,6 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-content">
-        {/* Đặt Stay Night trong cùng một thẻ h3 để chúng nằm ngang */}
         <h3 className="footer-title">Stay Night</h3>
         <div className="social-icons">
           <a

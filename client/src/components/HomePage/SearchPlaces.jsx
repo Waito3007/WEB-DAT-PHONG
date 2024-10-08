@@ -1,7 +1,8 @@
-// SearchPlaces.jsx
-import React from "react";
+// src/components/HomePage/SearchPlaces.jsx
+import React from "react"; // Import React
 
 const SearchPlaces = () => {
+  // Định nghĩa component
   return (
     <section className="search-places">
       <div className="search-container">
@@ -30,12 +31,18 @@ const SearchPlaces = () => {
           </div>
         </div>
         <div className="button-group">
-          <button className="show-places-btn">Tìm</button>
-          <button className="promo-code-btn">Thêm mã khuyến mãi</button>
+          <button
+            className="show-places-btn"
+            onClick={() => {
+              /* Thêm logic điều hướng vào đây */
+            }}
+          >
+            Tìm
+          </button>
         </div>
       </div>
     </section>
   );
 };
 
-export default SearchPlaces;
+export default SearchPlaces; // Xuất component

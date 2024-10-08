@@ -13,40 +13,65 @@ body {
 
 /* Navbar */
 .navbar {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8); /* Nền bán trong suốt cho navbar */
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Căn chỉnh lên trên */
-  padding: 20px 40px;
+  align-items: center;
+  padding: 15px 30px; /* Giảm padding để bố cục gọn gàng hơn */
   color: white;
-  height: 150px;
-  position: relative;
-  z-index: 10;
+  position: fixed; /* Giữ navbar ở trên cùng khi cuộn */
+  top: 0;
+  width: 100%;
+  z-index: 100; /* Đảm bảo navbar luôn nằm trên các phần tử khác */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Hiệu ứng đổ bóng dưới navbar */
+  transition: background-color 0.3s ease; /* Hiệu ứng chuyển đổi màu nền */
 }
 
+/* Thay đổi nền navbar khi cuộn */
+.navbar.scrolled {
+  background-color: rgba(0, 0, 0, 0.9); /* Màu nền đậm hơn khi cuộn xuống */
+}
+
+/* Định nghĩa kiểu dáng cho tiêu đề navbar */
 .navbar-title h1 {
-  font-size: 30px;
+  font-size: 32px; /* Kích thước tiêu đề lớn hơn */
   margin: 0;
-  color: black !important;
-  margin-top: 10px;
+  color: white;
+  font-weight: 600;
 }
 
-.navbar-buttons {
-  margin-top: 10px; /* Đẩy các nút lên cao hơn */
-}
-
-/* Định nghĩa kiểu dáng cho nút */
+/* Định nghĩa kiểu dáng cho các nút */
 .navbar-buttons button {
-  background-color: #f0f0f0;
-  border: 2px solid black;
-  padding: 12px 24px;
-  font-size: 18px;
-  color: black;
+  background-color: #ffffff;
+  border: 2px solid #000;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Tạo hiệu ứng chuyển đổi mượt mà cho nút */
+  border-radius: 4px; /* Bo tròn góc nút */
 }
 
 .navbar-buttons button:hover {
-  background-color: black;
-  color: white; /* Thay đổi màu chữ khi hover */
+  background-color: #000;
+  color: #fff; /* Thay đổi màu nền và màu chữ khi hover */
+  border-color: #fff; /* Đổi màu viền khi hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 20px;
+  }
+
+  .navbar-title h1 {
+    font-size: 24px;
+  }
+
+  .navbar-buttons button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
 }
 
 /* Hero Section */
@@ -396,7 +421,7 @@ select:focus {
 }
 
 .book-btn {
-  background-color: #00bfae;
+  background-color: #042f2c;
   color: white;
   padding: 5px 10px; /* Giảm kích thước nút */
 }
