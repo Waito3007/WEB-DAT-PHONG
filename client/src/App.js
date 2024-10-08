@@ -20,6 +20,7 @@ import HotelDetail from './components/hotel_manager/HotelDetail'; // Nhập Hote
 import AddRoom from './components/hotel_manager/AddRoom';
 import HotelRooms from './components/hotel_manager/HotelRooms'; // Đường dẫn component RoomList
 import RoomDetail from './components/hotel_manager/RoomDetail';
+import Navbar from './components/hotel_manager/NavbarManeger';
 
 
 const AppContent = () => {
