@@ -6,6 +6,7 @@ const userRoutes = require('./routes/account/register'); // Nhập route ngườ
 const loginRoute = require('./routes/account/login');
 const userTableRouter = require('./routes/dashboard/usertable');
 const hotelRoutes = require('./routes/hotel_manager/hotel');
+const Room = require('./routes/hotel_manager/room'); // Đường dẫn mới cho room
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes); // Đăng ký route
 app.use('/api/users', loginRoute); // Route cho đăng nhập
 app.use('/api/usertable', userTableRouter); // Router lấy list người dùng
+app.use('/api/room', Room); // Thêm route cho phòng
 app.use('/api/hotel', hotelRoutes);
 app.get('/', (req, res) => {
   res.send('Welcome to Hotel Booking API');
