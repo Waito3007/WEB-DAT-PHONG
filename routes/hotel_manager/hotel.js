@@ -99,28 +99,56 @@ router.delete('/:id', auth, async (req, res) => {
     res.status(500).json({ msg: 'Đã xảy ra lỗi trong quá trình xóa khách sạn' });
   }
 });
-// Route cập nhật thông tin khách sạn
-router.put('/:hotelId', auth, async (req, res) => {
-  const { name, location, description } = req.body;
-  const hotelId = req.params.hotelId;
+
+router.put('/:hotelId', auth, upload.array('imagehotel', 5), async (req, res) => {
+  const { hotelId } = req.params;
+  const { name, location, description, removedImages } = req.body;
 
   try {
-    const updatedHotel = await Hotel.findByIdAndUpdate(
-      hotelId,
-      { name, location, description }, // Chỉ cập nhật các trường này
-      { new: true } // Trả về dữ liệu đã cập nhật
-    );
-
-    if (!updatedHotel) {
-      return res.status(404).json({ msg: 'Khách sạn không tìm thấy' });
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) {
+      return res.status(404).json({ msg: 'Khách sạn không tồn tại' });
     }
 
-    res.json(updatedHotel); // Trả về thông tin đã cập nhật
-  } catch (error) {
-    console.error('Lỗi khi cập nhật khách sạn:', error);
+    // Lấy URL ảnh mới từ file tải lên
+    const imageRoomUrls = req.files.map(file => file.path);
+
+    // Cập nhật thông tin khách sạn
+    hotel.name = name || hotel.name;
+    hotel.location = location || hotel.location;
+    hotel.description = description !== undefined ? description : hotel.description;
+
+    // Gộp ảnh cũ và ảnh mới
+    hotel.imagehotel = [...hotel.imagehotel, ...imageRoomUrls];
+
+    // Xóa ảnh đã đánh dấu
+    if (removedImages && removedImages.length > 0) {
+      const imagesToRemove = removedImages.filter(image => hotel.imagehotel.includes(image));
+
+      // Xử lý xóa ảnh khỏi Cloudinary
+      for (const imageUrl of imagesToRemove) {
+        const publicId = imageUrl.split('/').pop().split('.')[0]; // Lấy publicId của ảnh từ URL
+        await cloudinary.uploader.destroy(`hotels/${publicId}`, (error, result) => {
+          if (error) {
+            console.error('Lỗi khi xóa ảnh khỏi Cloudinary:', error);
+          } else {
+            console.log('Xóa ảnh khỏi Cloudinary thành công:', result);
+          }
+        });
+      }
+
+      // Xóa ảnh đã đánh dấu khỏi mảng imagehotel
+      hotel.imagehotel = hotel.imagehotel.filter(image => !removedImages.includes(image));
+    }
+
+    await hotel.save();
+    res.status(200).json({ msg: 'Khách sạn đã được cập nhật thành công', hotel });
+  } catch (err) {
+    console.error(err.message);
     res.status(500).json({ msg: 'Lỗi server' });
   }
 });
+
 
 // Route để lấy tất cả khách sạn
 router.get('/', async (req, res) => {
@@ -131,4 +159,29 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: 'Lỗi khi lấy danh sách khách sạn', error });
   }
 });
+
+// Route xóa hình ảnh
+router.put('/:hotelId/remove-image', async (req, res) => {
+  const { hotelId } = req.params;
+  const { imageUrl } = req.body;
+
+  try {
+      // Cập nhật phòng bằng cách xóa URL hình ảnh khỏi mảng imageroom
+      const updatedHotel = await Hotel.findByIdAndUpdate(
+          hotelId,
+          { $pull: { imagehotel: imageUrl } },
+          { new: true }
+      );
+
+      if (!updatedHotel) {
+          return res.status(404).json({ message: 'Không tìm thấy phòng' });
+      }
+
+      res.json(updatedHotel);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Đã xảy ra lỗi' });
+  }
+});
+
 module.exports = router;
