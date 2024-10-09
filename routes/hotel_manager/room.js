@@ -94,8 +94,20 @@ router.put('/:roomId', auth, upload.array('imageroom', 5), async (req, res) => {
     // Xóa ảnh đã được đánh dấu
     if (removedImages && removedImages.length > 0) {
       room.imageroom = room.imageroom.filter(image => !removedImages.includes(image));
-      // Xử lý xóa ảnh khỏi Cloudinary hoặc nơi lưu trữ khác nếu cần
+// Xử lý xóa ảnh khỏi Cloudinary
+for (const imageUrl of imagesToRemove) {
+  const publicId = imageUrl.split('/').pop().split('.')[0]; // Lấy publicId của ảnh từ URL
+  await cloudinary.uploader.destroy(`hotels/${publicId}`, (error, result) => {
+    if (error) {
+      console.error('Lỗi khi xóa ảnh khỏi Cloudinary:', error);
+    } else {
+      console.log('Xóa ảnh khỏi Cloudinary thành công:', result);
     }
+  });
+}
+
+// Xóa ảnh đã đánh dấu khỏi mảng imageroom
+room.imageroom = room.imageroom.filter(image => !removedImages.includes(image));    }
 
     await room.save();
     res.status(200).json({ msg: 'Phòng đã được cập nhật thành công', room });
