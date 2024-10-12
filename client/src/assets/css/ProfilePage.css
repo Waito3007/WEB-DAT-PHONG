@@ -1,0 +1,10 @@
+.profile-banner {
+    position: absolute;
+    width: 1232px;
+    height: 350px;
+    left: 15%;
+    top: 135px;
+    background: url('https://res.cloudinary.com/dackig67m/image/upload/v1728370749/hotels/file_gloxnr.jpg'); /* Thay đổi đường dẫn tới ảnh của bạn */
+    background-size: cover; /* Đảm bảo ảnh lấp đầy toàn bộ diện tích */
+    border-radius: 12px;
+}

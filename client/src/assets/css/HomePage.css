@@ -28,11 +28,11 @@ body {
 }
 /* Navbar */
 .navbar {
-  background-color: var(--navbar-bg-color);
+  background-color: rgba(0, 0, 0); /* Nền bán trong suốt cho navbar */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 20px 40px; /* Giảm padding để bố cục gọn gàng hơn */
   color: white;
   position: fixed;
   top: 0;
@@ -46,12 +46,7 @@ body {
   background-color: white;
 }
 
-.navbar-title h1 {
-  font-size: 32px;
-  margin: 0;
-  color: white;
-  font-weight: 600;
-}
+/* Định nghĩa kiểu dáng cho tiêu đề navbar */
 
 .navbar-buttons button {
   background-color: #ffffff;

@@ -7,6 +7,7 @@ const loginRoute = require('./routes/account/login');
 const userTableRouter = require('./routes/dashboard/usertable');
 const hotelRoutes = require('./routes/hotel_manager/hotel');
 const Room = require('./routes/hotel_manager/room'); 
+const Profile = require('./routes/account/profile'); 
 const HomePage = require('./routes/homepage/tophotel');// Đường dẫn mới cho room
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
@@ -20,10 +21,10 @@ app.use(express.json()); // Để phân tích JSON trong request
 dotenv.config();
 // Middleware
 app.use(express.json());
-
 // Routes
 app.use('/api/users', userRoutes); // Đăng ký route
 app.use('/api/users', loginRoute); // Route cho đăng nhập
+app.use('/api/profile', Profile);
 app.use('/api/usertable', userTableRouter); // Router lấy list người dùng
 app.use('/api/room', Room); // Thêm route cho phòng
 app.use('/api/hotel', hotelRoutes);
