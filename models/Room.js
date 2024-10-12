@@ -9,19 +9,23 @@ const roomSchema = new mongoose.Schema({
 });
 
 // Middleware xóa tham chiếu phòng trong model Hotel khi xóa phòng
-roomSchema.pre('remove', async function (next) {
+roomSchema.pre('findOneAndDelete', async function (next) {
   try {
+    // Lấy ID phòng từ truy vấn
+    const room = await this.model.findOne(this.getFilter());
+
     // Tìm khách sạn mà phòng này thuộc về
-    const hotel = await mongoose.model('Hotel').findById(this.hotel);
+    const hotel = await mongoose.model('Hotel').findById(room.hotel);
     
     if (hotel) {
       // Loại bỏ ID của phòng khỏi danh sách rooms của khách sạn
-      hotel.rooms = hotel.rooms.filter(roomId => roomId.toString() !== this._id.toString());
+      hotel.rooms = hotel.rooms.filter(roomId => roomId.toString() !== room._id.toString());
       
       // Lưu lại tài liệu khách sạn sau khi đã cập nhật danh sách rooms
       await hotel.save();
     }
     
+    next(); // Tiếp tục đến bước tiếp theo
   } catch (error) {
     next(error); // Gọi hàm next với lỗi nếu có
   }
