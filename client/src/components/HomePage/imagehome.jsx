@@ -5,7 +5,7 @@ const ImageHome = () => {
     <div
       className="hero-image"
       style={{
-        backgroundImage: `url(/Hp.png)`, // Đường dẫn tới ảnh trong thư mục public
+        backgroundImage: `url(/figma.png)`, // Đường dẫn tới ảnh trong thư mục public
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

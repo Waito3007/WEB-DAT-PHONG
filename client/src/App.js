@@ -1,9 +1,14 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import NotFoundPage from './pages/NotFoundPage';
-import Login from './components/account/Login';
-import Register from './components/account/Register';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import NotFoundPage from "./pages/NotFoundPage";
+import Login from "./components/account/Login";
+import Register from "./components/account/Register";
 // Admin
 import Sidebar from "./components/dashboard/common/Sidebar";
 import OverviewPage from "./pages/OverviewPage";
@@ -13,40 +18,45 @@ import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
+import SearchPage from "./pages/SearchPage";
 // Hotel Manager
-import HotelAdd from './components/hotel_manager/AddHotel';
-import MyHotel from './components/hotel_manager/MyHotel';
-import HotelDetail from './components/hotel_manager/HotelDetail'; // Nhập HotelDetail
-import AddRoom from './components/hotel_manager/AddRoom';
-import HotelRooms from './components/hotel_manager/HotelRooms'; // Đường dẫn component RoomList
-import RoomDetail from './components/hotel_manager/RoomDetail';
-
+import HotelAdd from "./components/hotel_manager/AddHotel";
+import MyHotel from "./components/hotel_manager/MyHotel";
+import HotelDetail from "./components/hotel_manager/HotelDetail"; // Nhập HotelDetail
+import AddRoom from "./components/hotel_manager/AddRoom";
+import HotelRooms from "./components/hotel_manager/HotelRooms"; // Đường dẫn component RoomList
+import RoomDetail from "./components/hotel_manager/RoomDetail";
+import SearchPlaces from "./components/HomePage/SearchPlaces";
 
 const AppContent = () => {
   const location = useLocation();
 
   const isAdminPage = [
-    '/settings',
-    '/analytics',
-    '/orders',
-    '/sales',
-    '/users',
-    '/hotelmanager',
-    '/overview'
+    "/settings",
+    "/analytics",
+    "/orders",
+    "/sales",
+    "/users",
+    "/hotelmanager",
+    "/overview",
   ].includes(location.pathname);
 
   return (
-    <div className={`flex h-screen ${isAdminPage ? 'bg-blue-900' : 'bg-gray-100'} text-gray-100 overflow-hidden`}>
+    <div
+      className={`flex h-screen ${
+        isAdminPage ? "bg-blue-900" : "bg-gray-100"
+      } text-gray-100 overflow-hidden`}
+    >
       {isAdminPage && (
-        <div className='fixed inset-0 z-0'>
-          <div className='absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80' />
-          <div className='absolute inset-0 backdrop-blur-sm' />
+        <div className="fixed inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80" />
+          <div className="absolute inset-0 backdrop-blur-sm" />
         </div>
       )}
       {isAdminPage && <Sidebar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} /> 
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/hotelmanager" element={<HotelManagerPage />} />
@@ -60,7 +70,10 @@ const AppContent = () => {
         <Route path="/myhotel" element={<MyHotel />} />
         <Route path="/hotels/:hotelId/rooms" element={<HotelRooms />} />
         <Route path="/room/:roomId" element={<RoomDetail />} />
-        <Route path="/hotels/:hotelId" element={<HotelDetail />} /> {/* Route cho HotelDetail */}
+        <Route path="/hotels/:hotelId" element={<HotelDetail />} />{" "}
+        <Route path="/searchplaces" element={<SearchPlaces />} />
+        <Route path="/SearchPage" element={<SearchPage />} />
+        {/* Route cho HotelDetail */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

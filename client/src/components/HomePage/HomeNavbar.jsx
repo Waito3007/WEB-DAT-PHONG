@@ -20,8 +20,8 @@ const HomeNavbar = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "20px 40px",
-          backgroundColor: "rgba(0`, 0, 0, 0.7)", // Nền bán trong suốt
+          padding: "5px 20px",
+
           color: "white",
           width: "100%",
           position: "fixed", // Cố định trên cùng
@@ -31,7 +31,7 @@ const HomeNavbar = () => {
       >
         <div className="navbar-title">
           <h1 style={{ color: "white", fontSize: "30px", margin: 0 }}>
-            Stay Night
+            staynight
           </h1>
         </div>
         <div className="navbar-buttons">
@@ -60,7 +60,7 @@ const buttonStyle = {
   backgroundColor: "#f0f0f0",
   border: "2px solid black",
   padding: "10px 20px",
-  fontSize: "16px",
+  fontSize: "12px",
   color: "black",
   cursor: "pointer",
   transition: "background-color 0.3s ease",
