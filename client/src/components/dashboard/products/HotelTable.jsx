@@ -10,9 +10,6 @@ const PRODUCT_DATA = [
 	{ id: 5, name: "Coffee Maker", category: "Home", price: 79.99, stock: 78, sales: 720 },
 ];
 
-const HotelTable = () => {
-	const [searchTerm, setSearchTerm] = useState("");
-	const [filteredProducts, setFilteredProducts] = useState(PRODUCT_DATA);
 
 	const handleSearch = (e) => {
 		const term = e.target.value.toLowerCase();
