@@ -69,7 +69,6 @@ const HotelTable = () => {
 							</th>
 						</tr>
 					</thead>
-
 					<tbody className='divide-y divide-gray-700'>
 						{filteredProducts.map((product) => (
 							<motion.tr
