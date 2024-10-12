@@ -23,7 +23,7 @@ const Login = () => {
         localStorage.setItem('token', data.token); // Store token
         localStorage.setItem('user', JSON.stringify(data.user)); // Store user info
         message.success('Đăng nhập thành công'); // Sử dụng Ant Design message
-        navigate('/addhotel'); // Redirect to profile page
+        navigate('/'); // Redirect to profile page
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
         message.error(data.msg || 'Có lỗi xảy ra'); // Sử dụng Ant Design message

@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 import Login from './components/account/Login';
 import Register from './components/account/Register';
+import Profile from './pages/ProfilePage';
 // Admin
 import Sidebar from "./components/dashboard/common/Sidebar";
 import OverviewPage from "./pages/OverviewPage";
@@ -48,6 +49,7 @@ const AppContent = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/hotelmanager" element={<HotelManagerPage />} />
         <Route path="/users" element={<UsersPage />} />
