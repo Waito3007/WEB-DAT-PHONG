@@ -118,13 +118,36 @@ room.imageroom = room.imageroom.filter(image => !removedImages.includes(image));
 });
 
 
+// // Xóa phòng
+// router.delete('/:roomId', auth, async (req, res) => {
+//   try {
+//     await Room.findByIdAndDelete(req.params.roomId);
+//     //Xóa phòng và kích hoạt middleware 'remove'
+//     await room.remove();
+//     res.json({ message: 'Phòng đã được xóa' });
+//   } catch (error) {
+//     res.status(500).json({ message: 'Lỗi khi xóa phòng' });
+//   }
+// });
+
 // Xóa phòng
 router.delete('/:roomId', auth, async (req, res) => {
+  const roomId = req.params.roomId;
   try {
-    await Room.findByIdAndDelete(req.params.roomId);
+    // Tìm phòng theo roomId
+    const room = await Room.findById(roomId);
+    
+    // Nếu không tìm thấy phòng, trả về lỗi 404
+    if (!room) {
+      return res.status(404).json({ message: 'Không tìm thấy phòng' });
+    }
+    
+    // Xóa phòng và kích hoạt middleware 'remove'
+    await room.remove(); // Gọi phương thức remove trên đối tượng phòng đã tìm thấy
+
     res.json({ message: 'Phòng đã được xóa' });
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi khi xóa phòng' });
+    res.status(500).json({ message: 'Lỗi khi xóa phòng', error: error.message });
   }
 });
 

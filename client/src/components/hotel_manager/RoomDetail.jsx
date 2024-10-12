@@ -94,6 +94,8 @@ const RoomDetail = () => {
     }
   };
 
+  
+  
   const handleImageChange = ({ fileList: newFileList }) => {
     setFileList(newFileList.map(file => file.originFileObj || file));
   };
