@@ -22,7 +22,7 @@
     "antd": "^5.21.1",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
-    "cloudinary": "^1.21.0",
+    "cloudinary": "^1.41.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
