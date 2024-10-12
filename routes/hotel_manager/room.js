@@ -79,7 +79,6 @@ router.get('/:roomId', auth, async (req, res) => {
 });
 
 // Route cập nhật phòng
-// Route cập nhật phòng
 router.put('/:roomId', auth, upload.array('imageroom', 5), async (req, res) => {
   const { roomId } = req.params;
   const { type, price, availability, removedImages } = req.body;
