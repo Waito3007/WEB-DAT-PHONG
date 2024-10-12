@@ -13,11 +13,11 @@ body {
 
 /* Navbar */
 .navbar {
-  background-color: rgba(0, 0, 0, 0.8); /* Nền bán trong suốt cho navbar */
+  background-color: rgba(0, 0, 0); /* Nền bán trong suốt cho navbar */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px; /* Giảm padding để bố cục gọn gàng hơn */
+  padding: 20px 40px; /* Giảm padding để bố cục gọn gàng hơn */
   color: white;
   position: fixed; /* Giữ navbar ở trên cùng khi cuộn */
   top: 0;
@@ -33,12 +33,7 @@ body {
 }
 
 /* Định nghĩa kiểu dáng cho tiêu đề navbar */
-.navbar-title h1 {
-  font-size: 32px; /* Kích thước tiêu đề lớn hơn */
-  margin: 0;
-  color: white;
-  font-weight: 600;
-}
+
 
 /* Định nghĩa kiểu dáng cho các nút */
 .navbar-buttons button {

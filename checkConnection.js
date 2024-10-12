@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Rate = require('./models/Rate'); // Đường dẫn tới model Rate của bạn
 
 // Giả sử bạn có sẵn ObjectId của hotel và user
-const hotelId = '66fed7b0120035018573c219'; // Thay bằng ObjectId thật của hotel
+const hotelId = '67057dc7bedf78f9ddfcf82e'; // Thay bằng ObjectId thật của hotel
 const userId = '66edafedab0ffb31c524442f'; // Thay bằng ObjectId thật của user
 
 // Tạo một document mới cho Rate
@@ -12,8 +12,8 @@ const createRate = async () => {
     const newRate = new Rate({
       hotel: hotelId,             // ObjectId của hotel
       user: userId,               // ObjectId của user
-      rating: 8,                  // Điểm đánh giá (ví dụ: 8)
-      comment: 'Khách sạn tuyệt vời, dịch vụ rất tốt!', // Bình luận (nếu có)
+      rating: 9,                  // Điểm đánh giá (ví dụ: 8)
+      comment: 'Khách sạn bên ngoài có vẻ dơ nhưng đã được dọn dẹp, tha thứ được', // Bình luận (nếu có)
     });
 
     // Lưu document mới vào database
