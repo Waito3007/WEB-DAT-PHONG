@@ -1,12 +1,10 @@
-// Footer.jsx
 import React from "react";
 
 const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-content">
-        {/* Đặt Stay Night trong cùng một thẻ h3 để chúng nằm ngang */}
-        <h3 className="footer-title">Stay Night</h3>
+        <h3 className="footer-title">Stay night</h3>
         <div className="social-icons">
           <a
             href="https://www.facebook.com"
@@ -45,9 +43,9 @@ const Footer = () => {
               <br />
               HCM
               <br />
-              Cần thơ
+              Cần Thơ
               <br />
-              Spa
+              Sapa
             </p>
           </div>
           <div>
@@ -70,12 +68,10 @@ const Footer = () => {
               Hướng dẫn du lịch Seng
               <br />
               Hướng dẫn du lịch Nghĩa
-              <br />
-              Hướng dẫn du lịch Nhân
             </p>
           </div>
           <div>
-            <h4>Về chung tôi</h4>
+            <h4>Về chúng tôi</h4>
             <p>
               Du lịch bền vững
               <br />
@@ -83,7 +79,7 @@ const Footer = () => {
             </p>
           </div>
           <div>
-            <h4>Liên hệ với chung tôi</h4>
+            <h4>Liên hệ với chúng tôi</h4>
             <p>
               Du lịch bền vững
               <br />
