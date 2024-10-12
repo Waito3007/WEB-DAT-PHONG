@@ -129,6 +129,7 @@ body {
   width: 100%;
   margin: 20px auto;
   text-align: left; /* Căn trái cho các thành phần */
+  margin-top:-250px;
 }
 
 .input-group {
