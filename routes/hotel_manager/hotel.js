@@ -74,51 +74,47 @@ router.get('/:hotelId', auth, async (req, res) => {
 });
 
 // Route xóa khách sạn
-router.delete('/:id', auth, async (req, res) => {
-  const hotelId = req.params.id; // Lấy ID khách sạn từ tham số URL
-  const { password } = req.body; // Lấy mật khẩu từ body yêu cầu
+router.delete('/:hotelId', auth, async (req, res) => {
+  const { hotelId } = req.params;
+  const isAdmin = req.user && req.user.role === 'Admin'; // Kiểm tra xem người dùng có phải là admin không
 
   try {
-    // Tìm user theo ID đã xác thực
-    const user = await User.findById(req.user.userId);
-    if (!user) {
-      return res.status(404).json({ msg: 'Người dùng không tìm thấy' });
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) {
+      return res.status(404).json({ msg: 'Khách sạn không tồn tại' });
+    }
+
+    // Nếu người dùng là admin, không cần xác nhận mật khẩu
+    if (isAdmin) {
+      await Hotel.findByIdAndDelete(hotelId);
+      return res.json({ msg: 'Khách sạn đã được xóa thành công' }); // Không trả về tên khách sạn
+    }
+
+    // Nếu không phải admin, yêu cầu xác nhận mật khẩu
+    const { password } = req.body; // Nhận mật khẩu từ client
+    if (!password) {
+      return res.status(400).json({ msg: 'Cần phải nhập mật khẩu để xóa khách sạn' });
     }
 
     // Kiểm tra mật khẩu
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await bcrypt.compare(password, req.user.password); // So sánh mật khẩu
     if (!isMatch) {
-      return res.status(400).json({ msg: 'Mật khẩu không chính xác' });
+      return res.status(403).json({ msg: 'Mật khẩu không chính xác' });
     }
 
-    // Xóa khách sạn
-    const hotel = await Hotel.findById(hotelId);
-    if (!hotel) {
-      return res.status(404).json({ msg: 'Khách sạn không tìm thấy' });
-    }
-
-    // Xóa tất cả các phòng thuộc khách sạn
-    await Room.deleteMany({ hotel: hotelId });
-
-    // Xóa hình ảnh từ Cloudinary
-    const publicIds = hotel.imagehotel.map(url => getPublicIdFromUrl(url)).filter(id => id);
-    
-    for (const publicId of publicIds) {
-      try {
-        await cloudinary.uploader.destroy(publicId);
-      } catch (error) {
-        console.error('Lỗi khi xóa ảnh khỏi Cloudinary:', error);
-      }
-    }
-
-    // Xóa khách sạn
+    // Nếu mật khẩu chính xác, xóa khách sạn
     await Hotel.findByIdAndDelete(hotelId);
-    res.json({ message: 'Khách sạn và các phòng đã được xóa' });
+    return res.json({ msg: 'Khách sạn đã được xóa thành công' }); // Không trả về tên khách sạn
+
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Lỗi khi xóa khách sạn', error: error.message });
+    console.error('Lỗi khi xóa khách sạn:', error);
+    return res.status(500).json({ msg: 'Đã xảy ra lỗi trong quá trình xóa khách sạn' });
   }
 });
+
+
+
+
 
 
 // Route cập nhật khách sạn

@@ -17,4 +17,19 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+const fetchUserInfo = async () => {
+  try {
+    const response = await axios.get('/api/profile/me', {
+      withCredentials: true, // Nếu cần gửi cookie để xác thực
+    });
+    if (response.data && response.data.role) {
+      setIsAdmin(response.data.role === 'Admin');
+    }
+  } catch (error) {
+    console.error('Lỗi khi lấy thông tin người dùng:', error);
+  }
+};
+
+
+
 module.exports = router;
