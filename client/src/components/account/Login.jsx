@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Typography, message, Flex } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import '../../App.css';
 import { Content } from 'antd/es/layout/layout';
-
-const { Title } = Typography;
 
 const Login = () => {
   const [error, setError] = useState(null);
@@ -38,63 +36,84 @@ const Login = () => {
   };
 
   return (
-    <div className="background flex items-center justify-center" > {/* Thêm class background ở đây */}
-      <div style={{ backgroundColor: 'rgb(1 2 2 / 42%)' }} className="bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-auto ">
-        <Title level={2} style={{ textAlign: 'center', color: 'yellow' }}>
-          Đăng nhập
-        </Title>
+    <div className="w-[1440px] h-[1024px] pl-[89px] pr-[102px] py-[104px] bg-white justify-start items-start gap-[119px] inline-flex">
+      <div className="w-[512px] self-stretch flex-col justify-start items-start gap-12 inline-flex">
+        <div className="self-stretch h-[49px] flex-col justify-start items-start gap-4 flex">
+          <div className="text-center text-black text-[40px] font-normal font-['Alexandria']">
+            Đăng nhập tài khoản của bạn
+          </div>
+        </div>
         <Form
           name="login"
           onFinish={handleLogin}
           layout="vertical"
+          className="self-stretch h-[451px] flex-col justify-start items-start gap-10 flex"
         >
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[{ required: true, message: 'Vui lòng nhập email!' }]}
-          >
-            <Input
-              type="email"
-              style={{
-                borderColor: 'black', // Viền màu đen
-              }}
-              required
-            />
-          </Form.Item>
+          <div className="self-stretch h-[177px] flex-col justify-start items-start gap-6 flex">
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[{ required: true, message: 'Vui lòng nhập email!' }]}
+            >
+              <Input
+                type="email"
+                style={{
+                  borderColor: 'black',
+                }}
+                className="w-[512px] h-14 rounded-tl rounded-tr"
+                required
+              />
+            </Form.Item>
 
-          <Form.Item
-            label="Mật khẩu"
-            name="password"
-            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
-          >
-            <Input.Password
-              style={{
-                borderColor: 'black', // Viền màu đen
-              }}
-              required
-            />
-          </Form.Item>
+            <Form.Item
+              label="Mật khẩu"
+              name="password"
+              rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
+            >
+              <Input.Password
+                style={{
+                  borderColor: 'black',
+                }}
+                className="w-[512px] h-14 rounded-tl rounded-tr"
+                required
+              />
+            </Form.Item>
+          </div>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          <div className="buttonLogin">
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{
-                width: '100%',
-                backgroundColor: '#ffffff',
-                color: 'white',
-                borderColor: 'black', // Viền màu đen
-                textAlign:'center',
-              }}
-            >
-              Đăng nhập
-            </Button>
-          </Form.Item>
+          <div className="self-stretch justify-start items-center gap-[252px] inline-flex">
+            <div className="w-[512px] text-right text-[#ff8682] text-sm font-medium font-['Montserrat']">
+              Quên mật khẩu
+            </div>
+          </div>
+
+          <div className="flex-col justify-start items-start gap-4 flex">
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="self-stretch h-12 px-4 py-2 bg-black rounded justify-center items-center gap-1"
+              >
+                Đăng nhập
+              </Button>
+            </Form.Item>
           </div>
         </Form>
+
+        <div className="self-stretch text-center">
+          <span style="text-[#112211] text-sm font-medium font-['Montserrat']">Bạn chưa có tài khoản? </span>
+          <span style="text-[#ff8682] text-sm font-semibold font-['Montserrat']">Đăng ký</span>
+        </div>
+      </div>
+      <div className="w-[618px] h-[816px] relative">
+        <img className="w-[616px] h-[816px] left-0 top-0 absolute rounded-[30px]" src="https://via.placeholder.com/616x816" alt="Login Image" />
+        <div className="w-[616px] h-[58px] left-[2px] top-[816px] absolute bg-gradient-to-b from-black to-black rounded-tl-[30px] rounded-tr-[30px]" />
+        <div className="h-2.5 left-[274px] top-[782px] absolute justify-start items-start gap-2 inline-flex">
+          <div className="w-8 h-2.5 bg-[#8dd3bb] rounded-[5px]" />
+          <div className="w-2.5 h-2.5 bg-white rounded-full" />
+          <div className="w-2.5 h-2.5 bg-white rounded-full" />
+        </div>
       </div>
     </div>
   );

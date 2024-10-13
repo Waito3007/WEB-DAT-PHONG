@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
+
 const Register = () => {
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role] = useState('Customer'); // Mặc định là 'Customer'
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -13,21 +15,27 @@ const Register = () => {
     e.preventDefault();
     setError(null);
 
-    const registrationDate = new Date().toISOString(); // Lấy ngày hiện tại
+    // Kiểm tra mật khẩu và mật khẩu nhập lại
+    if (password !== confirmPassword) {
+      setError('Mật khẩu và mật khẩu nhập lại không khớp');
+      return;
+    }
+
+    const registrationDate = new Date().toISOString();
 
     try {
       const response = await fetch('/api/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, role, registrationDate }), // Gửi registrationDate
+        body: JSON.stringify({ firstName, lastName, email, password, registrationDate }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('token', data.token); // Store token
-        localStorage.setItem('user', JSON.stringify(data.user)); // Store user info
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
         alert('Đăng ký thành công');
-        navigate('/profile'); // Redirect to profile page
+        navigate('/profile');
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
       }
@@ -38,23 +46,40 @@ const Register = () => {
   };
 
   return (
-    <div className="background flex items-center justify-center min-h-screen bg-gray-800 w-full">
-      <div style={{ backgroundColor: 'rgb(1 2 2 / 42%)' }}  className=" p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-center mb-6">Đăng Ký</h2>
+    <div className="w-[1440px] h-[1024px] pl-[104px] pr-[161px] py-[104px] bg-white justify-start items-start gap-[47px] inline-flex">
+      <div className="w-[488px] h-[816px] relative">
+        <img className="w-[486.42px] h-[816px] left-0 top-0 absolute rounded-[30px]" src="https://via.placeholder.com/486x816" alt="Register" />
+      </div>
+
+      <div className="w-[640px] self-stretch flex-col justify-start items-start gap-12 inline-flex">
+        <h2 className="text-black text-[40px] font-normal">Đăng Ký</h2>
         {error && <div className="text-red-500 mb-4">{error}</div>}
-        <form onSubmit={handleRegister}>
-          <div className="mb-4">
-            <label className="block text-gray-300">Họ Tên</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md"
-              required
-            />
+        <form onSubmit={handleRegister} className="self-stretch h-[618px] flex-col justify-start items-start gap-10 flex">
+          <div className="flex gap-6">
+            <div className="flex flex-col">
+              <label className="text-[#1c1b1f] text-sm">Tên</label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="text-[#1c1b1f] text-sm">Họ</label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
+
+          <div className="flex flex-col">
+            <label className="text-[#1c1b1f] text-sm">Email</label>
             <input
               type="email"
               value={email}
@@ -63,8 +88,9 @@ const Register = () => {
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Mật Khẩu</label>
+
+          <div className="flex flex-col">
+            <label className="text-[#1c1b1f] text-sm">Mật khẩu</label>
             <input
               type="password"
               value={password}
@@ -73,10 +99,23 @@ const Register = () => {
               required
             />
           </div>
-          <div className="phuong flex items-center justify-center ">
-            <button type="submit" className="w-1/2 bg-blue-500 text-white py-2 rounded-md hover:bg-gradient-to-r hover:from-pink-200 hover:to-pink-600 transition duration-800 ease-in-out">Đăng Ký</button>
 
-          </div>          
+          <div className="flex flex-col">
+            <label className="text-[#1c1b1f] text-sm">Nhập lại mật khẩu</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+
+          <div className="flex items-center justify-center">
+            <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md">
+              Đăng Ký
+            </button>
+          </div>
         </form>
       </div>
     </div>
