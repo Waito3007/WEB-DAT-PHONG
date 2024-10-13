@@ -1,73 +1,103 @@
-import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HomeNavbar = () => {
-  const navigate = useNavigate(); // Khởi tạo navigate
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null); // Trạng thái lưu thông tin người dùng
+  const [menuOpen, setMenuOpen] = useState(false); // Trạng thái mở menu
+
+  // Hàm gọi API để lấy thông tin người dùng
+  const fetchUser = async () => {
+    try {
+      const response = await fetch('/api/profile/me', {
+        method: 'GET',
+        credentials: 'include' // Đảm bảo cookie được gửi kèm theo yêu cầu
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData); // Cập nhật thông tin người dùng
+      } else {
+        console.error("Lỗi lấy thông tin người dùng:", response.status);
+      }
+    } catch (error) {
+      console.error("Lỗi mạng:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser(); // Gọi hàm lấy thông tin người dùng khi component được mount
+  }, []);
 
   const handleLogin = () => {
-    navigate("/login"); // Chuyển đến trang /login
+    navigate("/login");
   };
 
   const handleSignUp = () => {
-    navigate("/register"); // Chuyển đến trang /register
+    navigate("/register");
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen); // Đổi trạng thái mở menu
+  };
+
+  const handleLogout = async () => {
+    try {
+      // Gọi API để đăng xuất (nếu cần)
+      await fetch('/api/profile', {
+        method: 'POST',
+        credentials: 'include' // Đảm bảo cookie được gửi kèm theo yêu cầu
+      });
+      
+      // Xóa thông tin người dùng
+      setUser(null);
+      setMenuOpen(false); // Đóng menu nếu đang mở
+
+      // Điều hướng về trang đăng nhập
+      navigate("/login");
+    } catch (error) {
+      console.error("Lỗi khi đăng xuất:", error);
+    }
   };
 
   return (
-    <div
-      className="navbar"
-      style={{
-        backgroundImage: `url(/Hp.png)`, // Đường dẫn đến ảnh trong thư mục public
-        backgroundSize: "cover", // Đảm bảo ảnh phủ đầy
-        backgroundPosition: "center", // Căn giữa ảnh
-        backgroundRepeat: "no-repeat", // Không lặp lại ảnh
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-start", // Căn phần tử lên trên
-        padding: "20px 40px", // Tăng khoảng cách trên để kéo phần tử lên cao hơn
-        color: "white",
-        height: "60vh", // Chiều cao bằng chiều cao của viewport
-        width: "100%", // Đảm bảo navbar trải rộng toàn bộ chiều ngang
-        position: "relative", // Để có thể đặt navbar lên ảnh
-        zIndex: 10, // Đảm bảo navbar nằm trên tất cả các phần tử khác
-      }}
-    >
-      <div className="navbar-title" style={{ marginTop: "10px" }}>
-        {" "}
-        {/* Đẩy tiêu đề lên cao hơn */}
-        <h1
-          className="hotel-title"
-          style={{ color: "white", fontSize: "30px", margin: 0 }}
-        >
-          Stay Night
-        </h1>
+    <div className="navbar flex justify-between items-center p-4 bg-gray-800">
+      <div className="navbar-title">
+        <h1 className="text-white text-2xl m-0">staynight</h1>
       </div>
-      <div className="navbar-buttons" style={{ marginTop: "10px" }}>
-        {" "}
-        {/* Đẩy nút lên cao hơn */}
-        <button className="login-btn" onClick={handleLogin} style={buttonStyle}>
-          Đăng nhập
-        </button>
-        <button
-          className="signup-btn"
-          onClick={handleSignUp}
-          style={buttonStyle}
-        >
-          Đăng ký
-        </button>
+      <div className="navbar-buttons relative">
+        {user ? (
+          <div className="user-avatar cursor-pointer" onClick={toggleMenu}>
+            <img 
+              src={user.avatar || "https://res-console.cloudinary.com/dackig67m/thumbnails/v1/image/upload/v1728362097/aG90ZWxzL2ZpbGVfbXk5c2l1/drilldown"} 
+              alt="Avatar" 
+              className="w-10 h-10 rounded-full" 
+            />
+            {/* Menu dropdown */}
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-50">
+                <ul className="py-2">
+                  <li className="px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">Hồ sơ cá nhân của bạn</li>
+                  <li className="px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">Khách sạn yêu thích</li>
+                  <li className="px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">đặt phòng của bạn</li>
+                  <li className="px-4 py-2 text-black hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>Đăng xuất</li>
+                </ul>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <button className="login-btn bg-gray-300 border-2 border-black py-2 px-4 text-black text-lg mr-2" onClick={handleLogin}>
+              Đăng nhập
+            </button>
+            <button className="signup-btn bg-gray-300 border-2 border-black py-2 px-4 text-black text-lg" onClick={handleSignUp}>
+              Đăng ký
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
-};
-
-// Định nghĩa kiểu dáng cho nút
-const buttonStyle = {
-  backgroundColor: "#f0f0f0",
-  border: "2px solid black",
-  padding: "10px 20px",
-  fontSize: "16px",
-  color: "black",
-  cursor: "pointer",
-  transition: "background-color 0.3s ease",
 };
 
 export default HomeNavbar;

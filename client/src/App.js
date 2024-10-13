@@ -32,7 +32,7 @@ const AppContent = () => {
     '/sales',
     '/users',
     '/hotelmanager',
-    '/overview'
+    '/overview','/myhotel'
   ].includes(location.pathname);
 
   return (
