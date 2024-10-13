@@ -12,14 +12,16 @@ const HotelTable = () => {
   const [hotelsPerPage] = useState(5);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentHotel, setCurrentHotel] = useState(null);
   const [fileList, setFileList] = useState([]);
   const [password, setPassword] = useState("");
   const [removedImages, setRemovedImages] = useState([]);
+  const [isEditing, setIsEditing] = useState(false); // Trạng thái chế độ chỉnh sửa
   const [form] = Form.useForm();
-  const [isAdmin, setIsAdmin] = useState(false); // Khởi tạo biến isAdmin
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false); // Kiểm tra người dùng có phải admin không
 
+  // Lấy thông tin người dùng để kiểm tra quyền admin
   useEffect(() => {
     // Gọi API để lấy thông tin người dùng
     const fetchUserInfo = async () => {
@@ -52,7 +54,7 @@ const HotelTable = () => {
     fetchHotel();
   }, [fetchHotel]);
 
-  // Show modal for editing
+  // Hiển thị modal để chỉnh sửa khách sạn
   const showModal = (hotel) => {
     setCurrentHotel(hotel);
     setFileList(hotel.imagehotel.map((url) => ({ uid: url, url }))); // Update fileList with current images
@@ -64,7 +66,10 @@ const HotelTable = () => {
     setIsModalVisible(true);
   };
 
-  // Update hotel
+  
+  
+
+  // Cập nhật khách sạn
   const handleSave = async (values) => {
     setIsUpdating(true);
     try {
@@ -86,7 +91,7 @@ const HotelTable = () => {
       });
       message.success("Khách sạn đã được cập nhật thành công");
       setIsModalVisible(false);
-      fetchHotel(); // Update hotel list
+      fetchHotel(); // Cập nhật danh sách khách sạn
     } catch (error) {
       message.error("Đã xảy ra lỗi khi cập nhật khách sạn");
     } finally {
@@ -98,7 +103,7 @@ const HotelTable = () => {
     setFileList(newFileList.map((file) => file.originFileObj || file));
   };
 
-  // Show delete modal
+  // Hiển thị modal để xóa khách sạn
   const showDeleteModal = (hotel) => {
     setCurrentHotel(hotel);
     setIsDeleteModalVisible(true);
@@ -174,19 +179,21 @@ const HotelTable = () => {
     }
   };
 
-  // Handle search input
+  // Xử lý khi người dùng nhập tìm kiếm
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
     setCurrentPage(1);
   };
 
+  // Tìm kiếm khách sạn
   const filteredHotels = hotels.filter(
     (hotel) =>
       hotel.name.toLowerCase().includes(searchTerm) ||
       hotel.location.toLowerCase().includes(searchTerm)
   );
 
+  // Phân trang
   const indexOfLastHotel = currentPage * hotelsPerPage;
   const indexOfFirstHotel = indexOfLastHotel - hotelsPerPage;
   const currentHotels = filteredHotels.slice(
@@ -274,7 +281,7 @@ const HotelTable = () => {
                     <Trash2 size={18} />
                   </button>
                 </td>
-              </motion.tr>
+              </tr>
             ))}
           </tbody>
         </table>
@@ -296,15 +303,16 @@ const HotelTable = () => {
               {number}
             </button>
           ))}
-        </div>
-      )}
+        </ul>
+      </div>
 
-      {/* Update Hotel Modal */}
+      {/* Modal chỉnh sửa khách sạn */}
       <Modal
-        title="Cập nhật khách sạn"
+        title='Chỉnh sửa khách sạn'
         visible={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
+        className='modal-update'
       >
         <Form form={form} onFinish={handleSave}>
           <Form.Item
@@ -325,42 +333,49 @@ const HotelTable = () => {
           >
             <Input.TextArea placeholder="Mô tả" />
           </Form.Item>
-          <Form.Item>
+
+          <Form.Item label='Hình ảnh'>
             <Upload
+              listType='picture-card'
               fileList={fileList}
               onChange={handleImageChange}
               onRemove={handleRemoveImage}
-              listType="picture"
-              multiple
-              beforeUpload={() => false} // Prevent auto upload
+              beforeUpload={() => false} // Ngăn không cho upload ngay lập tức
             >
-              <Button icon={<UploadOutlined />}>Tải lên hình ảnh</Button>
+              {fileList.length < 5 && (
+                <div>
+                  <UploadOutlined />
+                  <div style={{ marginTop: 8 }}>Tải lên</div>
+                </div>
+              )}
             </Upload>
           </Form.Item>
+
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={isUpdating}>
-              Cập nhật
+            <Button type='primary' htmlType='submit' loading={isUpdating}>
+              Lưu thay đổi
             </Button>
           </Form.Item>
         </Form>
       </Modal>
 
-      {/* Delete Confirmation Modal */}
+      {/* Modal xóa khách sạn */}
       <Modal
-        title="Xóa khách sạn"
-        visible={isDeleteModalVisible}
-        onCancel={() => setIsDeleteModalVisible(false)}
-        footer={[
-          <Button key="cancel" onClick={() => setIsDeleteModalVisible(false)}>
-            Hủy
-          </Button>,
-          <Button key="delete" type="danger" onClick={handleDeleteOk}>
-            Xóa
-          </Button>,
-        ]}
-      >
-        <p>Bạn có chắc chắn muốn xóa khách sạn này không?</p>
-      </Modal>
+  title="Xóa Khách Sạn"
+  visible={isDeleteModalVisible}
+  onOk={handleDeleteConfirm}
+  onCancel={() => setIsDeleteModalVisible(false)}
+>
+  <p>Bạn có chắc chắn muốn xóa khách sạn này không?</p>
+  <Input
+    type="password"
+    placeholder="Nhập mật khẩu để xác nhận"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+  />
+</Modal>
+
+
     </motion.div>
   );
 };
