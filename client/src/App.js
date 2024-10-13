@@ -16,13 +16,9 @@ import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
 import HotelAdd from './components/hotel_manager/AddHotel';
 import MyHotel from './components/hotel_manager/MyHotel';
-<<<<<<< HEAD
 import HotelDetail from './components/hotel_manager/HotelDetail'; // Nhập HotelDetail
 // DetailHotel 
 import HotelDetailPage from './components/DetailHotel/HotelDetailPage';
-=======
-import HotelDetail from './components/hotel_manager/HotelDetail';
->>>>>>> 9185dba58d152a9175473a87bc98bc8971014ab1
 
 const AppContent = ({ hotels, addNewHotel }) => {
   const location = useLocation();
