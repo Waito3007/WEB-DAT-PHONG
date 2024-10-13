@@ -1,10 +1,11 @@
-import React from 'react';
+// App.js
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 import Login from './components/account/Login';
 import Register from './components/account/Register';
-// Admin
+import HotelPage from './components/HomePage/HotelPage';
 import Sidebar from "./components/dashboard/common/Sidebar";
 import OverviewPage from "./pages/OverviewPage";
 import HotelManagerPage from "./pages/HotelManagerPage";
@@ -13,16 +14,18 @@ import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
-// Hotel Manager
 import HotelAdd from './components/hotel_manager/AddHotel';
 import MyHotel from './components/hotel_manager/MyHotel';
+<<<<<<< HEAD
 import HotelDetail from './components/hotel_manager/HotelDetail'; // Nhập HotelDetail
 // DetailHotel 
 import HotelDetailPage from './components/DetailHotel/HotelDetailPage';
+=======
+import HotelDetail from './components/hotel_manager/HotelDetail';
+>>>>>>> 9185dba58d152a9175473a87bc98bc8971014ab1
 
-const AppContent = () => {
+const AppContent = ({ hotels, addNewHotel }) => {
   const location = useLocation();
-
   const isAdminPage = [
     '/settings',
     '/analytics',
@@ -35,27 +38,22 @@ const AppContent = () => {
 
   return (
     <div className={`flex h-screen ${isAdminPage ? 'bg-blue-900' : 'bg-gray-100'} text-gray-100 overflow-hidden`}>
-      {isAdminPage && (
-        <div className='fixed inset-0 z-0'>
-          <div className='absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80' />
-          <div className='absolute inset-0 backdrop-blur-sm' />
-        </div>
-      )}
       {isAdminPage && <Sidebar />}
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} /> 
+        <Route path="/" element={<HomePage hotels={hotels} />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/hotelmanager" element={<HotelManagerPage />} />
+        <Route path="/hotelpage" element={<HotelPage hotels={hotels} />} />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/sales" element={<SalesPage />} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/addhotel" element={<HotelAdd />} />
-        <Route path="/myhotel" element={<MyHotel />} />
-        <Route path="/hotels/:hotelId" element={<HotelDetail />} /> {/* Route cho HotelDetail */}
+        <Route path="/addhotel" element={<HotelAdd onHotelAdded={addNewHotel} />} />
+        <Route path="/myhotel" element={<MyHotel hotels={hotels} />} />
+        <Route path="/hotels/:hotelId" element={<HotelDetail />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/HotelDetailPage" element={<HotelDetailPage />} />
       </Routes>
@@ -64,9 +62,14 @@ const AppContent = () => {
 };
 
 const App = () => {
+  const [hotels, setHotels] = useState([]);
+
+  const addNewHotel = (newHotel) => {
+    setHotels((prevHotels) => [...prevHotels, newHotel]);
+  };
   return (
     <Router>
-      <AppContent />
+      <AppContent hotels={hotels} addNewHotel={addNewHotel} />
     </Router>
   );
 };

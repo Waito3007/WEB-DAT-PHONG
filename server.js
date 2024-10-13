@@ -24,6 +24,7 @@ app.use('/api/users', userRoutes); // Đăng ký route
 app.use('/api/users', loginRoute); // Route cho đăng nhập
 app.use('/api/usertable', userTableRouter); // Router lấy list người dùng
 app.use('/api/hotel', hotelRoutes);
+app.use('/api/hotel/addhotel', hotelRoutes);
 app.get('/', (req, res) => {
   res.send('Welcome to Hotel Booking API');
 });
