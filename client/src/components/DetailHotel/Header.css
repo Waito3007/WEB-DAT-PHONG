@@ -1,0 +1,201 @@
+/* Tổng quan về bố cục */
+.header {
+    display: flex;
+    justify-content: space-between; /* Các phần tử trải đều */
+    align-items: center; /* Căn giữa theo trục dọc */
+    flex-wrap: wrap; /* Cho phép các phần tử xuống dòng khi cần */
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: white;
+    width: 100vw; /* Chiều rộng 100% khung nhìn */
+    box-sizing: border-box; /* Padding không làm tràn khung */
+}
+
+.logo h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: black;
+    margin-right: auto; /* Đẩy logo sang bên trái */
+}
+
+/* Căn chỉnh tiêu đề và rating trên cùng một hàng */
+.hotel-header {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Khoảng cách giữa tiêu đề và rating */
+    margin-bottom: 10px;
+}
+.hotel-header1 {
+    display: flex;
+    flex-direction: column; /* Đặt chiều dọc để tiêu đề và đánh giá nằm dưới nhau */
+    margin-bottom: 10px; /* Khoảng cách giữa tiêu đề và phần thông tin dưới */
+}
+
+/* Căn chỉnh location và reviews dưới phần tiêu đề */
+.hotel-info {
+    display: block;
+    flex-direction: column; /* Xếp các phần tử theo cột */
+    gap: 5px; /* Khoảng cách giữa các phần tử */
+    margin-top: 20px; /* Khoảng cách với phần tử phía trên */
+}
+
+.hotel-header h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin: 0; /* Xóa khoảng cách mặc định */
+}
+
+.hotel-header .rating1 {
+    margin-top: 5px;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa sao và mô tả */
+}
+
+.rating span:first-child {
+    color: gold;
+    font-size: 20px;
+}
+
+.rating1 span:first-child {
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+}
+
+.location, .reviews {
+    display: block;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa biểu tượng và văn bản */
+}
+
+.location, .reviews span {
+    color: hsl(0, 0%, 0%);
+    font-size: 30px;
+}
+
+.review-score {
+    
+    font-weight: bold;
+    color: #d12626;
+}
+
+/* Khu vực người dùng và hành động */
+.user-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Căn đều giữa nút Favourites và thông tin người dùng */
+}
+
+.favorite-button {
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #007bff; /* Đổi màu thành màu xanh hoặc bạn có thể chỉnh theo ý */
+    font-weight: bold;
+    margin-right: 20px; /* Thêm khoảng cách giữa nút Favourites và thông tin người dùng */
+}
+
+.user {
+    display: flex;
+    align-items: center; /* Căn giữa hình ảnh và tên theo trục dọc */
+}
+
+.user img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px; /* Tạo khoảng cách giữa hình ảnh và tên */
+}
+
+.user span {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Khu vực giá và nút đặt ngay */
+.booking-info {
+    display: flex;
+    justify-content: column; /* Aligns content to the right */
+    align-items: center; /* Centers items vertically */
+    border: 1px solid #ccc; /* Border around the container */
+    padding: 10px; /* Padding inside the box */
+    background-color: white; /* Background color */
+    margin-top: 20px; /* Tạo khoảng cách với phần tử trước đó */
+    margin-left: 1090px; /* Tạo khoảng cách với phần tử trước đó */
+}
+
+.price {
+    font-size: 24px; /* Size of the price text */
+    font-weight: bold; /* Bold text */
+    color: red; /* Color of the price */
+    margin-right: 20px; /* Space between price and buttons */
+}
+
+.user-actions {
+    display: flex; /* Use flexbox for user action buttons */
+    margin-right: 10px; /* Tạo khoảng cách với phần tử trước đó */
+    gap: 10px; /* Space between buttons */
+}
+
+.favorite-button,
+.share-button,
+.book-now {
+    border: 1px solid #007bff; /* Border for buttons */
+    background-color: transparent; /* Transparent background */
+    color: #007bff; /* Color of the button text */
+    padding: 5px 10px; /* Padding for buttons */
+    cursor: pointer; /* Pointer on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.book-now {
+    background-color: #007bff; /* Blue background for "Đặt ngay" button */
+    color: white; /* White text */
+}
+
+.favorite-button:hover,
+.share-button:hover {
+    background-color: #e0e0e0; /* Light gray on hover */
+}
+
+.book-now:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.price {
+    font-size: 24px; /* Size of the price text */
+    font-weight: bold; /* Bold text */
+    color: red; /* Color of the price */
+    margin-right: 20px; /* Space between price and buttons */
+}
+
+
+.book-now {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+}
+
+.book-now:hover {
+    background-color: #0056b3;
+}
+
+.custom-line {
+    border: none; /* Xóa bỏ đường viền mặc định */
+    border-top: 2px solid #e0e0e0; /* Tạo một đường liền */
+    margin: 20px 0; /* Thêm khoảng cách phía trên và dưới */
+    width: 100%; /* Đường sẽ kéo dài toàn bộ chiều rộng */
+    box-sizing: border-box; /* Đảm bảo không tràn ra ngoài do padding */
+}

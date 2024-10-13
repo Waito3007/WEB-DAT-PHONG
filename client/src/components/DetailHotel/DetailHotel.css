@@ -1,0 +1,265 @@
+/* General */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.hotel-detail-page {
+  margin: 0 auto;
+  overflow-x: hidden;
+
+}
+
+/* Image Gallery */
+.image-gallery {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding:20px;
+}
+
+.main-image {
+  position: relative;
+}
+
+.main-image img {
+  width: 1000px;
+  height: 600px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.5s ease;
+}
+
+.main-image img:hover {
+  transform: scale(1.05); /* Zoom on hover */
+}
+
+.thumbnail-grid {
+  display: grid;
+  gap: 10px;
+  flex: 1;
+  grid-template-columns: repeat(2, 1fr); /* Chia lưới thành 2 cột */
+  grid-template-rows: repeat(2, 1fr);    /* Chia thành 2 hàng */
+}
+
+.thumbnail {
+  position: relative;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: auto; /* Đảm bảo chiều cao tự động */
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.5s ease;
+}
+
+.thumbnail img:hover {
+  transform: scale(1.05); /* Zoom on hover */
+}
+
+.thumbnail-grid img {
+  max-height: 300px;
+    height: 300px;
+    width: 500px;
+  }
+
+.thumbnail .view-more {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: none; /* Hide until hover */
+}
+
+.thumbnail:hover .view-more {
+  display: block; /* Show "View More" on hover */
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.header-left h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.header-left p {
+  font-size: 16px;
+  color: #555;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.price {
+  font-size: 20px;
+  color: #e74c3c;
+  margin-right: 20px;
+}
+
+.book-now-btn, .favorite-btn, .share-btn {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.book-now-btn:hover, .favorite-btn:hover, .share-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Hotel Info */
+.rating-card {
+  margin-top: 20px;
+  background-color: black; /* Black background */
+  color: white; /* White text */
+  border-radius: 10px; /* Rounded corners */
+  padding: 20px; /* Padding inside the card */
+  text-align: center; /* Center text */
+  width: 200px; /* Width of the card */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+.rating-score {
+  font-size: 36px; /* Large font size for score */
+  font-weight: bold; /* Bold font for score */
+}
+
+.rating-description {
+  font-size: 16px; /* Font size for description */
+  margin: 10px 0; /* Margin for spacing */
+}
+
+.rating-count {
+  font-size: 14px; /* Smaller font size for count */
+  opacity: 0.8; /* Slightly transparent */
+}
+
+
+
+
+
+.hotel-info {
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.hotel-info h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.hotel-info p {
+  font-size: 16px;
+  color: #000000;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.rating span {
+  font-size: 20px;
+  color: #f1c40f;
+  margin-right: 10px;
+}
+
+/* Amenities List */
+.amenities-list {
+  color:#000000;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.amenities-list h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.amenities-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.amenities-list ul li {
+  font-size: 16px;
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Review Section */
+.reviews {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.reviews h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.review {
+  margin-bottom: 10px;
+}
+
+.review h4 {
+  font-size: 16px;
+  color: #333;
+}
+
+.review p {
+  font-size: 14px;
+  color: #777;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #3498db;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 16px;
+}
