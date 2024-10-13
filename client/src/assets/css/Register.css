@@ -1,0 +1,22 @@
+.input-field {
+    height: 40px; /* Hoặc chiều cao mà bạn muốn */
+  }
+  label {
+    color: #1c1b1f; /* Màu chữ cho nhãn */
+}
+  .input-field {
+    height: 40px; /* Hoặc chiều cao mà bạn muốn */
+    border: 1px solid black !important; /* Đặt viền màu đen và dày hơn */
+    border-radius: 4px; /* Để góc của ô nhập trông mềm mại */
+    padding: 0.5rem; /* Để tăng khoảng cách bên trong */
+}
+
+/* Tùy chọn: Nếu bạn muốn thay đổi viền khi ô nhập được focus */
+.input-field:focus {
+    border-color: blue !important; /* Đổi màu viền khi focus */
+    outline: none; /* Bỏ viền mặc định khi focus */
+}
+
+label {
+    color: #1c1b1f; /* Màu chữ cho nhãn */
+}
