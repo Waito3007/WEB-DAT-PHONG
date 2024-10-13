@@ -694,7 +694,7 @@ select:focus {
   display: flex; /* Chế độ flex */
   background-color: #fff; /* Màu nền */
   width: 200%; /* Đặt chiều rộng toàn bộ */
-  max-width: 700px; /* Chiều rộng tối đa của thẻ khách sạn */
+  max-width: 900px; /* Chiều rộng tối đa của thẻ khách sạn */
   margin: 1rem; /* Khoảng cách giữa các khách sạn */
   height: 300px; /* Thêm chiều cao cố định cho thẻ khách sạn */
   align-items: flex-start; /* Căn chỉnh nội dung ở đầu */
@@ -769,5 +769,5 @@ select:focus {
   justify-content: flex-start; /* Căn nút về bên trái */
   margin-top: 0.5rem; /* Khoảng cách trên button */
   align-self: flex-start; /* Đưa button sát vào ảnh */
-  width: 150%;
+  width: 100%;
 }
