@@ -160,24 +160,21 @@ const HotelTable = () => {
     }
   };
 
-  // Handle image removal
+  // Xóa hình ảnh trong khi chỉnh sửa
   const handleRemoveImage = async (file) => {
     if (file.uid) {
-      setFileList((prev) => prev.filter((item) => item.uid !== file.uid));
-      setRemovedImages((prev) => [...prev, file.url]);
+      setFileList(prev => prev.filter(item => item.uid !== file.uid));
+      setRemovedImages(prev => [...prev, file.url]);
 
       try {
-        await axios.put(
-          `/api/hotel/${currentHotel._id}/remove-image`,
-          { imageUrl: file.url },
-          { withCredentials: true }
-        );
-        message.success("Hình ảnh đã được xóa thành công");
+        await axios.put(`/api/hotel/${currentHotel._id}/remove-image`, { imageUrl: file.url }, { withCredentials: true });
       } catch (error) {
-        message.error("Đã xảy ra lỗi khi xóa hình ảnh");
+        message.error('Đã xảy ra lỗi khi xóa hình ảnh');
       }
     }
   };
+  
+  
 
   // Xử lý khi người dùng nhập tìm kiếm
   const handleSearch = (e) => {
