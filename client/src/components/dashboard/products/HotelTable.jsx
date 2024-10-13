@@ -129,10 +129,16 @@ const HotelTable = () => {
   
 
   // Xóa hình ảnh trong khi chỉnh sửa
-  const handleRemoveImage = (file) => {
+  const handleRemoveImage = async (file) => {
     if (file.uid) {
       setFileList(prev => prev.filter(item => item.uid !== file.uid));
-      setRemovedImages(prev => [...prev, file.url]); // Lưu URL hình ảnh đã xóa
+      setRemovedImages(prev => [...prev, file.url]);
+
+      try {
+        await axios.put(`/api/hotel/${currentHotel._id}/remove-image`, { imageUrl: file.url }, { withCredentials: true });
+      } catch (error) {
+        message.error('Đã xảy ra lỗi khi xóa hình ảnh');
+      }
     }
   };
   
