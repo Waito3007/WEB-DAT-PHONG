@@ -66,7 +66,7 @@ const Register = () => {
         <form onSubmit={handleRegister} className="flex flex-col gap-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex flex-col w-full">
-              <label className="text-[#1c1b1f] text-sm">Tên</label>
+              <label className="text-[#1c1b1f] text-sm">Họ</label>
               <input
                 type="text"
                 value={firstName}
@@ -76,7 +76,7 @@ const Register = () => {
               />
             </div>
             <div className="flex flex-col w-full">
-              <label className="text-[#1c1b1f] text-sm">Họ</label>
+              <label className="text-[#1c1b1f] text-sm">Tên</label>
               <input
                 type="text"
                 value={lastName}
@@ -131,7 +131,7 @@ const Register = () => {
           </div>
 
           <div className="flex items-center justify-center">
-            <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md">
+            <button type="submit" className="w-full bg-black text-white py-2 rounded-md">
               Đăng Ký
             </button>
           </div>
