@@ -6,11 +6,14 @@ import "animate.css"; // Import animate.css
 const { Title } = Typography;
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleLogin = async (values) => {
-    setError(null); // Reset lỗi trước khi gửi yêu cầu
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(null);
 
     try {
       const response = await fetch("/api/users/login", {
