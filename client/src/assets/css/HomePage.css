@@ -689,7 +689,7 @@ select:focus {
   display: flex; /* Chế độ flex */
   background-color: #fff; /* Màu nền */
   width: 200%; /* Đặt chiều rộng toàn bộ */
-  max-width: 700px; /* Chiều rộng tối đa của thẻ khách sạn */
+  max-width: 900px; /* Chiều rộng tối đa của thẻ khách sạn */
   margin: 1rem; /* Khoảng cách giữa các khách sạn */
   height: 300px; /* Thêm chiều cao cố định cho thẻ khách sạn */
   align-items: flex-start; /* Căn chỉnh nội dung ở đầu */
@@ -764,5 +764,159 @@ select:focus {
   justify-content: flex-start; /* Căn nút về bên trái */
   margin-top: 0.5rem; /* Khoảng cách trên button */
   align-self: flex-start; /* Đưa button sát vào ảnh */
-  width: 150%;
+  width: 100%;
+}
+/* oderroom*/
+.order-room-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 100px;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.hotel-header {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Khoảng cách giữa các phần tử */
+}
+
+.hotel-name {
+  font-size: 24px;
+  margin: 0;
+  color: black;
+  font-weight: bold;
+}
+
+.hotel-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Khoảng cách giữa sao, điểm số và "Khách sạn 5 sao" */
+}
+
+.rating-stars {
+  display: flex;
+}
+
+.hotel-score {
+  font-weight: bold;
+  color: black;
+}
+
+.hotel-category {
+  color: gray;
+  font-size: 14px; /* Chữ nhỏ hơn tiêu đề */
+}
+
+.hotel-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: black;
+}
+
+/* Định dạng nút 4.2 */
+.Hotel-button {
+  background-color: #f0f0f0;
+  color: black;
+  border: 1px solid black;
+  padding: 5px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.hotel-price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #e63946;
+  padding: 1rem;
+}
+
+.book-now-btn {
+  background-color: black;
+  color: white;
+  padding: 10px 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.book-now-btn:hover {
+  background-color: rgb(58, 56, 56);
+}
+.hotel-booking {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: -10px;
+}
+/* hotel image */
+.hotel-image {
+  display: flex; /* Sử dụng flexbox để sắp xếp ảnh */
+  gap: 5px; /* Khoảng cách giữa ảnh lớn và các ảnh nhỏ */
+  padding-top: 50px;
+}
+
+.main-image {
+  width: 50%; /* Chiều rộng của ảnh lớn */
+  max-height: 50%; /* Chiều cao tối đa cho ảnh chính (có thể điều chỉnh) */
+  overflow: hidden; /* Ẩn phần thừa nếu cần */
+}
+
+.main-image img {
+  width: 100%;
+  height: 100%; /* Đảm bảo ảnh chiếm hết chiều cao */
+  object-fit: cover; /* Cắt ảnh theo tỷ lệ */
+  padding-left: 20%;
+}
+
+.gallery-images {
+  display: grid; /* Sử dụng grid cho ảnh nhỏ */
+  grid-template-columns: repeat(2, 1fr); /* 2 ảnh nhỏ trên 1 hàng */
+  grid-template-rows: repeat(2, 1fr); /* 2 hàng ảnh nhỏ */
+  gap: 5px; /* Khoảng cách giữa các ảnh nhỏ */
+  width: 40%; /* Chiều rộng của container ảnh nhỏ */
+  max-height: 40%; /* Chiều cao tối đa cho grid ảnh nhỏ (có thể điều chỉnh) */
+  position: relative; /* Để sử dụng cho định vị nút */
+}
+
+.gallery-images img {
+  width: 100%; /* Chiều rộng đầy đủ cho mỗi ảnh nhỏ */
+  height: 100%; /* Chiều cao tự động theo tỷ lệ ảnh */
+  object-fit: cover; /* Cắt ảnh theo tỷ lệ */
+}
+
+.image-with-button {
+  position: relative; /* Để định vị nút bên trên ảnh */
+}
+
+.view-more {
+  position: absolute; /* Định vị nút ở góc dưới bên phải */
+  bottom: 10px; /* Khoảng cách từ đáy ảnh */
+  right: 10px; /* Khoảng cách từ bên phải */
+  display: flex;
+  justify-content: center; /* Căn giữa nút */
+  width: 100%; /* Chiều rộng đầy đủ cho nút */
+  padding-left: 10%;
+}
+
+.view-more button {
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.view-more button:hover {
+  background-color: #333;
 }
