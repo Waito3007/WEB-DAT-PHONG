@@ -30,10 +30,5 @@ router.get('/me', async (req, res) => {
     res.status(500).json({ msg: 'Lỗi server' });
   }
 });
-// Route Đăng xuất
-router.post('/', (req, res) => {
-  // Xóa cookie token
-  res.clearCookie('token');
-  res.json({ msg: 'Đăng xuất thành công' });
-});
+
 module.exports = router;

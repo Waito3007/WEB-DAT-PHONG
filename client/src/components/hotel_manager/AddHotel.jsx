@@ -13,7 +13,6 @@ const AddHotel = () => {
     name: '',
     location: '',
     description: '',
-    rooms: [],
   });
   const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false); // Thêm state loading
@@ -28,7 +27,7 @@ const AddHotel = () => {
     setFileList(fileList);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values) => {
     setLoading(true); // Bật loading khi bắt đầu gửi form
     const formData = new FormData();
     formData.append('name', hotelData.name);
@@ -46,11 +45,16 @@ const AddHotel = () => {
         },
         withCredentials: true
       });
-      message.success('Thêm khách sạn thành công!');
-      navigate('/myhotel'); // Chuyển đến trang /myhotel sau khi thêm thành công
+
+      // Kiểm tra phản hồi từ server
+      if (response.status === 201) {
+        message.success('Thêm khách sạn thành công!');
+        navigate('/myhotel'); // Chuyển đến trang /myhotel sau khi thêm thành công
+      }
     } catch (error) {
-      console.error('Lỗi khi thêm khách sạn:', error.response?.data);
-      message.error('Đã xảy ra lỗi khi thêm khách sạn');
+      // Xử lý lỗi và hiển thị thông báo
+      const errorMsg = error.response?.data?.msg || 'Đã xảy ra lỗi khi thêm khách sạn';
+      message.error(errorMsg);
     } finally {
       setLoading(false); // Tắt loading khi hoàn thành
     }
@@ -67,6 +71,7 @@ const AddHotel = () => {
             value={hotelData.name} 
             onChange={handleChange}
             className="border-gray-300 focus:border-pink-500 focus:ring-pink-500"
+            required
           />
         </Form.Item>
 
@@ -77,6 +82,7 @@ const AddHotel = () => {
             value={hotelData.location} 
             onChange={handleChange}
             className="border-gray-300 focus:border-pink-500 focus:ring-pink-500"
+            required
           />
         </Form.Item>
 
@@ -96,7 +102,7 @@ const AddHotel = () => {
             listType="picture"
             maxCount={5}
             onChange={handleUpload}
-            beforeUpload={() => false}
+            beforeUpload={() => false} // Ngăn chặn tải lên ngay lập tức
           >
             <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
           </Upload>

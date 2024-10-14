@@ -2,13 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const Hotel = require('../../models/Hotel');
-const Room = require('../../models/Room');
-const User = require('../../models/User'); // Import model User
-const auth = require('../../middleware/auth'); // Middleware xác thực
-const upload = require('../../middleware/upload'); // Middleware upload ảnh
+const User = require('../../models/User');
+const auth = require('../../middleware/auth'); 
+const upload = require('../../middleware/upload');
 const cloudinary = require('cloudinary').v2;
+const bcrypt = require('bcrypt'); // Để kiểm tra mật khẩu nếu cần
 
-// Hàm để lấy publicId từ URL của Cloudinary
+// Hàm lấy publicId từ URL của Cloudinary
 const getPublicIdFromUrl = (url) => {
   const matches = url.match(/\/v\d+\/(.+)\.(jpg|jpeg|png|gif|webp)/);
   return matches ? matches[1] : null;
@@ -41,14 +41,14 @@ router.post('/addhotel', auth, upload.array('imagehotel', 5), async (req, res) =
   }
 });
 
+
 // Route lấy danh sách khách sạn của người dùng hiện tại
 router.get('/myhotels', auth, async (req, res) => {
   try {
-    const managerId = req.user.userId; // Lấy ID người dùng từ middleware auth
+    const managerId = req.user.userId;
 
-    // Tìm các khách sạn mà người dùng là quản lý và lấy thêm thông tin từ 'User'
     const hotels = await Hotel.find({ manager: managerId })
-      .populate('manager', 'name email'); // Tham chiếu thông tin từ model 'User'
+      .populate('manager', 'name email'); 
 
     res.status(200).json(hotels);
   } catch (err) {
@@ -74,57 +74,56 @@ router.get('/:hotelId', auth, async (req, res) => {
 });
 
 // Route xóa khách sạn
-router.delete('/:id', auth, async (req, res) => {
-  const hotelId = req.params.id; // Lấy ID khách sạn từ tham số URL
-  const { password } = req.body; // Lấy mật khẩu từ body yêu cầu
+router.delete('/:hotelId', auth, async (req, res) => {
+  const { hotelId } = req.params;
+  const userId = req.user.userId; // Lấy userId từ middleware auth
+  const { password } = req.body; // Lấy mật khẩu từ body
 
   try {
-    // Tìm user theo ID đã xác thực
-    const user = await User.findById(req.user.userId);
+    // Lấy thông tin người dùng từ model User
+    const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ msg: 'Người dùng không tìm thấy' });
+      return res.status(404).json({ msg: 'Người dùng không tồn tại' });
     }
 
-    // Kiểm tra mật khẩu
-    const isMatch = await user.comparePassword(password);
+    // Kiểm tra mật khẩu nếu cần
+    const isMatch = await bcrypt.compare(password, user.password); // Kiểm tra mật khẩu
     if (!isMatch) {
-      return res.status(400).json({ msg: 'Mật khẩu không chính xác' });
+      return res.status(403).json({ msg: 'Mật khẩu không đúng' });
     }
 
-    // Xóa khách sạn
     const hotel = await Hotel.findById(hotelId);
     if (!hotel) {
-      return res.status(404).json({ msg: 'Khách sạn không tìm thấy' });
+      return res.status(404).json({ msg: 'Khách sạn không tồn tại' });
     }
 
-    // Xóa tất cả các phòng thuộc khách sạn
-    await Room.deleteMany({ hotel: hotelId });
-
-    // Xóa hình ảnh từ Cloudinary
-    const publicIds = hotel.imagehotel.map(url => getPublicIdFromUrl(url)).filter(id => id);
+    // Kiểm tra quyền
+    const isAdmin = user.role === 'Admin';
+    const isManager = user.role === 'HotelManager';
     
-    for (const publicId of publicIds) {
-      try {
-        await cloudinary.uploader.destroy(publicId);
-      } catch (error) {
-        console.error('Lỗi khi xóa ảnh khỏi Cloudinary:', error);
-      }
+    if (isManager && !hotel.manager.equals(user._id)) {
+      return res.status(403).json({ msg: 'Bạn không có quyền xóa khách sạn này' });
     }
 
-    // Xóa khách sạn
+    if (!isAdmin && !isManager) {
+      return res.status(403).json({ msg: 'Bạn không có quyền xóa khách sạn' });
+    }
+
     await Hotel.findByIdAndDelete(hotelId);
-    res.json({ message: 'Khách sạn và các phòng đã được xóa' });
+    return res.json({ msg: 'Khách sạn đã được xóa thành công' });
+
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Lỗi khi xóa khách sạn', error: error.message });
+    console.error('Lỗi khi xóa khách sạn:', error);
+    return res.status(500).json({ msg: 'Đã xảy ra lỗi trong quá trình xóa khách sạn' });
   }
 });
+
 
 
 // Route cập nhật khách sạn
 router.put('/:hotelId', auth, upload.array('imagehotel', 5), async (req, res) => {
   const { hotelId } = req.params;
-  const { name, location, description, removedImages = [] } = req.body; // Đảm bảo removedImages là một mảng
+  const { name, location, description, removedImages = [] } = req.body;
 
   try {
     const hotel = await Hotel.findById(hotelId);
@@ -132,22 +131,18 @@ router.put('/:hotelId', auth, upload.array('imagehotel', 5), async (req, res) =>
       return res.status(404).json({ msg: 'Khách sạn không tồn tại' });
     }
 
-    // Lấy URL ảnh mới từ file tải lên
     const imageHotelUrls = req.files ? req.files.map(file => file.path) : [];
 
-    // Cập nhật thông tin khách sạn
     hotel.name = name || hotel.name;
     hotel.location = location || hotel.location;
     hotel.description = description !== undefined ? description : hotel.description;
 
-    // Gộp ảnh cũ và ảnh mới
     hotel.imagehotel = [...hotel.imagehotel, ...imageHotelUrls];
 
     // Xóa ảnh đã được đánh dấu
     if (Array.isArray(removedImages) && removedImages.length > 0) {
       const publicIdsToRemove = removedImages.map(url => getPublicIdFromUrl(url)).filter(id => id);
-
-      // Xử lý xóa ảnh khỏi Cloudinary
+    
       for (const publicId of publicIdsToRemove) {
         try {
           await cloudinary.uploader.destroy(publicId);
@@ -155,11 +150,10 @@ router.put('/:hotelId', auth, upload.array('imagehotel', 5), async (req, res) =>
           console.error('Lỗi khi xóa ảnh khỏi Cloudinary:', error);
         }
       }
-
-      // Xóa ảnh đã đánh dấu khỏi mảng imagehotel
+    
       hotel.imagehotel = hotel.imagehotel.filter(image => !removedImages.includes(image));
     }
-
+    
     await hotel.save();
     res.status(200).json({ msg: 'Khách sạn đã được cập nhật thành công', hotel });
   } catch (err) {
@@ -168,10 +162,10 @@ router.put('/:hotelId', auth, upload.array('imagehotel', 5), async (req, res) =>
   }
 });
 
-// Route để lấy tất cả khách sạn với tên quản lý
+// Route lấy tất cả khách sạn với tên quản lý
 router.get('/', async (req, res) => {
   try {
-    const hotels = await Hotel.find().populate('manager', 'name'); // Chỉ lấy trường tên của người quản lý
+    const hotels = await Hotel.find().populate('manager', 'name');
     res.json(hotels);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi khi lấy danh sách khách sạn', error });
@@ -189,7 +183,6 @@ router.put('/:hotelId/remove-image', auth, async (req, res) => {
       return res.status(404).json({ message: 'Không tìm thấy khách sạn' });
     }
 
-    // Xóa ảnh khỏi Cloudinary
     const publicId = getPublicIdFromUrl(imageUrl);
     if (publicId) {
       await cloudinary.uploader.destroy(publicId);
