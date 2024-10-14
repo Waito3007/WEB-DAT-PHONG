@@ -27,6 +27,7 @@ import AddRoom from "./components/hotel_manager/AddRoom";
 import HotelRooms from "./components/hotel_manager/HotelRooms"; // Đường dẫn component RoomList
 import RoomDetail from "./components/hotel_manager/RoomDetail";
 import SearchPlaces from "./components/HomePage/SearchPlaces";
+import DetailHotelPage from "./pages/DetailHotelPage";
 
 const AppContent = () => {
   const location = useLocation();
@@ -73,6 +74,7 @@ const AppContent = () => {
         <Route path="/hotels/:hotelId" element={<HotelDetail />} />{" "}
         <Route path="/searchplaces" element={<SearchPlaces />} />
         <Route path="/SearchPage" element={<SearchPage />} />
+        <Route path="/DetailHotelPage" element={<DetailHotelPage />} />
         {/* Route cho HotelDetail */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
