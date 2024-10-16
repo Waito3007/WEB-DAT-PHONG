@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, Col, Row } from 'antd';
+import { useNavigate } from 'react-router-dom'; // Thêm import này
 
 const { Meta } = Card;
 
@@ -8,13 +9,13 @@ const TopHotels = () => {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Khởi tạo useNavigate
 
   useEffect(() => {
-    // Fetch dữ liệu từ API
     const fetchTopHotels = async () => {
       try {
-        const response = await axios.get('/api/homepage/top4hotel'); // Gửi request đến API
-        setHotels(response.data); // Cập nhật danh sách khách sạn
+        const response = await axios.get('/api/homepage/top4hotel');
+        setHotels(response.data);
         setLoading(false);
       } catch (err) {
         setError('Có lỗi xảy ra khi tải dữ liệu khách sạn');
@@ -26,11 +27,11 @@ const TopHotels = () => {
   }, []);
 
   if (loading) {
-    return <div>Đang tải...</div>; // Hiển thị khi đang tải dữ liệu
+    return <div>Đang tải...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; // Hiển thị lỗi nếu có
+    return <div>{error}</div>;
   }
 
   return (
@@ -46,7 +47,7 @@ const TopHotels = () => {
                 cover={
                   <img
                     alt={hotel.name}
-                    src={hotel.imagehotel[0] || 'default-image.jpg'} // Hiển thị ảnh đầu tiên hoặc ảnh mặc định
+                    src={hotel.imagehotel[0] || 'default-image.jpg'}
                     style={{
                       height: '200px',
                       width: '100%',
@@ -54,6 +55,7 @@ const TopHotels = () => {
                     }}
                   />
                 }
+                onClick={() => navigate(`/detailhotel/${hotel._id}`)} // Chuyển hướng đến trang chi tiết
               >
                 <Meta
                   title={hotel.name}

@@ -1,21 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
+import { Card, Col, Row } from 'antd';
+import axios from 'axios';
 
-const HotelImage = () => {
+const HotelImage = ({ hotelId }) => {
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await axios.get(`/api/detail/${hotelId}/image`);
+        setImages(response.data);
+      } catch (error) {
+        console.error('Error fetching hotel images:', error);
+      }
+    };
+
+    fetchImages();
+  }, [hotelId]);
+
   return (
-    <div className="hotel-image">
-      <div className="main-image">
-        <img src="Hp1.png" alt="Main Hotel View" />
-      </div>
-      <div className="gallery-images">
-        <img src="Hp1.png" alt="Room 1" />
-        <img src="Hp1.png" alt="Room 2" />
-        <img src="Hp1.png" alt="Room 3" />
-        <div className="image-with-button">
-          <img src="Hp1.png" alt="Room 4" />
-          <div className="view-more">
-            <button>Xem toàn bộ</button>
-          </div>
-        </div>
+    <div className="flex justify-center items-center mt-10">
+      <div className="w-full max-w-4xl">
+        <Row gutter={16}>
+          <Col span={12}>
+            <Card
+              cover={
+                <img
+                  alt="Main Hotel View"
+                  src={images[0] || 'default-image-url.png'} // Thay 'default-image-url.png' bằng URL ảnh mặc định nếu không có ảnh
+                  className="w-full h-full object-cover"
+                />
+              }
+              className="h-96"
+            />
+          </Col>
+          <Col span={12}>
+            <Row gutter={16}>
+              {images.slice(1, 5).map((image, index) => (
+                <Col span={12} key={index}>
+                  <Card
+                    cover={
+                      <img
+                        alt={`Room ${index + 1}`}
+                        src={image || 'default-image-url.png'} // Thay 'default-image-url.png' bằng URL ảnh mặc định
+                        className="w-full h-48 object-cover"
+                      />
+                    }
+                  />
+                </Col>
+              ))}
+            </Row>
+          </Col>
+        </Row>
       </div>
     </div>
   );

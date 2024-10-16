@@ -28,18 +28,19 @@ import HotelRooms from "./components/hotel_manager/HotelRooms"; // Đường d�
 import RoomDetail from "./components/hotel_manager/RoomDetail";
 import SearchPlaces from "./components/HomePage/SearchPlaces";
 import DetailHotelPage from "./pages/DetailHotelPage";
-
+import DetailRoomPage from "./pages/DetailRoomPage"; 
+import HotelImage from "./components/DetailHotel/HotelImage";
 const AppContent = () => {
   const location = useLocation();
 
   const isAdminPage = [
-    '/settings',
-    '/analytics',
-    '/orders',
-    '/sales',
-    '/users',
-    '/hotelmanager',
-    '/overview','/myhotel'
+    "/settings",
+    "/analytics",
+    "/orders",
+    "/sales",
+    "/users",
+    "/hotelmanager",
+    "/overview",
   ].includes(location.pathname);
 
   return (
@@ -71,11 +72,12 @@ const AppContent = () => {
         <Route path="/myhotel" element={<MyHotel />} />
         <Route path="/hotels/:hotelId/rooms" element={<HotelRooms />} />
         <Route path="/room/:roomId" element={<RoomDetail />} />
-        <Route path="/hotels/:hotelId" element={<HotelDetail />} />{" "}
+        <Route path="/hotels/:hotelId" element={<HotelDetail />} />
         <Route path="/searchplaces" element={<SearchPlaces />} />
         <Route path="/SearchPage" element={<SearchPage />} />
-        <Route path="/DetailHotelPage" element={<DetailHotelPage />} />
-        {/* Route cho HotelDetail */}
+        <Route path="/t2/:hotelId" element={<HotelImage />} />
+        <Route path="/detailhotel/:hotelId" element={<DetailHotelPage />} /> {/* Cập nhật đường dẫn chi tiết khách sạn */}
+        <Route path="/detairoom/:hotelId" element={<DetailRoomPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
