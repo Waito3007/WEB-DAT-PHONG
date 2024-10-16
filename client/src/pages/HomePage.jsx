@@ -1,6 +1,6 @@
 // HomePage.jsx
 import React from "react";
-import "../assets/css/HomePage.css";
+import "../assets/css/style.css";
 import HeroSection from "../components/HomePage/HomeNavbar";
 import ImageHome from "../components/HomePage/imagehome";
 import SearchPlaces from "../components/HomePage/SearchPlaces";

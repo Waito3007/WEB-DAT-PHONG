@@ -1,8 +1,8 @@
 
 import React from "react";
-import "../assets/css/HomePage.css";
+import "../assets/css/style.css";
 import HeroSection from "../components/HomePage/HomeNavbar";
-import OrderRoom from "../components/DetailHotel/Orderroom";
+import DetailRoom from "../components/DetailRoom/DetailRoom";
 import Footer from "../components/HomePage/Footer";
 function DetailRoomPage() {
   return (

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'antd';
 import axios from 'axios';
-
-const HotelImage = ({ hotelId }) => {
+import { useParams } from "react-router-dom";
+const HotelImage = () => {
+  const { hotelId } = useParams();
   const [images, setImages] = useState([]);
 
   useEffect(() => {
@@ -19,19 +20,18 @@ const HotelImage = ({ hotelId }) => {
   }, [hotelId]);
 
   return (
-    <div className="flex justify-center items-center mt-10">
-      <div className="w-full max-w-4xl">
+    <div className="flex justify-center items-center">
+      <div className="w-full max-w-7xl ">
         <Row gutter={16}>
           <Col span={12}>
             <Card
               cover={
                 <img
                   alt="Main Hotel View"
-                  src={images[0] || 'default-image-url.png'} // Thay 'default-image-url.png' bằng URL ảnh mặc định nếu không có ảnh
+                  src={images[0] || 'https://res.cloudinary.com/dackig67m/image/upload/v1729091450/hotels/file_jl2c9p.jpg'} 
                   className="w-full h-full object-cover"
                 />
               }
-              className="h-96"
             />
           </Col>
           <Col span={12}>
@@ -42,7 +42,7 @@ const HotelImage = ({ hotelId }) => {
                     cover={
                       <img
                         alt={`Room ${index + 1}`}
-                        src={image || 'default-image-url.png'} // Thay 'default-image-url.png' bằng URL ảnh mặc định
+                        src={image || 'https://res.cloudinary.com/dackig67m/image/upload/v1729091450/hotels/file_jl2c9p.jpg'} 
                         className="w-full h-48 object-cover"
                       />
                     }
