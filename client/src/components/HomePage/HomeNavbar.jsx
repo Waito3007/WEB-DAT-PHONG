@@ -36,6 +36,9 @@ const HomeNavbar = () => {
   const handleSignUp = () => {
     navigate("/register");
   };
+  const handleHome = () => {
+    navigate("/");
+  };
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen); // Đổi trạng thái mở menu
@@ -52,18 +55,18 @@ const HomeNavbar = () => {
       // Xóa thông tin người dùng
       setUser(null);
       setMenuOpen(false); // Đóng menu nếu đang mở
-
       // Điều hướng về trang đăng nhập
       navigate("/login");
     } catch (error) {
       console.error("Lỗi khi đăng xuất:", error);
     }
   };
-
   return (
     <div className="navbar flex justify-between items-center p-4 bg-gray-800">
       <div className="navbar-title">
-        <h1 className="text-white text-2xl m-0">staynight</h1>
+        <button className="text-white text-2xl m-0" onClick={handleHome}>
+          staynight
+        </button>
       </div>
       <div className="navbar-buttons relative">
         {user ? (

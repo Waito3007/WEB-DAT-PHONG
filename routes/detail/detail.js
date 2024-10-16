@@ -59,5 +59,16 @@ router.get('/:hotelId/image', async (req, res) => {
     res.status(500).json({ message: 'Có lỗi xảy ra khi lấy thông tin.', error: error.message });
   }
 });
-
+router.get('/:hotelId/rooms', async (req, res) => {
+  try {
+    const rooms = await Room.find({ hotel: req.params.hotelId }).populate('hotel');
+    if (rooms.length === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy phòng nào cho khách sạn này.' });
+    }
+    res.json(rooms);
+  } catch (error) {
+    console.error("Error fetching rooms:", error);
+    res.status(500).json({ message: 'Có lỗi xảy ra khi lấy thông tin phòng.' });
+  }
+});
 module.exports = router;

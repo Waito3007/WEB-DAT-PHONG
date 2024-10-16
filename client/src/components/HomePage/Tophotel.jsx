@@ -69,7 +69,7 @@ const TopHotels = () => {
                       </span>
                       <br />
                       <span className="lowest-price" style={{ fontWeight: 'bold', fontSize: '18px', color: '#ff3d00' }}>
-                        {hotel.lowestRoomPrice ? `${hotel.lowestRoomPrice} VND` : 'Đang cập nhật'}
+                        {hotel.lowestRoomPrice ? `${hotel.lowestRoomPrice.toLocaleString('vi-VN')} VND` : 'Đang cập nhật'}
                       </span>
                     </div>
                   }

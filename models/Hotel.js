@@ -1,14 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const hotelSchema = new mongoose.Schema({
   name: { type: String, required: true },
   location: { type: String, required: true },
   description: { type: String },
-  manager: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Room' }],
+  manager: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: "Room" }],
   imagehotel: [{ type: String }],
-  stars: { type: String, min: 1, max: 5, required: false }
+  stars: { type: String, min: 1, max: 5, required: false },
 });
 
 // Xuất mô hình Hotel
-module.exports = mongoose.model('Hotel', hotelSchema);
+module.exports = mongoose.model("Hotel", hotelSchema);

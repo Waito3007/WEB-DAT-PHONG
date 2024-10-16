@@ -1,0 +1,646 @@
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: black;
+}
+.homepage,
+.searchpage,
+.DetailHotelPage,
+.DetailRoomPage {
+  overflow-x: hidden;
+}
+.homepage {
+  width: 100%;
+}
+.searchpage {
+  height: auto; /* Hoặc 100vh nếu bạn muốn nó đầy đủ chiều cao */
+  display: flex; /* Nếu cần sử dụng Flexbox */
+  flex-direction: column; /* Đặt chiều hướng là cột */
+}
+:root {
+  --navbar-bg-color: rgba(0, 0, 0, 0.7);
+}
+/* Navbar */
+.navbar {
+  background-color: rgba(0, 0, 0); /* Nền bán trong suốt cho navbar */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px; /* Giảm padding để bố cục gọn gàng hơn */
+  color: white;
+  position: fixed; /* Giữ navbar ở trên cùng khi cuộn */
+  top: 0;
+  width: 100%;
+  z-index: 100; /* Đảm bảo navbar luôn nằm trên các phần tử khác */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Hiệu ứng đổ bóng dưới navbar */
+  transition: background-color 0.3s ease; /* Hiệu ứng chuyển đổi màu nền */
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 20px;
+  }
+
+  .navbar-title h1 {
+    font-size: 24px;
+  }
+
+  .navbar-buttons button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+/* khung tìm kiếm */
+.search-places {
+  padding: 40px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  max-width: 1200px;
+  width: 100%;
+  margin: 20px auto;
+  text-align: left; /* Căn trái cho các thành phần */
+  margin-top: -250px;
+}
+
+.input-group {
+  display: flex;
+  gap: 15px; /* Khoảng cách giữa các input */
+  margin-bottom: 20px; /* Khoảng cách dưới cùng */
+}
+
+.input-item {
+  display: flex;
+  flex-direction: column; /* Đặt nhãn và input thành cột */
+  flex: 1; /* Cho phép các input-item chiếm không gian đều nhau */
+  position: relative; /* Để tạo hiệu ứng cho nút */
+}
+
+label {
+  font-size: 14px; /* Kích thước chữ cho nhãn */
+  color: black; /* Màu chữ */
+  margin-bottom: 5px; /* Khoảng cách dưới nhãn */
+  font-weight: bold; /* Làm chữ nhãn đậm hơn */
+}
+
+input[type="text"],
+input[type="date"],
+select {
+  padding: 12px; /* Đệm bên trong */
+  border: 1px solid #ccc; /* Đường viền */
+  border-radius: 5px; /* Bo góc */
+  font-size: 16px; /* Kích thước chữ */
+  color: black; /* Đặt màu chữ là đen */
+  transition: border-color 0.3s; /* Hiệu ứng chuyển đổi màu viền */
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus {
+  border-color: #0664c2; /* Thay đổi màu viền khi được chọn */
+  outline: none; /* Tắt viền mặc định */
+}
+
+.date-group {
+  display: flex; /* Sắp xếp Check In và Check Out trên cùng một hàng */
+  gap: 15px; /* Khoảng cách giữa Check In và Check Out */
+  width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng */
+}
+
+.date-group .input-item {
+  flex: 1; /* Cho phép các ô nhập chiếm đều không gian */
+}
+
+.show-places-btn,
+.promo-code-btn {
+  background-color: var(--navbar-bg-color); /* Màu nền nút */
+  color: white; /* Màu chữ */
+  border: none; /* Không đường viền */
+  padding: 12px 20px; /* Đệm cho nút */
+  border-radius: 5px; /* Bo góc */
+  cursor: pointer; /* Con trỏ chuột khi di chuột qua nút */
+  transition: background-color 0.3s; /* Hiệu ứng chuyển màu nền */
+  font-size: 16px; /* Kích thước chữ cho nút */
+}
+
+.show-places-btn:hover,
+.promo-code-btn:hover {
+  opacity: 0.9;
+}
+.search-title {
+  color: black; /* Màu sắc của tiêu đề */
+  font-size: 28px; /* Kích thước chữ lớn hơn */
+  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+
+/* Các kiểu dáng cho các nút trong button-group */
+.button-group {
+  display: flex; /* Sắp xếp các nút trong hàng */
+  justify-content: flex-end; /* Căn chỉnh nút về bên phải */
+  margin-top: 10px; /* Khoảng cách trên để tạo khoảng cách giữa các input và button */
+  gap: 10px; /* Khoảng cách giữa các nút */
+}
+.room-input {
+  flex: 0 0 120px; /* Chiều rộng nhỏ hơn cho khung Room */
+}
+
+.room-input select {
+  width: 100%; /* Đảm bảo select chiếm toàn bộ chiều rộng của khung */
+  box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+  height: 500px; /* Điều chỉnh chiều cao tại đây */
+  padding: 10px; /* Thêm padding cho select */
+  font-size: 16px; /* Kích thước chữ trong select */
+}
+.input-item input,
+.input-item select {
+  width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng của khung */
+  box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+  height: 40px; /* Thiết lập chiều cao cho tất cả các input và select */
+  padding: 10px; /* Thêm padding cho input và select */
+  font-size: 16px; /* Kích thước chữ trong input và select */
+}
+
+/* Popular Destinations Section */
+.popular-destinations {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto; /* Căn giữa phần tử chính */
+}
+
+.section-title {
+  color: black; /* Màu sắc của tiêu đề */
+  font-size: 28px; /* Kích thước chữ lớn hơn */
+  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+  text-align: left; /* Căn lề trái cho tiêu đề */
+}
+
+.ant-row {
+  display: flex;
+  justify-content: center; /* Center the grid */
+}
+
+.ant-card {
+  border: none;
+  box-shadow: none; /* No shadow */
+  text-align: left;
+}
+
+/* Wrapper for image to make it square */
+.destination-image-wrapper {
+  width: 100%; /* Ensure the width is 100% of the column */
+  padding-top: 100%; /* This creates a square ratio (1:1) */
+  position: relative;
+}
+
+/* Image inside the square wrapper */
+.destination-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image fits nicely */
+  border-radius: 10px;
+}
+
+.destination-content {
+  padding-left: 20px; /* Create space between the image and text */
+}
+
+.ant-card-meta-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: black; /* Text color for destination name */
+}
+
+.ant-card-meta-description {
+  color: grey; /* Text color for description */
+}
+
+/* Footer.css */
+.footer {
+  background-color: #000000;
+  padding: 40px 20px;
+}
+
+.footer-content {
+  /* max-width: 1200px;  */
+  margin: 0 auto; /* Căn giữa nội dung */
+  display: flex; /* Sử dụng flexbox để sắp xếp các thành phần */
+  flex-direction: row; /* Đặt chiều ngang cho các thành phần */
+  align-items: flex-start; /* Căn giữa theo chiều dọc */
+  justify-content: space-between; /* Căn đều các thành phần */
+  width: 100vw; /* Chiều rộng đầy đủ của màn hình */
+}
+
+.footer-title {
+  font-size: 20px; /* Kích thước chữ lớn cho tiêu đề */
+  color: white; /* Màu chữ tiêu đề */
+  margin: 1%;
+  white-space: nowrap;
+  /* margin-bottom: 100px; */
+}
+
+.social-icons {
+  margin: 0 10px; /* Khoảng cách bên trái và bên phải các biểu tượng xã hội */
+}
+
+.social-icons a {
+  margin: 0 10px; /* Khoảng cách giữa các biểu tượng */
+  color: white; /* Màu sắc của biểu tượng */
+  font-size: 20px; /* Kích thước biểu tượng */
+}
+
+.footer-links {
+  display: flex; /* Sử dụng flexbox để sắp xếp các link */
+  justify-content: space-between; /* Căn đều các link */
+  width: 100%; /* Đặt chiều rộng 100% cho footer links */
+  margin-top: 10px; /* Khoảng cách trên các link */
+}
+
+.footer-links div {
+  flex: 1; /* Cho phép mỗi div trong footer-links có cùng kích thước */
+  text-align: left; /* Căn trái nội dung trong mỗi div */
+  color: white; /* Màu chữ cho các nhóm link */
+}
+
+.footer-links h4 {
+  margin-bottom: 10px; /* Khoảng cách dưới tiêu đề của từng nhóm link */
+  color: white; /* Màu chữ tiêu đề trong nhóm link */
+}
+
+.footer-links p {
+  margin: 0; /* Đặt margin 0 cho các paragraph */
+  color: white; /* Màu chữ cho các đoạn văn */
+}
+
+/* TravelCards.css */
+.travel-cards {
+  padding: 20px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between; /* Để giữ khoảng cách giữa giá và nút */
+  align-items: center;
+  margin-top: 10px; /* Thay đổi khoảng cách */
+}
+
+.price {
+  font-weight: bold;
+  font-size: 18px; /* Thay đổi kích thước chữ */
+  color: #ff3d00; /* Đổi màu cho giá */
+}
+
+.book-btn {
+  background-color: #00bfae; /* Màu nền cho nút */
+  color: white; /* Màu chữ cho nút */
+  padding: 8px 16px; /* Thay đổi kích thước nút */
+  border: none; /* Bỏ viền */
+  border-radius: 4px; /* Bo góc cho nút */
+  cursor: pointer; /* Thêm con trỏ tay khi di chuột qua */
+}
+
+.travel-title {
+  color: black; /* Màu sắc của tiêu đề */
+  font-size: 28px; /* Kích thước chữ lớn hơn */
+  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+
+.travel-cards-wrapper {
+  width: 100%; /* Chiếm toàn bộ chiều rộng */
+  max-width: 1225px; /* Chiều rộng tối đa */
+  margin: 0 auto; /* Căn giữa phần tử */
+  padding: 0 16px; /* Đệm hai bên */
+}
+
+.stars {
+  color: gold; /* Màu cho sao */
+  font-size: 18px; /* Kích thước cho sao */
+}
+
+.star {
+  margin-right: 2px; /* Khoảng cách giữa các sao */
+}
+
+.rating {
+  color: #1877f2; /* Màu sắc cho điểm số */
+  font-weight: bold; /* Để làm nổi bật điểm số */
+}
+.location-title {
+  font-size: 36px; /* Kích thước chữ */
+  color: black; /* Màu chữ */
+  font-weight: bold; /* Độ đậm */
+  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+/*endow*/
+.endow-cards {
+  padding: 20px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between; /* Để giữ khoảng cách giữa giá và nút */
+  align-items: center;
+  margin-top: 10px; /* Thay đổi khoảng cách */
+}
+
+.price {
+  font-weight: bold;
+  font-size: 18px; /* Thay đổi kích thước chữ */
+  color: #ff3d00; /* Đổi màu cho giá */
+}
+
+.book-btn {
+  background-color: #00bfae; /* Màu nền cho nút */
+  color: white; /* Màu chữ cho nút */
+  padding: 8px 16px; /* Thay đổi kích thước nút */
+  border: none; /* Bỏ viền */
+  border-radius: 4px; /* Bo góc cho nút */
+  cursor: pointer; /* Thêm con trỏ tay khi di chuột qua */
+}
+
+.endow-title {
+  color: black; /* Màu sắc của tiêu đề */
+  font-size: 28px; /* Kích thước chữ lớn hơn */
+  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+
+.endow-cards-wrapper {
+  width: 100%; /* Chiếm toàn bộ chiều rộng */
+  max-width: 1225px; /* Chiều rộng tối đa */
+  margin: 0 auto; /* Căn giữa phần tử */
+  padding: 0 16px; /* Đệm hai bên */
+}
+
+.stars {
+  color: gold; /* Màu cho sao */
+  font-size: 18px; /* Kích thước cho sao */
+}
+
+.star {
+  margin-right: 2px; /* Khoảng cách giữa các sao */
+}
+
+.rating {
+  color: #1877f2; /* Màu sắc cho điểm số */
+  font-weight: bold; /* Để làm nổi bật điểm số */
+}
+
+/* PopularDestinations.css */
+.popular-destinations {
+  padding: 20px; /* Đệm cho phần tử */
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between; /* Để giữ khoảng cách giữa giá và nút */
+  align-items: center;
+  margin-top: 10px; /* Thay đổi khoảng cách */
+}
+
+.price {
+  font-weight: bold;
+  font-size: 18px; /* Thay đổi kích thước chữ */
+  color: #ff3d00; /* Đổi màu cho giá */
+}
+
+.stars {
+  color: gold; /* Màu cho sao */
+  font-size: 18px; /* Kích thước cho sao */
+}
+
+.star {
+  margin-right: 2px; /* Khoảng cách giữa các sao */
+}
+
+.rating {
+  color: #1877f2; /* Màu sắc cho điểm số */
+  font-weight: bold; /* Để làm nổi bật điểm số */
+}
+
+.location-title {
+  font-size: 36px; /* Kích thước chữ */
+  color: black; /* Màu chữ */
+  font-weight: bold; /* Độ đậm */
+  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+/* search hotel */
+.search-container-hotel {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 100px auto;
+  width: 80%;
+  max-width: 1200px;
+}
+
+.input-group-hotel {
+  display: flex;
+  align-items: stretch; /* Căn giữa theo chiều dọc */
+  justify-content: space-between; /* Các phần tử cách đều nhau */
+  gap: 10px; /* Khoảng cách giữa các ô nhập liệu */
+  margin-top: 10px; /* Khoảng cách phía trên cho input-group */
+}
+
+.input-hotel {
+  flex-grow: 1;
+}
+
+.input-hotel input,
+.input-hotel select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 40px; /* Giảm chiều cao của ô nhập liệu */
+}
+
+.search-btn {
+  background-color: black;
+  border: none;
+  color: white;
+  padding: 5px; /* Giảm padding để nút nhỏ hơn */
+  border-radius: 4px;
+  cursor: pointer;
+  width: 50px; /* Đặt chiều rộng cho nút */
+  height: 35px; /* Đặt chiều cao bằng với các ô nhập liệu */
+  display: flex; /* Căn giữa icon */
+  align-items: center; /* Căn giữa icon theo chiều dọc */
+  justify-content: center; /* Căn giữa icon theo chiều ngang */
+  margin-top: 25px; /* Dịch nút xuống dưới */
+}
+
+.search-btn svg {
+  /* Đặt thêm margin cho icon */
+  margin-bottom: 2px; /* Dịch icon xuống dưới một chút */
+}
+
+.search-btn:hover {
+  opacity: 0.8;
+}
+/* HotelList.css */
+.container {
+  display: flex;
+  flex-direction: row; /* Giữ phần lọc bên trái */
+  margin: 0 auto;
+}
+
+.filter {
+  width: 60%; /* Đặt chiều rộng của phần lọc. Có thể điều chỉnh theo ý thích */
+  padding: 1rem; /* p-4 */
+  background-color: #f7fafc; /* bg-gray-100 */
+  border-radius: 0.5rem; /* rounded-lg */
+}
+
+.filter h2 {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600; /* font-semibold */
+  color: #000; /* text-black */
+  margin-bottom: 0.5rem; /* khoảng cách dưới tiêu đề */
+}
+
+.filter label {
+  margin-bottom: 0.5rem; /* mb-2 */
+  color: #000; /* text-black */
+  display: block; /* Đảm bảo label chiếm toàn bộ chiều rộng */
+}
+
+.filter input[type="range"] {
+  width: 90%; /* Kéo dài chiều rộng thanh giá */
+  margin: 1rem 0; /* Khoảng cách trên và dưới */
+}
+
+/* Tăng chiều rộng cho các nhãn giá */
+.filter .price-label {
+  display: flex; /* Chỉnh sửa để nhãn giá có thể căn chỉnh */
+  justify-content: space-between; /* Căn giữa giữa nhãn giá */
+  width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng */
+}
+
+/* Tiếp tục các quy tắc CSS trước đó */
+.hotel-list {
+  width: 75%; /* Chiều rộng của danh sách khách sạn */
+  padding: 1rem; /* p-4 */
+}
+
+.hotel-list h2 {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600; /* font-semibold */
+  color: #000; /* text-black */
+}
+
+.hotel-card {
+  border: 1px solid #e2e8f0; /* Đường viền */
+  border-radius: 0.5rem; /* Bo tròn góc */
+  padding: 1rem; /* Padding cho thẻ khách sạn */
+  display: flex; /* Chế độ flex */
+  background-color: #fff; /* Màu nền */
+  width: 200%; /* Đặt chiều rộng toàn bộ */
+  max-width: 900px; /* Chiều rộng tối đa của thẻ khách sạn */
+  margin: 1rem; /* Khoảng cách giữa các khách sạn */
+  height: 300px; /* Thêm chiều cao cố định cho thẻ khách sạn */
+  align-items: flex-start; /* Căn chỉnh nội dung ở đầu */
+}
+
+.hotel-card img {
+  border-radius: 0.5rem; /* rounded-lg */
+  height: 17rem; /* h-60 */
+  width: 17rem; /* w-60 */
+  object-fit: cover; /* object-cover */
+  margin-right: 1rem; /* mr-4 */
+}
+.book-button {
+  margin-top: 4rem; /* Khoảng cách trên */
+  background-color: black; /* Màu nền */
+  color: #fff; /* Màu chữ */
+  padding: 0.5rem; /* Padding */
+  border-radius: 0.5rem; /* Bo tròn góc */
+  text-align: center; /* Căn giữa chữ trong nút */
+  border: none; /* Không có viền */
+  cursor: pointer; /* Hiển thị con trỏ chuột khi di chuột qua nút */
+  font-size: 1rem; /* Kích thước chữ */
+  width: 100%; /* Đặt chiều rộng thành 100% */
+  transition: background-color 0.3s; /* Hiệu ứng chuyển màu nền */
+}
+.button-container {
+  display: flex; /* Đặt chế độ flex cho container */
+  justify-content: flex-start; /* Căn nút về bên trái */
+  margin-top: 0.5rem; /* Khoảng cách trên button */
+  align-self: flex-start; /* Đưa button sát vào ảnh */
+  width: 100%;
+}
+/* oderroom*/
+.order-room-container {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 100px;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.hotel-header {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Khoảng cách giữa các phần tử */
+}
+
+.hotel-name {
+  font-size: 24px;
+  margin: 0;
+  color: black;
+  font-weight: bold;
+}
+
+.hotel-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Khoảng cách giữa sao, điểm số và "Khách sạn 5 sao" */
+}
+
+.rating-stars {
+  display: flex;
+}
+
+.hotel-score {
+  font-weight: bold;
+  color: black;
+}
+
+.hotel-category {
+  color: gray;
+  font-size: 14px; /* Chữ nhỏ hơn tiêu đề */
+}
+
+.hotel-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: black;
+}
+.book-now-btn {
+  background-color: black;
+  color: white;
+  padding: 10px 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.book-now-btn:hover {
+  background-color: rgb(58, 56, 56);
+}
+.hotel-booking {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: -10px;
+}
