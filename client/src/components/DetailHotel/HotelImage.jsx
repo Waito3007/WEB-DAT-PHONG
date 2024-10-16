@@ -22,3 +22,6 @@ const HotelImage = () => {
 };
 
 export default HotelImage;
+
+
+
