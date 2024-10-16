@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Edit, Search, Trash2, PlusCircle } from 'lucide-react';
 import { Modal, Input, Button, message, Upload, Form } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom'; // Import Link từ react-router-dom
 
 const MyHotelTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -216,6 +217,10 @@ const MyHotelTable = () => {
                   >
                     <Trash2 size={18} />
                   </button>
+                   {/* Nút Xem Phòng */}
+                   <Link to={`/hotels/${hotel._id}/rooms`} className='text-yellow-500 hover:text-yellow-700'>
+                    Xem Phòng
+                  </Link>
                 </td>
               </tr>
             ))}
