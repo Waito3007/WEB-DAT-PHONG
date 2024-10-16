@@ -651,6 +651,7 @@ select:focus {
 }
 /* oderroom*/
 .order-room-container {
+  margin-top: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -741,6 +742,7 @@ select:focus {
 }
 /* hotel image */
 .hotel-image {
+  margin-bottom: 30px;
   display: flex; /* Sử dụng flexbox để sắp xếp ảnh */
   gap: 5px; /* Khoảng cách giữa ảnh lớn và các ảnh nhỏ */
   padding-top: 50px;
@@ -764,8 +766,8 @@ select:focus {
   grid-template-columns: repeat(2, 1fr); /* 2 ảnh nhỏ trên 1 hàng */
   grid-template-rows: repeat(2, 1fr); /* 2 hàng ảnh nhỏ */
   gap: 5px; /* Khoảng cách giữa các ảnh nhỏ */
-  width: 40%; /* Chiều rộng của container ảnh nhỏ */
-  max-height: 40%; /* Chiều cao tối đa cho grid ảnh nhỏ (có thể điều chỉnh) */
+  width: 38%; /* Chiều rộng của container ảnh nhỏ */
+  max-height: 0%; /* Chiều cao tối đa cho grid ảnh nhỏ (có thể điều chỉnh) */
   position: relative; /* Để sử dụng cho định vị nút */
 }
 

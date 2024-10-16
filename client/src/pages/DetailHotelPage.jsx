@@ -1,4 +1,3 @@
-// HomePage.jsx
 import React from "react";
 import "../assets/css/HomePage.css";
 import HeroSection from "../components/HomePage/HomeNavbar";
