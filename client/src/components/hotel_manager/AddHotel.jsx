@@ -1,127 +1,135 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Form, Input, Button, Typography, message, Upload } from 'antd';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Form, Input, Button, message, InputNumber, Switch, Upload, Spin, Typography } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import 'animate.css'; // Nếu cần dùng animate.css
 
-const { TextArea } = Input;
 const { Title } = Typography;
 
-const AddHotel = () => {
-  const [hotelData, setHotelData] = useState({
-    name: '',
-    location: '',
-    description: '',
-  });
-  const [fileList, setFileList] = useState([]);
-  const [loading, setLoading] = useState(false); // Thêm state loading
-  const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng trang
+const AddRoom = () => {
+  const { hotelId } = useParams();
+  const [type, setType] = useState('');
+  const [price, setPrice] = useState(0);
+  const [availability, setAvailability] = useState(true);
+  const [remainingRooms, setRemainingRooms] = useState(0); // Trường mới cho số phòng còn lại
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setHotelData({ ...hotelData, [name]: value });
-  };
-
-  const handleUpload = ({ fileList }) => {
-    setFileList(fileList);
-  };
-
-  const handleSubmit = async (values) => {
-    setLoading(true); // Bật loading khi bắt đầu gửi form
+  const handleAddRoom = async () => {
+    setLoading(true);
     const formData = new FormData();
-    formData.append('name', hotelData.name);
-    formData.append('location', hotelData.location);
-    formData.append('description', hotelData.description);
-    
-    fileList.forEach(file => {
-      formData.append('imagehotel', file.originFileObj);
+    formData.append('type', type);
+    formData.append('price', price);
+    formData.append('availability', availability);
+    formData.append('remainingRooms', remainingRooms); // Thêm số phòng còn lại vào formData
+
+    images.forEach((file) => {
+      formData.append('imageroom', file);
     });
 
     try {
-      const response = await axios.post('/api/hotel/addhotel', formData, {
+      await axios.post(`/api/room/${hotelId}/add-room`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        withCredentials: true
+        withCredentials: true,
       });
 
-      // Kiểm tra phản hồi từ server
-      if (response.status === 201) {
-        message.success('Thêm khách sạn thành công!');
-        navigate('/myhotel'); // Chuyển đến trang /myhotel sau khi thêm thành công
-      }
+      message.success('Phòng đã được thêm thành công');
+      navigate(`/myhotel`);
     } catch (error) {
-      // Xử lý lỗi và hiển thị thông báo
-      const errorMsg = error.response?.data?.msg || 'Đã xảy ra lỗi khi thêm khách sạn';
-      message.error(errorMsg);
+      console.error('Lỗi khi thêm phòng:', error.response?.data);
+      message.error('Đã xảy ra lỗi khi thêm phòng');
     } finally {
-      setLoading(false); // Tắt loading khi hoàn thành
+      setLoading(false);
     }
   };
 
+  const handleFileChange = ({ fileList }) => {
+    setImages(fileList.map(file => file.originFileObj));
+  };
+
   return (
-    <div className="max-w-lg mx-auto p-8 bg-white shadow-lg rounded-lg mt-10 animate__animated animate__fadeIn">
-      <Title level={2} className="text-center text-gray-800 mb-6">Thêm Khách Sạn</Title>
-      <Form layout="vertical" onFinish={handleSubmit}>
-        <Form.Item label="Tên khách sạn" required>
-          <Input 
-            name="name" 
-            placeholder="Nhập tên khách sạn" 
-            value={hotelData.name} 
-            onChange={handleChange}
-            className="border-gray-300 focus:border-pink-500 focus:ring-pink-500"
+    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md">
+      <Title level={3} className="text-center mb-4">Thêm Phòng</Title>
+      <Form layout="vertical" onFinish={handleAddRoom}>
+        <Form.Item 
+          label={<span className="font-semibold text-gray-700">Loại Phòng</span>} 
+          required
+        >
+          <Input
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            placeholder="Nhập loại phòng (Deluxe, Standard...)"
+            className="rounded-lg"
+            required
+          />
+        </Form.Item>
+        
+        <Form.Item 
+          label={<span className="font-semibold text-gray-700">Giá Phòng</span>} 
+          required
+        >
+          <InputNumber
+            min={0}
+            value={price}
+            onChange={(value) => setPrice(value)}
+            className="w-full rounded-lg"
+            placeholder="Nhập giá phòng"
             required
           />
         </Form.Item>
 
-        <Form.Item label="Địa điểm" required>
-          <Input 
-            name="location" 
-            placeholder="Nhập địa điểm" 
-            value={hotelData.location} 
-            onChange={handleChange}
-            className="border-gray-300 focus:border-pink-500 focus:ring-pink-500"
+        <Form.Item 
+          label={<span className="font-semibold text-gray-700">Tình Trạng</span>}
+        >
+          <Switch
+            checked={availability}
+            onChange={(checked) => setAvailability(checked)}
+            checkedChildren="Có sẵn"
+            unCheckedChildren="Hết phòng"
+            className="ml-2"
+          />
+        </Form.Item>
+
+        <Form.Item 
+          label={<span className="font-semibold text-gray-700">Số Phòng Còn Lại</span>} // Thêm trường này
+          required
+        >
+          <InputNumber
+            min={0}
+            value={remainingRooms}
+            onChange={(value) => setRemainingRooms(value)}
+            className="w-full rounded-lg"
+            placeholder="Nhập số phòng còn lại"
             required
           />
         </Form.Item>
 
-        <Form.Item label="Mô tả">
-          <TextArea 
-            name="description" 
-            placeholder="Nhập mô tả" 
-            rows={4} 
-            value={hotelData.description} 
-            onChange={handleChange}
-            className="border-gray-300 focus:border-pink-500 focus:ring-pink-500"
-          />
-        </Form.Item>
-
-        <Form.Item label="Ảnh khách sạn">
+        <Form.Item 
+          label={<span className="font-semibold text-gray-700">Ảnh Phòng</span>}
+        >
           <Upload
             listType="picture"
-            maxCount={5}
-            onChange={handleUpload}
-            beforeUpload={() => false} // Ngăn chặn tải lên ngay lập tức
+            beforeUpload={() => false}
+            onChange={handleFileChange}
           >
             <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
           </Upload>
         </Form.Item>
 
-        <Form.Item>
-          <Button 
-            type="primary" 
-            htmlType="submit" 
-            block
-            loading={loading} // Thêm loading vào button
-            className="bg-pink-500 hover:bg-pink-600 transition-all duration-300"
-          >
-            {loading ? 'Đang xử lý...' : 'Thêm Khách Sạn'}
-          </Button>
-        </Form.Item>
+        <Button 
+          type="primary" 
+          htmlType="submit" 
+          loading={loading}
+          className="w-full mt-3 rounded-lg"
+        >
+          {loading ? <Spin /> : 'Thêm Phòng'}
+        </Button>
       </Form>
     </div>
   );
 };
 
-export default AddHotel;
+export default AddRoom;

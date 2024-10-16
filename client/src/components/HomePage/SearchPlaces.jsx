@@ -1,7 +1,7 @@
 // SearchPlaces.jsx
 import React from "react";
 
-const SearchPlaces = () => {
+function SearchPlaces() {
   return (
     <section className="search-places">
       <div className="search-container">
@@ -35,6 +35,6 @@ const SearchPlaces = () => {
       </div>
     </section>
   );
-};
+}
 
 export default SearchPlaces;
