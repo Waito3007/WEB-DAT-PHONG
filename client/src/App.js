@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   useLocation,
+  Switch,
 } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
