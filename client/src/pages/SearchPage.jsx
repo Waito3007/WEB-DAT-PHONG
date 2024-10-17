@@ -1,5 +1,5 @@
 import React from "react";
-import "../assets/css/HomePage.css";
+import "../assets/css/style.css";
 import HeroSection from "../components/HomePage/HomeNavbar";
 import SearchHotel from "../components/SearchPage/SearchHotel";
 import HotelList from "../components/SearchPage/HotelList";

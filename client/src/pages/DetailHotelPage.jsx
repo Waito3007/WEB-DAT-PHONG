@@ -1,6 +1,6 @@
 
 import React from "react";
-import "../assets/css/HomePage.css";
+import "../assets/css/style.css";
 import HeroSection from "../components/HomePage/HomeNavbar";
 import OrderRoom from "../components/DetailHotel/Orderroom";
 import HotelImage from "../components/DetailHotel/HotelImage";
@@ -10,7 +10,7 @@ function DetailHotelPage() {
     <div className="DetailHotelPage">
       <HeroSection />
       <OrderRoom />
-      {/* <HotelImage /> */}
+      <HotelImage />
       <Footer />
     </div>
   );

@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -31,6 +32,7 @@ import SearchPlaces from "./components/HomePage/SearchPlaces";
 import DetailHotelPage from "./pages/DetailHotelPage";
 import DetailRoomPage from "./pages/DetailRoomPage"; 
 import HotelImage from "./components/DetailHotel/HotelImage";
+import CheckoutPage from "./pages/CheckoutPage";
 const AppContent = () => {
   const location = useLocation();
 
@@ -78,7 +80,8 @@ const AppContent = () => {
         <Route path="/SearchPage" element={<SearchPage />} />
         <Route path="/t2/:hotelId" element={<HotelImage />} />
         <Route path="/detailhotel/:hotelId" element={<DetailHotelPage />} /> {/* Cập nhật đường dẫn chi tiết khách sạn */}
-        <Route path="/detairoom/:hotelId" element={<DetailRoomPage />} />
+        <Route path="/detailroom/:hotelId" element={<DetailRoomPage />} />
+        <Route path="/detailroom/:hotelId/checkout/:roomId" element={<CheckoutPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

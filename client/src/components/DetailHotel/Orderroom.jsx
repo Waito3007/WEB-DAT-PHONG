@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FaMapMarkerAlt, FaStar } from "react-icons/fa";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const OrderRoom = () => {
   const { hotelId } = useParams();
+  const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
   const [hotel, setHotel] = useState(null);
   const [averageRating, setAverageRating] = useState(0);
   const [totalRatings, setTotalRatings] = useState(0);
@@ -32,6 +33,11 @@ const OrderRoom = () => {
 
   const stars = hotel.stars || 1;
 
+  // Xử lý khi ấn vào nút "Chọn phòng"
+  const handleSelectRoom = () => {
+    navigate(`/detailroom/${hotel._id}`); // Điều hướng sang trang detailroom khi người dùng ấn nút "Chọn phòng"
+  };
+
   return (
     <div className="order-room-container p-4">
       <div className="hotel-info mb-4">
@@ -55,8 +61,12 @@ const OrderRoom = () => {
         </div>
       </div>
       <div className="hotel-booking flex justify-between items-center">
-        <span className="hotel-price text-xl font-bold">{lowestPrice.toLocaleString()} VND</span>
-        <button className="book-now-btn bg-blue-500 text-white py-2 px-4 rounded-lg">Chọn</button>
+        <span className="price text-xl font-bold">{lowestPrice.toLocaleString('vi-VN')} VND</span>
+        <button
+          className="book-now-btn text-white py-2 px-4"
+          onClick={handleSelectRoom} 
+          >Chọn phòng
+        </button>
       </div>
     </div>
   );
