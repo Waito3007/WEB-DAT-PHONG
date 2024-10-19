@@ -57,6 +57,8 @@ const RoomDetail = () => {
       formData.append('type', values.type);
       formData.append('price', values.price);
       formData.append('availability', values.availability);
+      formData.append('remainingRooms', values.remainingRooms);
+
       
       fileList.forEach((file) => {
         formData.append('imageroom', file);
