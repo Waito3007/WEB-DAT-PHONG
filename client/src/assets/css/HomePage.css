@@ -10,6 +10,13 @@ body {
   width: 100%;
   overflow-x: hidden;
 }
+.DetailHotelPage {
+  height: auto; /* Hoặc 100vh nếu bạn muốn nó đầy đủ chiều cao */
+  overflow: auto; /* Đảm bảo có thể cuộn dọc */
+  display: flex; /* Nếu cần sử dụng Flexbox */
+  flex-direction: column; /* Đặt chiều hướng là cột */
+}
+
 .searchpage {
   height: auto; /* Hoặc 100vh nếu bạn muốn nó đầy đủ chiều cao */
   overflow-y: auto; /* Đảm bảo có thể cuộn dọc */
@@ -464,66 +471,6 @@ select:focus {
   font-weight: bold; /* Để làm nổi bật điểm số */
 }
 
-/* PopularDestinations.css */
-.popular-destinations {
-  padding: 20px; /* Đệm cho phần tử */
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between; /* Để giữ khoảng cách giữa giá và nút */
-  align-items: center;
-  margin-top: 10px; /* Thay đổi khoảng cách */
-}
-
-.price {
-  font-weight: bold;
-  font-size: 18px; /* Thay đổi kích thước chữ */
-  color: #ff3d00; /* Đổi màu cho giá */
-}
-
-.book-btn {
-  background-color: #00bfae; /* Màu nền cho nút */
-  color: white; /* Màu chữ cho nút */
-  padding: 8px 16px; /* Thay đổi kích thước nút */
-  border: none; /* Bỏ viền */
-  border-radius: 4px; /* Bo góc cho nút */
-  cursor: pointer; /* Thêm con trỏ tay khi di chuột qua */
-}
-
-.travel-title {
-  color: black; /* Màu sắc của tiêu đề */
-  font-size: 28px; /* Kích thước chữ lớn hơn */
-  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
-}
-
-.popular-destinations-wrapper {
-  width: 100%; /* Chiếm toàn bộ chiều rộng */
-  max-width: 1225px; /* Chiều rộng tối đa */
-  margin: 0 auto; /* Căn giữa phần tử */
-  padding: 0 16px; /* Đệm hai bên */
-}
-
-.stars {
-  color: gold; /* Màu cho sao */
-  font-size: 18px; /* Kích thước cho sao */
-}
-
-.star {
-  margin-right: 2px; /* Khoảng cách giữa các sao */
-}
-
-.rating {
-  color: #1877f2; /* Màu sắc cho điểm số */
-  font-weight: bold; /* Để làm nổi bật điểm số */
-}
-
-.location-title {
-  font-size: 36px; /* Kích thước chữ */
-  color: black; /* Màu chữ */
-  font-weight: bold; /* Độ đậm */
-  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
-}
 /* search hotel */
 .search-container-hotel {
   background-color: #fff;
@@ -580,62 +527,7 @@ select:focus {
 .search-btn:hover {
   background-color: #0056b3; /* Màu nền khi hover */
 }
-/* search hotel */
-.search-container-hotel {
-  background-color: #fff;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin: 100px auto;
-  width: 80%;
-  max-width: 1200px;
-  overflow: auto; /* Thêm dòng này để cho phép cuộn */
-}
 
-.input-group-hotel {
-  display: flex;
-  align-items: stretch; /* Căn giữa theo chiều dọc */
-  justify-content: space-between; /* Các phần tử cách đều nhau */
-  gap: 10px; /* Khoảng cách giữa các ô nhập liệu */
-  margin-top: 10px; /* Khoảng cách phía trên cho input-group */
-}
-
-.input-hotel {
-  flex-grow: 1;
-}
-
-.input-hotel input,
-.input-hotel select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  height: 40px; /* Giảm chiều cao của ô nhập liệu */
-}
-
-.search-btn {
-  background-color: black;
-  border: none;
-  color: white;
-  padding: 5px; /* Giảm padding để nút nhỏ hơn */
-  border-radius: 4px;
-  cursor: pointer;
-  width: 50px; /* Đặt chiều rộng cho nút */
-  height: 35px; /* Đặt chiều cao bằng với các ô nhập liệu */
-  display: flex; /* Căn giữa icon */
-  align-items: center; /* Căn giữa icon theo chiều dọc */
-  justify-content: center; /* Căn giữa icon theo chiều ngang */
-  margin-top: 25px; /* Dịch nút xuống dưới */
-}
-
-.search-btn svg {
-  /* Đặt thêm margin cho icon */
-  margin-bottom: 2px; /* Dịch icon xuống dưới một chút */
-}
-
-.search-btn:hover {
-  background-color: #0056b3; /* Màu nền khi hover */
-}
 /* HotelList.css */
 .container {
   display: flex;
@@ -870,7 +762,7 @@ select:focus {
 
 .main-image {
   width: 50%; /* Chiều rộng của ảnh lớn */
-  max-height: 50%; /* Chiều cao tối đa cho ảnh chính (có thể điều chỉnh) */
+  max-height: 100%; /* Chiều cao tối đa cho ảnh chính (có thể điều chỉnh) */
   overflow: hidden; /* Ẩn phần thừa nếu cần */
 }
 
@@ -924,4 +816,125 @@ select:focus {
 
 .view-more button:hover {
   background-color: #333;
+}
+/* Introduction*/
+.introduction {
+  padding: 20px;
+  border-bottom: 1px solid #ddd;
+  color: black;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.introduction h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.introduction p {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+/* tien nghi*/
+.amenities {
+  padding: 20px;
+  padding-left: 10%;
+  padding-right: 40%;
+  color: black;
+}
+
+.amenities h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.amenities ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Chia thành 2 cột */
+  gap: 20px; /* Khoảng cách giữa các mục */
+}
+
+.amenities li {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.amenities .icon {
+  margin-right: 5px;
+  font-size: 1.5rem;
+}
+/* review */
+.review-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: black;
+  margin-left: 10%;
+  margin-top: 50px;
+}
+
+.overall-rating {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.rating-score {
+  display: flex;
+  align-items: flex-start;
+}
+.rating-cc {
+  margin-right: auto;
+}
+.overall-rating h2 {
+  font-size: 3rem;
+  margin-right: 10px;
+}
+
+.submit-review {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.reviews-list {
+  border-top: 1px solid #ccc;
+}
+
+.review-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.review-content {
+  flex-grow: 1;
+}
+
+.flag-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
 }
