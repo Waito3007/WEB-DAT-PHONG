@@ -43,37 +43,6 @@ router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req
     console.error(err.message);
     res.status(500).json({ msg: 'Lỗi server' });
   }
-});// Route thêm phòng
-router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req, res) => {
-  const { hotelId } = req.params;
-  const { type, price, availability, remainingRooms } = req.body;
-
-  try {
-    const hotel = await Hotel.findById(hotelId);
-    if (!hotel) {
-      return res.status(404).json({ msg: 'Khách sạn không tồn tại' });
-    }
-
-    const imageRoomUrls = req.files ? req.files.map(file => file.path) : [];
-
-    const newRoom = new Room({
-      hotel: hotelId,
-      type,
-      price,
-      availability,
-      imageroom: imageRoomUrls,
-      remainingRooms: remainingRooms || 0, // Nếu không có, mặc định là 0
-    });
-
-    await newRoom.save();
-    hotel.rooms.push(newRoom._id);
-    await hotel.save();
-
-    res.status(201).json({ msg: 'Phòng đã được thêm thành công', room: newRoom });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ msg: 'Lỗi server' });
-  }
 });
 
 // Route để lấy danh sách phòng cho một khách sạn

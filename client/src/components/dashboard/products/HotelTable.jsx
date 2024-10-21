@@ -16,7 +16,6 @@ const HotelTable = () => {
   const [fileList, setFileList] = useState([]);
   const [password, setPassword] = useState('');
   const [removedImages, setRemovedImages] = useState([]);
-  const [isEditing, setIsEditing] = useState(false); // Trạng thái chế độ chỉnh sửa
   const [form] = Form.useForm();
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false); // Kiểm tra người dùng có phải admin không

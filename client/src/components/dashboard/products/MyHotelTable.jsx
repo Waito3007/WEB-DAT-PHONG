@@ -1,13 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Edit, Search, Trash2, PlusCircle } from 'lucide-react';
-import { Modal, Input, Button, message, Upload, Form } from 'antd';
+import { Edit, Search, Trash2, PlusCircle, Eye } from 'lucide-react';
+import { Modal, Input, Button, message, Upload, Form, Drawer,Rate } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom'; // Import Link từ react-router-dom
 
 const MyHotelTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false); 
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hotelsPerPage] = useState(5);
@@ -20,6 +20,10 @@ const MyHotelTable = () => {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [password, setPassword] = useState('');
+  const [isRoomDrawerVisible, setIsRoomDrawerVisible] = useState(false);
+  const [roomList, setRoomList] = useState([]);
+  const [addHotelForm] = Form.useForm(); // Form instance for Add Hotel
+
 
   const fetchHotels = useCallback(async () => {
     try {
@@ -34,6 +38,26 @@ const MyHotelTable = () => {
     fetchHotels();
   }, [fetchHotels]);
 
+  const showRoomDrawer = async (hotelId) => {
+    try {
+      const response = await axios.get(`/api/hotel/${hotelId}/rooms`, { withCredentials: true });
+      setRoomList(response.data);
+      setIsRoomDrawerVisible(true);
+    } catch (error) {
+      message.error('Không thể lấy danh sách phòng');
+    }
+  };
+
+  //them anh moi khi them khach san
+  const handleUpload = ({ fileList }) => {
+    setFileList(fileList);
+  };
+
+  const closeRoomDrawer = () => {
+    setIsRoomDrawerVisible(false);
+    setRoomList([]);
+  };
+
   const showModal = (hotel) => {
     setCurrentHotel(hotel);
     setFileList(hotel.imagehotel.map(url => ({ uid: url, url })));
@@ -41,10 +65,13 @@ const MyHotelTable = () => {
       name: hotel.name,
       location: hotel.location,
       description: hotel.description,
+      stars: hotel.stars,
     });
     setIsModalVisible(true);
   };
 
+
+//cap nhat khách sạn
   const handleSave = async (values) => {
     setIsUpdating(true);
     try {
@@ -52,6 +79,7 @@ const MyHotelTable = () => {
       formData.append('name', values.name);
       formData.append('location', values.location);
       formData.append('description', values.description);
+      formData.append('stars', values.star);
       fileList.forEach((file) => {
         formData.append('imagehotel', file);
       });
@@ -73,7 +101,9 @@ const MyHotelTable = () => {
       setIsUpdating(false);
     }
   };
- // Xóa hình ảnh trong khi chỉnh sửa
+
+
+  //xóa ảnh
   const handleRemoveImage = async (file) => {
     if (file.uid) {
       setFileList(prev => prev.filter(item => item.uid !== file.uid));
@@ -86,30 +116,45 @@ const MyHotelTable = () => {
       }
     }
   };
-  const handleAddHotel = async (values) => {
-    try {
-      const formData = new FormData();
-      formData.append('name', values.name);
-      formData.append('location', values.location);
-      formData.append('description', values.description);
-      fileList.forEach((file) => {
-        formData.append('imagehotel', file);
-      });
 
-      await axios.post('/api/hotel/addhotel', formData, {
+
+  //thêm khách sạn
+  const handleAddHotel = async (values) => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('name', values.name);
+    formData.append('location', values.location);
+    formData.append('description', values.description);
+    formData.append('stars', values.stars); // Bổ sung trường đánh giá sao
+  
+    // Đính kèm file ảnh
+    fileList.forEach(file => {
+      formData.append('imagehotel', file.originFileObj);
+    });
+  
+    try {
+      const response = await axios.post('/api/hotel/addhotel', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        withCredentials: true,
+        withCredentials: true
       });
-
-      message.success('Khách sạn đã được thêm thành công');
-      setIsAddModalVisible(false);
-      fetchHotels();
+  
+      if (response.status === 201) {
+        message.success('Thêm khách sạn thành công!');
+        fetchHotels();
+        setIsAddModalVisible(false);
+        addHotelForm.resetFields();
+        setFileList([]);
+      }
     } catch (error) {
-      message.error('Đã xảy ra lỗi khi thêm khách sạn');
+      const errorMsg = error.response?.data?.msg || 'Đã xảy ra lỗi khi thêm khách sạn';
+      message.error(errorMsg);
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   const handleImageChange = ({ fileList: newFileList }) => {
     setFileList(newFileList.map(file => file.originFileObj || file));
@@ -128,6 +173,7 @@ const MyHotelTable = () => {
       });
       message.success('Xóa khách sạn thành công');
       setHotels(hotels.filter(hotel => hotel._id !== currentHotel._id));
+      fetchHotels();
     } catch (error) {
       message.error(error.response?.data.message || 'Không thể xóa khách sạn vì lí do xác thực');
     } finally {
@@ -167,17 +213,15 @@ const MyHotelTable = () => {
       <div className='flex justify-between items-center mb-6'>
         <h2 className='text-xl font-semibold text-gray-100'>Danh Sách Khách Sạn</h2>
         <div className='flex space-x-2'>
-        <div className='relative'>
-  <input
-    type='text'
-    //placeholder='Tìm kiếm khách sạn...'
-    className='bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-12 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
-    onChange={handleSearch}
-    value={searchTerm}
-  />
-  <Search className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400' size={18} />
-</div>
-
+          <div className='relative'>
+            <input
+              type='text'
+              className='bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-12 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              onChange={handleSearch}
+              value={searchTerm}
+            />
+            <Search className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400' size={18} />
+          </div>
           <button
             className='text-green-500 hover:text-green-700'
             onClick={() => setIsAddModalVisible(true)}
@@ -194,7 +238,9 @@ const MyHotelTable = () => {
               <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Tên</th>
               <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Vị trí</th>
               <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Quản lý</th>
+              <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Xếp Hạng</th>              
               <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Hành động</th>
+
             </tr>
           </thead>
 
@@ -204,155 +250,174 @@ const MyHotelTable = () => {
                 <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>{hotel.name}</td>
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>{hotel.location}</td>
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>{hotel.manager.name}</td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-4'>
-                  <button
-                    className='text-blue-500 hover:text-blue-700'
-                    onClick={() => showModal(hotel)}
-                  >
+                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>{hotel.stars}</td>
+                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                  <button onClick={() => showRoomDrawer(hotel._id)} className='text-blue-500 hover:text-blue-700 mr-2'>
+                    <Eye size={18} />
+                  </button>
+                  <button onClick={() => showModal(hotel)} className='text-yellow-500 hover:text-yellow-700 mr-2'>
                     <Edit size={18} />
                   </button>
-                  <button
-                    className='text-red-500 hover:text-red-700'
-                    onClick={() => showDeleteModal(hotel)}
-                  >
+                  <button onClick={() => showDeleteModal(hotel)} className='text-red-500 hover:text-red-700'>
                     <Trash2 size={18} />
                   </button>
-                   {/* Nút Xem Phòng */}
-                   <Link to={`/hotels/${hotel._id}/rooms`} className='text-yellow-500 hover:text-yellow-700'>
-                    Xem Phòng
-                  </Link>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        {pageNumbers.length > 1 && (
+          <nav className='mt-4'>
+            <ul className='flex justify-center'>
+              {pageNumbers.map((number) => (
+                <li key={number} className='mx-1'>
+                  <button
+                    className={`px-3 py-1 rounded-md ${
+                      currentPage === number ? 'bg-blue-500 text-white' : 'bg-gray-700 text-gray-300'
+                    }`}
+                    onClick={() => paginate(number)}
+                  >
+                    {number}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
       </div>
 
-      <div className='flex justify-center mt-6'>
-        <ul className='pagination'>
-          {pageNumbers.map(number => (
-            <li key={number} className='inline-block mx-1'>
-              <button
-                onClick={() => paginate(number)}
-                className={`px-3 py-2 rounded-lg ${currentPage === number ? 'bg-blue-500 text-white' : 'bg-gray-700 text-gray-300'}`}
-              >
-                {number}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-	 {/* Modal xóa khách sạn */}
+      {/* Modal for Edit Hotel */}
       <Modal
-  title="Xóa Khách Sạn"
-  visible={isDeleteModalVisible}
-  onOk={handleDeleteConfirm}
-  onCancel={() => setIsDeleteModalVisible(false)}
->
-  <p>Bạn có chắc chắn muốn xóa khách sạn này không?</p>
-  <Input
-    type="password"
-    placeholder="Nhập mật khẩu để xác nhận"
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-  />
-</Modal>
- {/* Modal chỉnh sửa khách sạn */}
-      <Modal
-        title='Chỉnh sửa khách sạn'
+        title={isUpdating ? 'Cập nhật khách sạn' : 'Chỉnh sửa khách sạn'}
         visible={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
-        className='modal-update'
       >
-        <Form form={form} onFinish={handleSave}>
-          <Form.Item name='name' label='Tên khách sạn' rules={[{ required: true, message: 'Vui lòng nhập tên khách sạn' }]}>
-            <Input placeholder='Tên khách sạn' />
+        <Form form={form} layout="vertical" onFinish={handleSave}>
+          <Form.Item name="name" label="Tên khách sạn" rules={[{ required: true, message: 'Vui lòng nhập tên khách sạn!' }]}>
+            <Input />
           </Form.Item>
-
-          <Form.Item name='location' label='Vị trí' rules={[{ required: true, message: 'Vui lòng nhập vị trí' }]}>
-            <Input placeholder='Vị trí' />
+          <Form.Item name="location" label="Vị trí" rules={[{ required: true, message: 'Vui lòng nhập vị trí!' }]}>
+            <Input />
           </Form.Item>
-
-          <Form.Item name='description' label='Mô tả'>
-            <Input.TextArea placeholder='Mô tả khách sạn' />
+          <Form.Item name="description" label="Mô tả">
+            <Input.TextArea rows={4} />
           </Form.Item>
-
-          <Form.Item label='Hình ảnh'>
+          <Form.Item label="Hình ảnh">
             <Upload
-              listType='picture-card'
+              action={null}
               fileList={fileList}
               onChange={handleImageChange}
               onRemove={handleRemoveImage}
-              beforeUpload={() => false} // Ngăn không cho upload ngay lập tức
+              beforeUpload={() => false} // Prevent automatic upload
+              listType="picture"
             >
-              {fileList.length < 5 && (
-                <div>
-                  <UploadOutlined />
-                  <div style={{ marginTop: 8 }}>Tải lên</div>
-                </div>
-              )}
+              <Button icon={<UploadOutlined />}>Chọn Hình Ảnh</Button>
             </Upload>
           </Form.Item>
-
           <Form.Item>
-            <Button type='primary' htmlType='submit' loading={isUpdating}>
-              Lưu thay đổi
+            <Button type="primary" htmlType="submit" loading={isUpdating}>
+              {isUpdating ? 'Đang cập nhật...' : 'Cập nhật'}
             </Button>
           </Form.Item>
         </Form>
       </Modal>
-      {/* Modal thêm khách sạn */}
+
+      
       <Modal
-        title='Thêm Khách Sạn'
-        visible={isAddModalVisible}
-        onCancel={() => setIsAddModalVisible(false)}
+  title="Thêm Khách Sạn"
+  visible={isAddModalVisible}
+  onCancel={() => setIsAddModalVisible(false)}
+  footer={null}
+>
+  <Form form={addHotelForm} layout="vertical" onFinish={handleAddHotel}>
+    <Form.Item
+      name="name"
+      label="Tên khách sạn"
+      rules={[{ required: true, message: 'Vui lòng nhập tên khách sạn!' }]}
+    >
+      <Input />
+    </Form.Item>
+    <Form.Item
+      name="location"
+      label="Vị trí"
+      rules={[{ required: true, message: 'Vui lòng nhập vị trí!' }]}
+    >
+      <Input />
+    </Form.Item>
+    <Form.Item name="description" label="Mô tả">
+      <Input.TextArea rows={4} />
+    </Form.Item>
+    {/* Stars rating field */}
+    <Form.Item
+      name="stars"
+      label="Xếp Hạng"
+      rules={[{ required: true, message: 'Vui lòng chọn xếp hạng!' }]}
+    >
+      <Rate allowHalf />
+    </Form.Item>
+    <Form.Item label="Hình ảnh">
+      <Upload
+        action={null}
+        fileList={fileList}
+        onChange={handleUpload}
+        onRemove={handleRemoveImage}
+        beforeUpload={() => false} // Prevent automatic upload
+        listType="picture"
+      >
+        <Button icon={<UploadOutlined />}>Chọn Hình Ảnh</Button>
+      </Upload>
+    </Form.Item>
+    <Form.Item>
+      <Button type="primary" htmlType="submit" loading={loading}>
+        {loading ? 'Đang thêm...' : 'Thêm khách sạn'}
+      </Button>
+    </Form.Item>
+  </Form>
+</Modal>
+
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        title="Xác nhận xóa"
+        visible={isDeleteModalVisible}
+        onCancel={() => setIsDeleteModalVisible(false)}
         footer={null}
       >
-        <Form
-          layout='vertical'
-          onFinish={handleAddHotel}
-          form={form}
-        >
-          <Form.Item
-            label='Tên Khách Sạn'
-            name='name'
-            rules={[{ required: true, message: 'Vui lòng nhập tên khách sạn' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label='Vị trí'
-            name='location'
-            rules={[{ required: true, message: 'Vui lòng nhập vị trí khách sạn' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label='Mô tả'
-            name='description'
-            rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
-          >
-            <Input.TextArea />
-          </Form.Item>
-          <Form.Item label='Hình ảnh khách sạn'>
-            <Upload
-              multiple
-              listType='picture'
-              beforeUpload={() => false}
-              onChange={handleImageChange}
-              fileList={fileList}
-            >
-              <Button icon={<UploadOutlined />}>Chọn hình ảnh</Button>
-            </Upload>
-          </Form.Item>
-          <Form.Item>
-            <Button type='primary' htmlType='submit'>
-              Thêm
-            </Button>
-          </Form.Item>
-        </Form>
+        <p>Bạn có chắc chắn muốn xóa khách sạn này không?</p>
+        <Input.Password
+          placeholder="Nhập mật khẩu để xác nhận"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <div className="flex justify-end mt-4">
+          <Button type="primary" onClick={handleDeleteConfirm}>
+            Xóa
+          </Button>
+          <Button onClick={() => setIsDeleteModalVisible(false)} className="ml-2">
+            Hủy
+          </Button>
+        </div>
       </Modal>
+
+      {/* Room Drawer */}
+      <Drawer
+        title="Danh sách phòng"
+        placement="right"
+        onClose={closeRoomDrawer}
+        visible={isRoomDrawerVisible}
+      >
+        {roomList.length === 0 ? (
+          <p>Không có phòng nào</p>
+        ) : (
+          <ul>
+            {roomList.map((room) => (
+              <li key={room._id}>{room.name}</li>
+            ))}
+          </ul>
+        )}
+      </Drawer>
     </motion.div>
   );
 };
