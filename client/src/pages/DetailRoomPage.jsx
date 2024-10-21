@@ -8,6 +8,7 @@ function DetailRoomPage() {
   return (
     <div className="DetailRoomPage">
       <HeroSection />
+      <DetailRoom/>
       <Footer />
     </div>
   );
