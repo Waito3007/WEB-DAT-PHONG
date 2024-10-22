@@ -2,11 +2,15 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Edit, Search, Trash2, PlusCircle, Eye } from 'lucide-react';
-import { Modal, Input, Button, message, Upload, Form, Drawer,Rate } from 'antd';
+import { Modal, Input, Button, message, Upload, Form, Drawer,Rate, Table } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import AddRoom from './AddRoom'; // Thay đổi đường dẫn cho phù hợp với cấu trúc thư mục của bạn
+
 
 const MyHotelTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedHotelId, setSelectedHotelId] = useState(null); // Hotel ID to be passed to AddRoom
+  const [roomSearchTerm, setRoomSearchTerm] = useState(''); // Tìm kiếm phòng
   const [loading, setLoading] = useState(false); 
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,6 +28,13 @@ const MyHotelTable = () => {
   const [roomList, setRoomList] = useState([]);
   const [addHotelForm] = Form.useForm(); // Form instance for Add Hotel
 
+  const roomsPerPage = 10; // Số phòng mỗi trang
+
+  const convertToString = (id) => {
+    return String(id);};
+
+  const hotelId = selectedHotelId; // Giả sử selectedHotelId là một giá trị nào đó
+  const stringHotelId = convertToString(hotelId);
 
   const fetchHotels = useCallback(async () => {
     try {
@@ -40,13 +51,15 @@ const MyHotelTable = () => {
 
   const showRoomDrawer = async (hotelId) => {
     try {
-      const response = await axios.get(`/api/hotel/${hotelId}/rooms`, { withCredentials: true });
-      setRoomList(response.data);
-      setIsRoomDrawerVisible(true);
+      const response = await axios.get(`/api/room/${hotelId}/rooms`, { withCredentials: true });
+      setRoomList(response.data); // Gán dữ liệu trả về nếu có
     } catch (error) {
-      message.error('Không thể lấy danh sách phòng');
+      setRoomList([]); // Nếu có lỗi, gán danh sách trống
+    } finally {
+      setIsRoomDrawerVisible(true); // Luôn mở Drawer bất kể có lỗi hay không
     }
   };
+  
 
   //them anh moi khi them khach san
   const handleUpload = ({ fileList }) => {
@@ -188,6 +201,54 @@ const MyHotelTable = () => {
     setCurrentPage(1);
   };
 
+  const handleAddRoomClick = (hotelId) => {
+    setIsModalVisible(true); // Open the modal
+    setSelectedHotelId(hotelId); // Set the selected hotel ID
+  };
+  
+
+  const handleModalClose = () => {
+    setIsModalVisible(false); // Đóng modal
+  };
+  
+  const handleViewRoom = (roomId) => {
+    console.log('Xem chi tiết phòng:', roomId);
+    // Xử lý logic xem chi tiết phòng
+  };
+  
+  const handleEditRoom = (roomId) => {
+    console.log('Sửa phòng:', roomId);
+    // Xử lý logic sửa phòng
+  };
+  
+  const handleDeleteRoom = (roomId) => {
+    console.log('Xóa phòng:', roomId);
+    // Xử lý logic xóa phòng
+  };
+
+
+  const handleSearchRoom = (e) => {
+    const term = e.target.value.toLowerCase();
+    setRoomSearchTerm(term); // Sử dụng roomSearchTerm thay vì searchTerm
+    setCurrentPage(1);
+  };
+
+  // Gọi hàm filteredRooms để lọc và phân trang
+  const filteredRooms = roomList.filter(
+    (room) => room.type.toLowerCase().includes(roomSearchTerm) // Sử dụng roomSearchTerm để lọc
+  );
+
+const indexOfLastRoom = currentPage * roomsPerPage;
+const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
+const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
+
+const paginateRooms = (pageNumber) => setCurrentPage(pageNumber);
+
+const roomPageNumbers = [];
+for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
+  roomPageNumbers.push(i);
+}
+  
   const filteredHotels = hotels.filter(
     (hotel) => hotel.name.toLowerCase().includes(searchTerm) || hotel.location.toLowerCase().includes(searchTerm)
   );
@@ -219,6 +280,7 @@ const MyHotelTable = () => {
               className='bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-12 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
               onChange={handleSearch}
               value={searchTerm}
+              autoComplete='off' // Ngăn chặn tự động điền
             />
             <Search className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400' size={18} />
           </div>
@@ -401,23 +463,102 @@ const MyHotelTable = () => {
         </div>
       </Modal>
 
-      {/* Room Drawer */}
       <Drawer
-        title="Danh sách phòng"
-        placement="right"
-        onClose={closeRoomDrawer}
-        visible={isRoomDrawerVisible}
-      >
-        {roomList.length === 0 ? (
-          <p>Không có phòng nào</p>
-        ) : (
-          <ul>
-            {roomList.map((room) => (
-              <li key={room._id}>{room.name}</li>
-            ))}
-          </ul>
-        )}
-      </Drawer>
+  title="Danh sách phòng"
+  placement="right"
+  onClose={closeRoomDrawer}
+  visible={isRoomDrawerVisible}
+  width={720}
+>
+  <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    {/* Nút Thêm Phòng */}
+    <Button 
+      type="primary" 
+      icon={<PlusCircle />} 
+      onClick={handleAddRoomClick} // Gọi hàm thêm phòng
+    >
+      Thêm Phòng
+    </Button>
+
+    {/* Thanh tìm kiếm */}
+    <Input
+      placeholder="Tìm kiếm phòng..."
+      onChange={handleSearchRoom}
+      value={roomSearchTerm}
+      autoComplete="off" // Ngăn chặn tự động điền
+      style={{ width: 200 }}
+    />
+  </div>
+
+    <>
+      {/* Bảng danh sách phòng */}
+      <Table
+        dataSource={currentRooms}
+        rowKey="_id" // Sử dụng trường _id làm khóa cho mỗi hàng
+        pagination={false} // Tắt phân trang nếu không cần thiết
+        columns={[
+          {
+            title: 'Loại Phòng',
+            dataIndex: 'type',
+            key: 'type',
+          },
+          {
+            title: 'Giá',
+            dataIndex: 'price',
+            key: 'price',
+            render: (text) => <span>{text} VND</span>,
+          },
+          {
+            title: 'Số Lượng Còn Lại',
+            dataIndex: 'remainingRooms',
+            key: 'remainingRooms',
+            render: (text) => <span>{text} Phòng</span>,
+          },
+          {
+            title: 'Hành Động',
+            key: 'action',
+            render: (text, room) => (
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <Eye color="green" cursor="pointer" title="Xem" onClick={() => handleViewRoom(room._id)} />
+                <Edit color="orange" cursor="pointer" title="Sửa" onClick={() => handleEditRoom(room._id)} />
+                <Trash2 color="red" cursor="pointer" title="Xóa" onClick={() => handleDeleteRoom(room._id)} />
+              </div>
+            ),
+          },
+        ]}
+      />
+
+      {/* Phân trang nếu có nhiều trang */}
+      {roomPageNumbers.length > 1 && (
+        <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}>
+          {roomPageNumbers.map(number => (
+            <Button 
+              key={number} 
+              onClick={() => paginateRooms(number)}
+              style={{ margin: '0 4px' }} // Khoảng cách giữa các nút
+            >
+              {number}
+            </Button>
+          ))}
+        </div>
+      )}
+    </>
+
+
+  {/* Hiển thị modal để thêm phòng */}
+  <AddRoom
+  visible={isModalVisible}
+  onClose={handleModalClose}
+  hotelId={stringHotelId} // Pass selected hotel ID to AddRoom
+/>
+
+</Drawer>
+
+
+
+
+
+
     </motion.div>
   );
 };
