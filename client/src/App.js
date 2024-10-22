@@ -24,7 +24,7 @@ import SearchPage from "./pages/SearchPage";
 import HotelAdd from "./components/hotel_manager/AddHotel";
 import MyHotel from "./components/hotel_manager/MyHotel";
 import HotelDetail from "./components/hotel_manager/HotelDetail"; // Nhập HotelDetail
-import AddRoom from "./components/hotel_manager/AddRoom";
+import AddRoom from "./components/dashboard/products/AddRoom";
 import HotelRooms from "./components/hotel_manager/HotelRooms"; // Đường dẫn component RoomList
 import RoomDetail from "./components/hotel_manager/RoomDetail";
 import SearchPlaces from "./components/HomePage/SearchPlaces";
@@ -70,7 +70,7 @@ const AppContent = () => {
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/addhotel" element={<HotelAdd />} />
-        <Route path="/hotels/:hotelId/add-room" element={<AddRoom />} />
+        <Route path="/hotels/:hotelId/add-room" component={AddRoom} />
         <Route path="/myhotel" element={<MyHotel />} />
         <Route path="/hotels/:hotelId/rooms" element={<HotelRooms />} />
         <Route path="/room/:roomId" element={<RoomDetail />} />

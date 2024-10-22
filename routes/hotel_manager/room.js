@@ -12,10 +12,18 @@ const getPublicIdFromUrl = (url) => {
   return matches ? matches[1] : null;
 };
 
-// Route thêm phòng
 router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req, res) => {
   const { hotelId } = req.params;
   const { type, price, availability, remainingRooms } = req.body;
+
+  // Log các giá trị để kiểm tra
+  console.log("hotelId:", hotelId);
+  console.log("req.body:", req.body);
+  console.log("req.files:", req.files);
+
+  if (!hotelId) {
+    return res.status(400).json({ msg: 'Thiếu hotelId trong URL' });
+  }
 
   try {
     const hotel = await Hotel.findById(hotelId);
@@ -40,10 +48,12 @@ router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req
 
     res.status(201).json({ msg: 'Phòng đã được thêm thành công', room: newRoom });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ msg: 'Lỗi server' });
+    console.error("Error details:", err.message); // Thêm log chi tiết lỗi
+    res.status(500).json({ msg: 'Lỗi server', error: err.message });
   }
 });
+
+
 
 // Route để lấy danh sách phòng cho một khách sạn
 router.get('/:hotelId/rooms', auth, async (req, res) => {
