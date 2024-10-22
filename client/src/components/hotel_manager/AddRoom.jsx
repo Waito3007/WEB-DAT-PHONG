@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Form, Input, Button, message, InputNumber, Switch, Upload, Spin, Typography } from 'antd';
+import { Form, Input, Button, message, InputNumber, Switch, Upload, Spin, Typography, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
+const { Option } = Select;
 
 const AddRoom = () => {
   const { hotelId } = useParams(); // Lấy hotelId từ URL
-  const [type, setType] = useState('');
-  const [price, setPrice] = useState(0);
-  const [availability, setAvailability] = useState(true);
-  const [images, setImages] = useState([]); // Đổi thành images cho nhất quán
+  const [type, setType] = useState(''); // Loại phòng
+  const [price, setPrice] = useState(0); // Giá phòng
+  const [availability, setAvailability] = useState(true); // Tình trạng phòng
+  const [images, setImages] = useState([]); // Ảnh phòng
+  const [remainingRooms, setRemainingRooms] = useState(0); // Số phòng còn lại
   const [loading, setLoading] = useState(false); // Trạng thái loading
   const navigate = useNavigate();
 
@@ -21,6 +23,7 @@ const AddRoom = () => {
     formData.append('type', type);
     formData.append('price', price);
     formData.append('availability', availability);
+    formData.append('remainingRooms', remainingRooms);
 
     // Thêm từng ảnh vào formData với tên trường 'imageroom'
     images.forEach((file) => {
@@ -57,13 +60,18 @@ const AddRoom = () => {
           label={<span className="font-semibold text-gray-700">Loại Phòng</span>} 
           required
         >
-          <Input
+          <Select
             value={type}
-            onChange={(e) => setType(e.target.value)}
-            placeholder="Nhập loại phòng (Deluxe, Standard...)"
-            className="rounded-lg"
+            onChange={(value) => setType(value)}
+            placeholder="Chọn loại phòng"
+            className="w-full rounded-lg"
             required
-          />
+          >
+            <Option value="1 phòng 1 người">1 phòng 1 người</Option>
+            <Option value="1 phòng 2 người">1 phòng 2 người</Option>
+            <Option value="2 phòng 2 người">2 phòng 2 người</Option>
+            <Option value="2 phòng 4 người">2 phòng 4 người</Option>
+          </Select>
         </Form.Item>
         
         <Form.Item 
@@ -76,6 +84,20 @@ const AddRoom = () => {
             onChange={(value) => setPrice(value)}
             className="w-full rounded-lg"
             placeholder="Nhập giá phòng"
+            required
+          />
+        </Form.Item>
+
+        <Form.Item 
+          label={<span className="font-semibold text-gray-700">Số phòng còn lại</span>} 
+          required
+        >
+          <InputNumber
+            min={0}
+            value={remainingRooms}
+            onChange={(value) => setRemainingRooms(value)}
+            className="w-full rounded-lg"
+            placeholder="Nhập số phòng còn lại"
             required
           />
         </Form.Item>

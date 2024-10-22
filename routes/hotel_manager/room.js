@@ -15,7 +15,7 @@ const getPublicIdFromUrl = (url) => {
 // Route thêm phòng
 router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req, res) => {
   const { hotelId } = req.params;
-  const { type, price, availability } = req.body;
+  const { type, price, availability, remainingRooms } = req.body;
 
   try {
     const hotel = await Hotel.findById(hotelId);
@@ -23,7 +23,7 @@ router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req
       return res.status(404).json({ msg: 'Khách sạn không tồn tại' });
     }
 
-    const imageRoomUrls = req.files ? req.files.map(file => file.path) : []; // Kiểm tra nếu không có file
+    const imageRoomUrls = req.files ? req.files.map(file => file.path) : [];
 
     const newRoom = new Room({
       hotel: hotelId,
@@ -31,6 +31,7 @@ router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req
       price,
       availability,
       imageroom: imageRoomUrls,
+      remainingRooms: remainingRooms || 0, // Nếu không có, mặc định là 0
     });
 
     await newRoom.save();

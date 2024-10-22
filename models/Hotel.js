@@ -6,7 +6,8 @@ const hotelSchema = new mongoose.Schema({
   description: { type: String },
   manager: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Room' }],
-  imagehotel: [{ type: String }]
+  imagehotel: [{ type: String }],
+  stars: { type: String, min: 1, max: 5, required: false }
 });
 
 // Xuất mô hình Hotel

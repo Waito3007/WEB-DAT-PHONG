@@ -42,7 +42,7 @@ const PopularDestinations = () => {
   return (
     <section className="popular-destinations-wrapper">
       <div className="popular-destinations">
-        <h2 className="travel-title">Địa điểm đang thịnh hành</h2>
+        <h2 className="travel-title">Khách sạn được yêu thích nhất</h2>
         <Row gutter={[16, 16]}>
           {destinations.map((destination, index) => (
             <Col xs={24} sm={12} md={8} lg={6} key={index}>

@@ -15,22 +15,25 @@ const getPublicIdFromUrl = (url) => {
 };
 
 // Route thêm khách sạn
+// Thêm khách sạn
 router.post('/addhotel', auth, upload.array('imagehotel', 5), async (req, res) => {
-  const { name, location, description, rooms } = req.body;
+  const { name, location, description, rooms, stars } = req.body;
 
   try {
     const managerId = req.user.userId;
 
-    // Lấy link ảnh từ Cloudinary sau khi upload
+    // Lấy đường dẫn ảnh sau khi upload (có thể sử dụng dịch vụ như Cloudinary)
     const imageUrls = req.files.map(file => file.path);
-
+    
+    // Tạo khách sạn mới theo mô hình
     const newHotel = new Hotel({
       name,
       location,
       description,
       manager: managerId,
-      rooms,
-      imagehotel: imageUrls, // Lưu link ảnh Cloudinary
+      rooms: rooms ? rooms.split(',') : [],  // Chuyển đổi từ chuỗi thành mảng nếu cần
+      imagehotel: imageUrls,
+      stars: stars || 3  // Mặc định số sao là 3 nếu không có giá trị
     });
 
     await newHotel.save();
@@ -40,6 +43,7 @@ router.post('/addhotel', auth, upload.array('imagehotel', 5), async (req, res) =
     res.status(500).json({ msg: 'Lỗi server' });
   }
 });
+
 
 
 // Route lấy danh sách khách sạn của người dùng hiện tại
