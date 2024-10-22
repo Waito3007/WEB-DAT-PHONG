@@ -5,11 +5,11 @@ import { Edit, Search, Trash2, PlusCircle, Eye } from 'lucide-react';
 import { Modal, Input, Button, message, Upload, Form, Drawer,Rate, Table } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import AddRoom from './AddRoom'; // Thay đổi đường dẫn cho phù hợp với cấu trúc thư mục của bạn
+import { useParams } from 'react-router-dom';
 
 
 const MyHotelTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedHotelId, setSelectedHotelId] = useState(null); // Hotel ID to be passed to AddRoom
   const [roomSearchTerm, setRoomSearchTerm] = useState(''); // Tìm kiếm phòng
   const [loading, setLoading] = useState(false); 
   const [hotels, setHotels] = useState([]);
@@ -29,12 +29,8 @@ const MyHotelTable = () => {
   const [addHotelForm] = Form.useForm(); // Form instance for Add Hotel
 
   const roomsPerPage = 10; // Số phòng mỗi trang
+  const { hotelId } = useParams();
 
-  const convertToString = (id) => {
-    return String(id);};
-
-  const hotelId = selectedHotelId; // Giả sử selectedHotelId là một giá trị nào đó
-  const stringHotelId = convertToString(hotelId);
 
   const fetchHotels = useCallback(async () => {
     try {
@@ -201,11 +197,10 @@ const MyHotelTable = () => {
     setCurrentPage(1);
   };
 
-  const handleAddRoomClick = (hotelId) => {
-    setIsModalVisible(true); // Open the modal
-    setSelectedHotelId(hotelId); // Set the selected hotel ID
+  const handleAddRoomClick = () => {
+    setCurrentHotel(hotels); // Lưu lại ID của khách sạn để truyền vào AddRoom
+    setIsModalVisible(true); // Mở modal khi nhấn nút
   };
-  
 
   const handleModalClose = () => {
     setIsModalVisible(false); // Đóng modal
@@ -466,6 +461,7 @@ for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
       <Drawer
   title="Danh sách phòng"
   placement="right"
+  hotelId={currentHotel}
   onClose={closeRoomDrawer}
   visible={isRoomDrawerVisible}
   width={720}
@@ -517,11 +513,11 @@ for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
           {
             title: 'Hành Động',
             key: 'action',
-            render: (text, room) => (
+            render: (text, record) => (
               <div style={{ display: 'flex', gap: '10px' }}>
-                <Eye color="green" cursor="pointer" title="Xem" onClick={() => handleViewRoom(room._id)} />
-                <Edit color="orange" cursor="pointer" title="Sửa" onClick={() => handleEditRoom(room._id)} />
-                <Trash2 color="red" cursor="pointer" title="Xóa" onClick={() => handleDeleteRoom(room._id)} />
+                <Eye color="green" cursor="pointer" title="Xem" onClick={() => handleViewRoom(record._id)} />
+                <Edit color="orange" cursor="pointer" title="Sửa" onClick={() => handleEditRoom(record._id)} />
+                <Trash2 color="red" cursor="pointer" title="Xóa" onClick={() => handleDeleteRoom(record._id)} />
               </div>
             ),
           },
@@ -546,12 +542,12 @@ for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
 
 
   {/* Hiển thị modal để thêm phòng */}
-  <AddRoom
-  visible={isModalVisible}
-  onClose={handleModalClose}
-  hotelId={stringHotelId} // Pass selected hotel ID to AddRoom
-/>
+  <AddRoom 
+    visible={isModalVisible} 
+    onClose={handleModalClose}
+    hotelId={hotelId} // Truyền hotelId vào AddRoom
 
+  />
 </Drawer>
 
 
