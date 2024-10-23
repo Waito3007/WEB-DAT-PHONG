@@ -70,7 +70,7 @@ const AppContent = () => {
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/addhotel" element={<HotelAdd />} />
-        <Route path="/hotels/:hotelId/add-room" component={AddRoom} />
+        <Route path="/hotels/:hotelId/add-room" element={<AddRoom />} />
         <Route path="/myhotel" element={<MyHotel />} />
         <Route path="/hotels/:hotelId/rooms" element={<HotelRooms />} />
         <Route path="/room/:roomId" element={<RoomDetail />} />

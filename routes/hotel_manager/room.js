@@ -4,26 +4,11 @@ const Room = require('../../models/Room');
 const Hotel = require('../../models/Hotel');
 const auth = require('../../middleware/auth'); // Middleware xác thực
 const upload = require('../../middleware/upload'); // Middleware upload ảnh (Cloudinary)
-const cloudinary = require('cloudinary').v2;
 
-// Hàm để lấy publicId từ URL của Cloudinary
-const getPublicIdFromUrl = (url) => {
-  const matches = url.match(/\/v\d+\/(.+)\.(jpg|jpeg|png|gif|webp)/);
-  return matches ? matches[1] : null;
-};
-
+// Route thêm phòng
 router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req, res) => {
   const { hotelId } = req.params;
-  const { type, price, availability, remainingRooms } = req.body;
-
-  // Log các giá trị để kiểm tra
-  console.log("hotelId:", hotelId);
-  console.log("req.body:", req.body);
-  console.log("req.files:", req.files);
-
-  if (!hotelId) {
-    return res.status(400).json({ msg: 'Thiếu hotelId trong URL' });
-  }
+  const { type, price, availability } = req.body;
 
   try {
     const hotel = await Hotel.findById(hotelId);
@@ -31,7 +16,7 @@ router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req
       return res.status(404).json({ msg: 'Khách sạn không tồn tại' });
     }
 
-    const imageRoomUrls = req.files ? req.files.map(file => file.path) : [];
+    const imageRoomUrls = req.files.map(file => file.path); // Lấy URL ảnh từ Cloudinary
 
     const newRoom = new Room({
       hotel: hotelId,
@@ -39,7 +24,6 @@ router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req
       price,
       availability,
       imageroom: imageRoomUrls,
-      remainingRooms: remainingRooms || 0, // Nếu không có, mặc định là 0
     });
 
     await newRoom.save();
@@ -48,12 +32,10 @@ router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req
 
     res.status(201).json({ msg: 'Phòng đã được thêm thành công', room: newRoom });
   } catch (err) {
-    console.error("Error details:", err.message); // Thêm log chi tiết lỗi
-    res.status(500).json({ msg: 'Lỗi server', error: err.message });
+    console.error(err.message);
+    res.status(500).json({ msg: 'Lỗi server' });
   }
 });
-
-
 
 // Route để lấy danh sách phòng cho một khách sạn
 router.get('/:hotelId/rooms', auth, async (req, res) => {
@@ -74,9 +56,8 @@ router.get('/:hotelId/rooms', auth, async (req, res) => {
 
 // Lấy chi tiết phòng theo roomId
 router.get('/:roomId', auth, async (req, res) => {
-  const { roomId } = req.params; // Lấy roomId từ params
-
   try {
+    const roomId = req.params.roomId;
     const room = await Room.findById(roomId);
 
     if (!room) {
@@ -84,7 +65,6 @@ router.get('/:roomId', auth, async (req, res) => {
     }
     res.json(room);
   } catch (error) {
-    console.error(error.message);
     res.status(500).json({ msg: 'Lỗi server', error });
   }
 });
@@ -100,8 +80,8 @@ router.put('/:roomId', auth, upload.array('imageroom', 5), async (req, res) => {
       return res.status(404).json({ msg: 'Phòng không tồn tại' });
     }
 
-    // Kiểm tra nếu có ảnh mới được upload
-    const imageRoomUrls = req.files ? req.files.map(file => file.path) : [];
+    // Lấy URL ảnh mới
+    const imageRoomUrls = req.files.map(file => file.path);
 
     // Cập nhật thông tin phòng
     room.type = type || room.type;
@@ -112,21 +92,9 @@ router.put('/:roomId', auth, upload.array('imageroom', 5), async (req, res) => {
     room.imageroom = [...room.imageroom, ...imageRoomUrls];
 
     // Xóa ảnh đã được đánh dấu
-    if (Array.isArray(removedImages) && removedImages.length > 0) {
-      const publicIdsToRemove = removedImages.map(url => getPublicIdFromUrl(url)).filter(id => id);
-
-      // Xử lý xóa ảnh khỏi Cloudinary
-      for (const publicId of publicIdsToRemove) {
-        try {
-          const result = await cloudinary.uploader.destroy(publicId);
-          console.log('Xóa ảnh khỏi Cloudinary thành công:', result);
-        } catch (error) {
-          console.error('Lỗi khi xóa ảnh khỏi Cloudinary:', error);
-        }
-      }
-
-      // Cập nhật imageroom sau khi xóa
+    if (removedImages && removedImages.length > 0) {
       room.imageroom = room.imageroom.filter(image => !removedImages.includes(image));
+      // Xử lý xóa ảnh khỏi Cloudinary hoặc nơi lưu trữ khác nếu cần
     }
 
     await room.save();
@@ -137,64 +105,39 @@ router.put('/:roomId', auth, upload.array('imageroom', 5), async (req, res) => {
   }
 });
 
+
 // Xóa phòng
 router.delete('/:roomId', auth, async (req, res) => {
-  const roomId = req.params.roomId;
   try {
-    const room = await Room.findById(roomId);
-
-    if (!room) {
-      return res.status(404).json({ message: 'Không tìm thấy phòng' });
-    }
-
-    // Xóa ảnh khỏi Cloudinary trước khi xóa phòng
-    const publicIds = room.imageroom.map(url => getPublicIdFromUrl(url)).filter(id => id);
-
-    for (const publicId of publicIds) {
-      try {
-        await cloudinary.uploader.destroy(publicId);
-      } catch (error) {
-        console.error('Lỗi khi xóa ảnh khỏi Cloudinary:', error);
-      }
-    }
-
-    // Gọi pre hook để xóa tham chiếu phòng trong mô hình Hotel
-    await Room.findByIdAndDelete(roomId);
-
+    await Room.findByIdAndDelete(req.params.roomId);
     res.json({ message: 'Phòng đã được xóa' });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Lỗi khi xóa phòng', error: error.message });
+    res.status(500).json({ message: 'Lỗi khi xóa phòng' });
   }
 });
 
+
 // Route xóa hình ảnh
-router.put('/:roomId/remove-image', auth, async (req, res) => {
+router.put('/:roomId/remove-image', async (req, res) => {
   const { roomId } = req.params;
   const { imageUrl } = req.body;
 
   try {
-    const room = await Room.findById(roomId);
-    if (!room) {
-      return res.status(404).json({ message: 'Không tìm thấy phòng' });
-    }
+      // Cập nhật phòng bằng cách xóa URL hình ảnh khỏi mảng imageroom
+      const updatedRoom = await Room.findByIdAndUpdate(
+          roomId,
+          { $pull: { imageroom: imageUrl } },
+          { new: true }
+      );
 
-    // Xóa ảnh khỏi Cloudinary
-    const publicId = getPublicIdFromUrl(imageUrl);
-    if (publicId) {
-      await cloudinary.uploader.destroy(publicId);
-    }
+      if (!updatedRoom) {
+          return res.status(404).json({ message: 'Không tìm thấy phòng' });
+      }
 
-    const updatedRoom = await Room.findByIdAndUpdate(
-      roomId,
-      { $pull: { imageroom: imageUrl } },
-      { new: true }
-    );
-
-    res.json(updatedRoom);
+      res.json(updatedRoom);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Đã xảy ra lỗi' });
+      console.error(error);
+      res.status(500).json({ message: 'Đã xảy ra lỗi' });
   }
 });
 

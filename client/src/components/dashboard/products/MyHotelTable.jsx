@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Edit, Search, Trash2, PlusCircle, Eye } from 'lucide-react';
 import { Modal, Input, Button, message, Upload, Form, Drawer,Rate, Table } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import AddRoom from './AddRoom'; // Thay đổi đường dẫn cho phù hợp với cấu trúc thư mục của bạn
+import RoomListModal from './RoomListModal'; // Import component
 import { useParams } from 'react-router-dom';
 
 
@@ -27,9 +27,13 @@ const MyHotelTable = () => {
   const [isRoomDrawerVisible, setIsRoomDrawerVisible] = useState(false);
   const [roomList, setRoomList] = useState([]);
   const [addHotelForm] = Form.useForm(); // Form instance for Add Hotel
+  const [selectedHotelRooms, setSelectedHotelRooms] = useState([]);
+  const [isModalRoomVisible, setIsModalRoomVisible] = useState(false);
 
   const roomsPerPage = 10; // Số phòng mỗi trang
   const { hotelId } = useParams();
+  const [selectedHotel, setSelectedHotel] = useState(null);
+
 
 
   const fetchHotels = useCallback(async () => {
@@ -44,27 +48,11 @@ const MyHotelTable = () => {
   useEffect(() => {
     fetchHotels();
   }, [fetchHotels]);
-
-  const showRoomDrawer = async (hotelId) => {
-    try {
-      const response = await axios.get(`/api/room/${hotelId}/rooms`, { withCredentials: true });
-      setRoomList(response.data); // Gán dữ liệu trả về nếu có
-    } catch (error) {
-      setRoomList([]); // Nếu có lỗi, gán danh sách trống
-    } finally {
-      setIsRoomDrawerVisible(true); // Luôn mở Drawer bất kể có lỗi hay không
-    }
-  };
   
 
   //them anh moi khi them khach san
   const handleUpload = ({ fileList }) => {
     setFileList(fileList);
-  };
-
-  const closeRoomDrawer = () => {
-    setIsRoomDrawerVisible(false);
-    setRoomList([]);
   };
 
   const showModal = (hotel) => {
@@ -88,7 +76,7 @@ const MyHotelTable = () => {
       formData.append('name', values.name);
       formData.append('location', values.location);
       formData.append('description', values.description);
-      formData.append('stars', values.star);
+      formData.append('stars', values.stars);
       fileList.forEach((file) => {
         formData.append('imagehotel', file);
       });
@@ -197,36 +185,25 @@ const MyHotelTable = () => {
     setCurrentPage(1);
   };
 
-  const handleAddRoomClick = () => {
-    setCurrentHotel(hotels); // Lưu lại ID của khách sạn để truyền vào AddRoom
-    setIsModalVisible(true); // Mở modal khi nhấn nút
-  };
-
-  const handleModalClose = () => {
-    setIsModalVisible(false); // Đóng modal
-  };
-  
-  const handleViewRoom = (roomId) => {
-    console.log('Xem chi tiết phòng:', roomId);
-    // Xử lý logic xem chi tiết phòng
-  };
-  
-  const handleEditRoom = (roomId) => {
-    console.log('Sửa phòng:', roomId);
-    // Xử lý logic sửa phòng
-  };
-  
-  const handleDeleteRoom = (roomId) => {
-    console.log('Xóa phòng:', roomId);
-    // Xử lý logic xóa phòng
-  };
-
 
   const handleSearchRoom = (e) => {
     const term = e.target.value.toLowerCase();
     setRoomSearchTerm(term); // Sử dụng roomSearchTerm thay vì searchTerm
     setCurrentPage(1);
   };
+
+  // Xem danh sách phòng
+  const handleViewRooms = (hotelId) => {
+    setSelectedHotelRooms(hotelId);
+    setIsModalRoomVisible(true);
+};
+
+
+  const handleCloseModal = () => {
+    setIsModalRoomVisible(false);
+    setSelectedHotelRooms([]);
+  };
+
 
   // Gọi hàm filteredRooms để lọc và phân trang
   const filteredRooms = roomList.filter(
@@ -276,8 +253,8 @@ for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
               onChange={handleSearch}
               value={searchTerm}
               autoComplete='off' // Ngăn chặn tự động điền
+              placeholder="Tìm kiếm khách sạn..."
             />
-            <Search className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400' size={18} />
           </div>
           <button
             className='text-green-500 hover:text-green-700'
@@ -305,13 +282,19 @@ for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
             {currentHotels.map((hotel) => (
               <tr key={hotel._id}>
                 <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>{hotel.name}</td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>{hotel.location}</td>
+                <td className='px-2 py-2 whitespace-nowrap text-sm text-gray-300' style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {hotel.location}
+                </td>
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>{hotel.manager.name}</td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>{hotel.stars}</td>
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-                  <button onClick={() => showRoomDrawer(hotel._id)} className='text-blue-500 hover:text-blue-700 mr-2'>
-                    <Eye size={18} />
-                  </button>
+                <Rate value={hotel.stars} disabled style={{ fontSize: '18px' }} />
+                </td>
+               
+                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
+                <button onClick={() => handleViewRooms(hotel._id)} className='text-blue-500 hover:text-blue-700 mr-2'>
+    <Eye size={18} />
+</button>
+
                   <button onClick={() => showModal(hotel)} className='text-yellow-500 hover:text-yellow-700 mr-2'>
                     <Edit size={18} />
                   </button>
@@ -343,6 +326,13 @@ for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
           </nav>
         )}
       </div>
+      
+      {/* RoomListModal to show rooms of selected hotel */}
+      <RoomListModal
+        hotelId={selectedHotelRooms}
+        visible={isModalRoomVisible}
+        onClose={handleCloseModal}
+      />
 
       {/* Modal for Edit Hotel */}
       <Modal
@@ -361,6 +351,14 @@ for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
           <Form.Item name="description" label="Mô tả">
             <Input.TextArea rows={4} />
           </Form.Item>
+          {/* Stars rating field */}
+    <Form.Item
+      name="stars"
+      label="Xếp Hạng"
+      rules={[{ required: true, message: 'Vui lòng chọn xếp hạng!' }]}
+    >
+      <Rate allowHalf />
+    </Form.Item>
           <Form.Item label="Hình ảnh">
             <Upload
               action={null}
@@ -457,104 +455,6 @@ for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
           </Button>
         </div>
       </Modal>
-
-      <Drawer
-  title="Danh sách phòng"
-  placement="right"
-  hotelId={currentHotel}
-  onClose={closeRoomDrawer}
-  visible={isRoomDrawerVisible}
-  width={720}
->
-  <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-    {/* Nút Thêm Phòng */}
-    <Button 
-      type="primary" 
-      icon={<PlusCircle />} 
-      onClick={handleAddRoomClick} // Gọi hàm thêm phòng
-    >
-      Thêm Phòng
-    </Button>
-
-    {/* Thanh tìm kiếm */}
-    <Input
-      placeholder="Tìm kiếm phòng..."
-      onChange={handleSearchRoom}
-      value={roomSearchTerm}
-      autoComplete="off" // Ngăn chặn tự động điền
-      style={{ width: 200 }}
-    />
-  </div>
-
-    <>
-      {/* Bảng danh sách phòng */}
-      <Table
-        dataSource={currentRooms}
-        rowKey="_id" // Sử dụng trường _id làm khóa cho mỗi hàng
-        pagination={false} // Tắt phân trang nếu không cần thiết
-        columns={[
-          {
-            title: 'Loại Phòng',
-            dataIndex: 'type',
-            key: 'type',
-          },
-          {
-            title: 'Giá',
-            dataIndex: 'price',
-            key: 'price',
-            render: (text) => <span>{text} VND</span>,
-          },
-          {
-            title: 'Số Lượng Còn Lại',
-            dataIndex: 'remainingRooms',
-            key: 'remainingRooms',
-            render: (text) => <span>{text} Phòng</span>,
-          },
-          {
-            title: 'Hành Động',
-            key: 'action',
-            render: (text, record) => (
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <Eye color="green" cursor="pointer" title="Xem" onClick={() => handleViewRoom(record._id)} />
-                <Edit color="orange" cursor="pointer" title="Sửa" onClick={() => handleEditRoom(record._id)} />
-                <Trash2 color="red" cursor="pointer" title="Xóa" onClick={() => handleDeleteRoom(record._id)} />
-              </div>
-            ),
-          },
-        ]}
-      />
-
-      {/* Phân trang nếu có nhiều trang */}
-      {roomPageNumbers.length > 1 && (
-        <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}>
-          {roomPageNumbers.map(number => (
-            <Button 
-              key={number} 
-              onClick={() => paginateRooms(number)}
-              style={{ margin: '0 4px' }} // Khoảng cách giữa các nút
-            >
-              {number}
-            </Button>
-          ))}
-        </div>
-      )}
-    </>
-
-
-  {/* Hiển thị modal để thêm phòng */}
-  <AddRoom 
-    visible={isModalVisible} 
-    onClose={handleModalClose}
-    hotelId={hotelId} // Truyền hotelId vào AddRoom
-
-  />
-</Drawer>
-
-
-
-
-
-
     </motion.div>
   );
 };

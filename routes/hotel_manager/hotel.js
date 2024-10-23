@@ -127,7 +127,7 @@ router.delete('/:hotelId', auth, async (req, res) => {
 // Route cập nhật khách sạn
 router.put('/:hotelId', auth, upload.array('imagehotel', 5), async (req, res) => {
   const { hotelId } = req.params;
-  const { name, location, description, removedImages = [] } = req.body;
+  const { name, location, description, stars, removedImages = [] } = req.body;
 
   try {
     const hotel = await Hotel.findById(hotelId);
@@ -140,6 +140,8 @@ router.put('/:hotelId', auth, upload.array('imagehotel', 5), async (req, res) =>
     hotel.name = name || hotel.name;
     hotel.location = location || hotel.location;
     hotel.description = description !== undefined ? description : hotel.description;
+    hotel.stars = stars || hotel.stars;
+
 
     hotel.imagehotel = [...hotel.imagehotel, ...imageHotelUrls];
 
