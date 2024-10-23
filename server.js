@@ -2,15 +2,15 @@
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
-const userRoutes = require('./routes/account/register'); // Nhập route người dùng
-const loginRoute = require('./routes/account/login');
-const userTableRouter = require('./routes/dashboard/usertable');
-const hotelRoutes = require('./routes/hotel_manager/hotel');
-const Room = require('./routes/hotel_manager/room'); 
-const Profile = require('./routes/account/profile'); 
-const HomePage = require('./routes/homepage/tophotel');// Đường dẫn mới cho room
-const Detail = require('./routes/detail/detail');
-const Checkout = require('./routes/checkout/checkout');
+const userapi = require('./api/account/register'); // Nhập route người dùng
+const loginRoute = require('./api/account/login');
+const userTableRouter = require('./api/dashboard/usertable');
+const hotelapi = require('./api/hotel_manager/hotel');
+const Room = require('./api/hotel_manager/room'); 
+const Profile = require('./api/account/profile'); 
+const HomePage = require('./api/homepage/tophotel');// Đường dẫn mới cho room
+const Detail = require('./api/detail/detail');
+const Checkout = require('./api/checkout/checkout');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const app = express();
@@ -23,13 +23,13 @@ app.use(express.json()); // Để phân tích JSON trong request
 dotenv.config();
 // Middleware
 app.use(express.json());
-// Routes
-app.use('/api/users', userRoutes); // Đăng ký route
+// api
+app.use('/api/users', userapi); // Đăng ký route
 app.use('/api/users', loginRoute); // Route cho đăng nhập
 app.use('/api/profile', Profile);
 app.use('/api/usertable', userTableRouter); // Router lấy list người dùng
 app.use('/api/room', Room); // Thêm route cho phòng
-app.use('/api/hotel', hotelRoutes);
+app.use('/api/hotel', hotelapi);
 app.use('/api/homepage', HomePage);
 app.use('/api/detail', Detail);
 app.use('/api/checkout', Checkout);
@@ -44,6 +44,6 @@ app.listen(PORT, () => {
 });
 
 // Add profile route
-const profileRoute = require('./routes/account/profile'); // Import profile route
+const profileRoute = require('./api/account/profile'); // Import profile route
 app.use('/api/profile', profileRoute); // Add profile route
 
