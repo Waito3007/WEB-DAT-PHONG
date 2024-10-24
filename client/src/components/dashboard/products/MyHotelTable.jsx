@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Edit, Search, Trash2, PlusCircle, Eye } from 'lucide-react';
 import { Modal, Input, Button, message, Upload, Form, Drawer,Rate, Table } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import RoomListModal from './RoomListModal'; // Import component
+import RoomListDrawer from './RoomListDrawer'; // Import component
 import { useParams } from 'react-router-dom';
 
 
@@ -328,7 +328,7 @@ for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
       </div>
       
       {/* RoomListModal to show rooms of selected hotel */}
-      <RoomListModal
+      <RoomListDrawer
         hotelId={selectedHotelRooms}
         visible={isModalRoomVisible}
         onClose={handleCloseModal}

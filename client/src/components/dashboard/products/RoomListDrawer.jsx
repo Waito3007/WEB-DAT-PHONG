@@ -1,62 +1,92 @@
-import React, { useState, useEffect } from 'react'; 
-import { Drawer, Button, List, Image, Input, Spin, Typography, Pagination } from 'antd';
-import { SearchOutlined, PlusOutlined } from '@ant-design/icons'; 
+import React, { useState, useEffect, useCallback } from 'react'; 
+import { Modal, Drawer, Button, List, Image, Input, message, Spin, Typography, Pagination } from 'antd';
+import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'; 
 import axios from 'axios';
 import AddRoom from './AddRoom'; // Nhập AddRoom
-
+import EditRoomDrawer from './EditRoomDrawer';
 
 const { Text } = Typography;
 
-const RoomListModal = ({ hotelId, visible, onClose }) => {
+const RoomListDrawer = ({ hotelId, visible, onClose }) => {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isAddRoomModalVisible, setIsAddRoomModalVisible] = useState(false); // Trạng thái modal thêm phòng
-  const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
-  const [roomsPerPage] = useState(3); // Số phòng trên mỗi trang
+  const [isAddRoomModalVisible, setIsAddRoomModalVisible] = useState(false);
+  const [isEditRoomDrawerVisible, setIsEditRoomDrawerVisible] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [roomsPerPage] = useState(3);
 
-  const fetchRooms = async () => {
+  const fetchRooms = useCallback(async () => {
     setLoading(true);
     try {
       const response = await axios.get(`/api/room/${hotelId}/rooms`);
       if (response.data.length === 0) {
-        setRooms([]); // Trả về danh sách trống
+        setRooms([]); 
       } else {
-        setRooms(response.data); // Lưu danh sách phòng
+        setRooms(response.data); 
       }
     } catch (error) {
       console.error('Error fetching rooms:', error);
-      // Không hiển thị thông báo lỗi nếu không có phòng
     } finally {
       setLoading(false);
     }
-  };
+  }, [hotelId]);
 
   useEffect(() => {
     if (hotelId && visible) {
       fetchRooms();
     }
-  }, [hotelId, visible]);
+  }, [hotelId, visible, fetchRooms]);
 
   const filteredRooms = rooms.filter(room =>
     room.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Tính toán số trang
   const indexOfLastRoom = currentPage * roomsPerPage;
   const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
   const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
 
+
+  //thêm phòng
   const handleAddRoom = () => {
-    setIsAddRoomModalVisible(true); // Mở modal thêm phòng
+    setIsAddRoomModalVisible(true);
   };
 
   const handleAddRoomModalClose = () => {
-    setIsAddRoomModalVisible(false); // Đóng modal thêm phòng
-    // Tải lại danh sách phòng sau khi thêm
+    setIsAddRoomModalVisible(false);
     fetchRooms(); 
   };
 
+  //chỉnh sửa phòng
+  const handleEditRoom = (roomId) => {
+    setSelectedRoomId(roomId);
+    setIsEditRoomDrawerVisible(true);
+  };
+
+   // Hàm xác nhận xóa phòng
+   const confirmDeleteRoom = (roomId) => {
+    Modal.confirm({
+      title: 'Xác nhận xóa',
+      content: 'Bạn có chắc chắn muốn xóa phòng này?',
+      okText: 'Có',
+      okType: 'danger',
+      cancelText: 'Không',
+      onOk: () => handleDeleteRoom(roomId), // Gọi hàm xóa phòng nếu người dùng xác nhận
+    });
+  };
+   // Hàm xóa phòng
+   const handleDeleteRoom = async (roomId) => {
+    try {
+      await axios.delete(`/api/room/${roomId}`, { withCredentials: true });
+      message.success('Phòng đã được xóa thành công');
+      fetchRooms(); 
+    } catch (error) {
+      message.error('Đã xảy ra lỗi khi xóa phòng');
+    }
+  };
+
+  
   return (
     <Drawer
       title="Danh sách phòng"
@@ -83,7 +113,7 @@ const RoomListModal = ({ hotelId, visible, onClose }) => {
             />
           </div>
           {rooms.length === 0 ? (
-            <Text type="secondary">Danh sách phòng trống.</Text> // Hiển thị thông báo nếu không có phòng
+            <Text type="secondary">Danh sách phòng trống.</Text>
           ) : (
             <>
               <List
@@ -92,10 +122,17 @@ const RoomListModal = ({ hotelId, visible, onClose }) => {
                 renderItem={room => (
                   <List.Item
                     actions={[
-                      <Button type="primary" onClick={() => {/* handle view details */}}>
-                        Xem chi tiết
-                      </Button>,
-                    ]}
+                  <Button 
+                type="primary" 
+                icon={<EditOutlined />} 
+                onClick={() => handleEditRoom(room._id)} // Mở drawer chỉnh sửa phòng
+              />,                      
+              <Button 
+                      type="primary" 
+                      danger 
+                      icon={<DeleteOutlined />} 
+                      onClick={() => confirmDeleteRoom(room._id)} // Gọi hàm xác nhận xóa
+                    />,                    ]}
                     style={{
                       border: '1px solid #e0e0e0',
                       borderRadius: '8px',
@@ -139,9 +176,18 @@ const RoomListModal = ({ hotelId, visible, onClose }) => {
         width={520}
       >
         <AddRoom hotelId={hotelId} onClose={handleAddRoomModalClose} />
+
+        
       </Drawer>
+      {/* Drawer chỉnh sửa thông tin phòng */}
+      <EditRoomDrawer 
+        visible={isEditRoomDrawerVisible} 
+        onClose={() => setIsEditRoomDrawerVisible(false)} 
+        roomId={selectedRoomId} 
+        fetchRooms={fetchRooms} 
+      />
     </Drawer>
   );
 };
 
-export default RoomListModal;
+export default RoomListDrawer;
