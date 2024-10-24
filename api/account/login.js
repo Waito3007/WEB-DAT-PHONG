@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
 
     // Tạo token
     const payload = { userId: user._id }; // Lưu trữ ID của người dùng trong token
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
 
     // Gửi token cho client qua cookie
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });

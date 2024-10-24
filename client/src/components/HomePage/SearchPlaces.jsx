@@ -11,14 +11,7 @@ function SearchPlaces() {
             <label htmlFor="destination">Điểm đến</label>
             <input type="text" id="destination" placeholder="Nhập điểm đến" />
           </div>
-          <div className="input-item">
-            <label htmlFor="check-in">Ngày nhận phòng</label>
-            <input type="date" id="check-in" />
-          </div>
-          <div className="input-item">
-            <label htmlFor="check-out">Ngày trả phòng</label>
-            <input type="date" id="check-out" />
-          </div>
+         
           <div className="input-item">
             <label htmlFor="room-select">Phòng</label>
             <select id="room-select">

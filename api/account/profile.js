@@ -30,5 +30,17 @@ router.get('/me', async (req, res) => {
     res.status(500).json({ msg: 'Lỗi server' });
   }
 });
+// API để đăng xuất
+router.post('/logout', (req, res) => {
+  // Xóa cookie chứa token
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // Đảm bảo secure flag khi ở production
+    sameSite: 'strict', 
+  });
+
+  // Trả về phản hồi thành công
+  res.status(200).json({ msg: 'Đăng xuất thành công' });
+});
 
 module.exports = router;

@@ -5,8 +5,9 @@ body {
   box-sizing: border-box;
   color: black;
 }
-.homepage, .searchpage,.DetailHotelPage, .DetailRoomPage {
+.homepage, .searchpage,.DetailHotelPage, .DetailRoomPage , .room-info {
   overflow-x: hidden;
+  
 }
 .homepage {
   width: 100%;

@@ -46,20 +46,26 @@ const HomeNavbar = () => {
 
   const handleLogout = async () => {
     try {
-      // Gọi API để đăng xuất (nếu cần)
-      await fetch('/api/profile', {
+      // Gọi API để đăng xuất
+      const response = await fetch('/api/profile/logout', {
         method: 'POST',
-        credentials: 'include' // Đảm bảo cookie được gửi kèm theo yêu cầu
+        credentials: 'include', // Gửi kèm cookie
       });
-      // Xóa thông tin người dùng
-      setUser(null);
-      setMenuOpen(false); // Đóng menu nếu đang mở
-      // Điều hướng về trang đăng nhập
-      navigate("/login");
+  
+      if (response.ok) {
+        // Xóa thông tin người dùng trong state
+        setUser(null);
+        setMenuOpen(false); // Đóng menu nếu đang mở
+        // Điều hướng về trang đăng nhập
+        navigate("/login");
+      } else {
+        console.error("Lỗi khi đăng xuất:", response.status);
+      }
     } catch (error) {
       console.error("Lỗi khi đăng xuất:", error);
     }
   };
+  
   return (
     <div className="navbar flex justify-between items-center p-4 bg-gray-800">
       <div className="navbar-title">

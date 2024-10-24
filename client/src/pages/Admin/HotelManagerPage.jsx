@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-
-import Header from "../components/dashboard/common/Header";
-import StatCard from "../components/dashboard/common/StatCard";
-
+import Header from "../../components/dashboard/common/Header";
+import StatCard from "../../components/dashboard/common/StatCard";
 import { AlertTriangle, DollarSign, Package, TrendingUp } from "lucide-react";
-import CategoryDistributionChart from "../components/dashboard/overview/CategoryDistributionChart";
-import SalesTrendChart from "../components/dashboard/products/SalesTrendChart";
-import ProductsTable from "../components/dashboard/products/HotelTable";
-import MyProductsTable from "../components/dashboard/products/MyHotelTable";
+import CategoryDistributionChart from "../../components/dashboard/overview/CategoryDistributionChart";
+import SalesTrendChart from "../../components/dashboard/products/SalesTrendChart";
+import HotelTable from "../../components/dashboard/products/HotelTable";
+import MyHotelTable from "../../components/dashboard/products/MyHotelTable";
 
 const HotelManagerPage = () => {
   const [role, setRole] = useState(""); // Biến để lưu role người dùng
@@ -56,7 +54,7 @@ const HotelManagerPage = () => {
         </motion.div>
 
         {/* Hiển thị bảng sản phẩm hoặc khách sạn */}
-        {role === "Admin" ? <ProductsTable /> : role === "HotelManager" ? <MyProductsTable /> : <div>Bạn không có quyền truy cập</div>}
+        {role === "Admin" ? <HotelTable /> : role === "HotelManager" ? <MyHotelTable /> : <div>Bạn không có quyền truy cập</div>}
 
         {/* CHARTS */}
         <div className="grid grid-col-1 lg:grid-cols-2 gap-8">
