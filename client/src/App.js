@@ -68,6 +68,12 @@ const AppContent = () => {
     "/overview",
   ].includes(location.pathname);
 
+  // Các trang mà HotelManager không được phép truy cập
+  const restrictedPagesForHotelManager = [
+    "/users",
+
+  ].includes(location.pathname);
+
   if (isLoading) {
     return <div>Loading...</div>; // Hiển thị loading trong khi chờ dữ liệu
   }
@@ -77,11 +83,16 @@ const AppContent = () => {
     return <Navigate to="/" />; // Điều hướng về trang chủ
   }
 
+  // Nếu là HotelManager và cố gắng truy cập vào trang bị hạn chế
+  if (restrictedPagesForHotelManager && role === "HotelManager") {
+    return <Navigate to="/overview" />; // Điều hướng về trang trước đó
+  }
+
   return (
     <div
-      className={`flex h-screen 
-      ${isAdminPage ? "bg-blue-900" : "bg-gray-100"} 
-      text-gray-100 overflow-hidden`}
+    className={`${
+        isAdminPage ? "flex h-screen bg-blue-900" : "bg-gray-100"
+      } text-gray-100 overflow-hidden`}
     >
       {isAdminPage && (
         <div className="fixed inset-0 z-0">
@@ -89,16 +100,16 @@ const AppContent = () => {
           <div className="absolute inset-0 backdrop-blur-sm" />
         </div>
       )}
-      {isAdminPage && <Sidebar />}
+      {isAdminPage && <Sidebar userRole={role} />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/hotelmanager" element={<HotelManagerPage />} />
-        <Route path="/users" element={<UsersPage />} />
         <Route path="/sales" element={<SalesPage />} />
         <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/users" element={<UsersPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/addhotel" element={<HotelAdd />} />
