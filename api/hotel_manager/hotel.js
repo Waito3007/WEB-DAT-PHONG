@@ -122,6 +122,34 @@ router.delete('/:hotelId', auth, async (req, res) => {
   }
 });
 
+// lấy số khách sạn
+const mongoose = require('mongoose');
+
+router.get('/count', auth, async (req, res) => {
+  try {
+    let count;
+    const userRole = req.user.role;
+    const userId = req.user.userId;
+
+    if (userRole === 'Admin') {
+      // Count all hotels for Admin
+      count = await Hotel.countDocuments({});
+    } else if (userRole === 'HotelManager') {
+      // Ensure userId is an ObjectId to match the manager field in the schema
+      const managerId = mongoose.Types.ObjectId.isValid(userId) ? mongoose.Types.ObjectId(userId) : userId;
+      count = await Hotel.countDocuments({ manager: managerId });
+    } else {
+      return res.status(403).json({ msg: 'Bạn không có quyền truy cập' });
+    }
+
+    res.json({ count });
+  } catch (error) {
+    console.error("Lỗi server:", error);
+    res.status(500).json({ msg: "Lỗi server", error });
+  }
+});
+
+
 
 
 // Route cập nhật khách sạn
