@@ -1,90 +1,79 @@
-import React from "react";
-import { Card, Col, Row } from "antd"; // Xóa Button ở đây
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Card, Col, Row } from 'antd';
+import { useNavigate } from 'react-router-dom'; // Thêm import này
 
 const { Meta } = Card;
 
 const PopularDestinations = () => {
-  const destinations = [
-    {
-      name: "LTN Hotel",
-      description: "170 đánh giá",
-      price: "12.000.000 VNĐ",
-      stars: 5,
-      image: "image.png",
-      rating: "8.5/10",
-    },
-    {
-      name: "LTN Hotel",
-      description: "170 đánh giá",
-      price: "12.000.000 VNĐ",
-      stars: 5,
-      image: "image.png",
-      rating: "8.5/10",
-    },
-    {
-      name: "LTN Hotel",
-      description: "170 đánh giá",
-      price: "12.000.000 VNĐ",
-      stars: 5,
-      image: "image.png",
-      rating: "8.5/10",
-    },
-    {
-      name: "LTN Hotel",
-      description: "170 đánh giá",
-      price: "12.000.000 VNĐ",
-      stars: 5,
-      image: "image.png",
-      rating: "8.5/10",
-    },
-  ];
+  const [hotels, setHotels] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Khởi tạo useNavigate
+
+  useEffect(() => {
+    const fetchTopHotels = async () => {
+      try {
+        const response = await axios.get('/api/homepage/top4hotel');
+        setHotels(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError('Có lỗi xảy ra khi tải dữ liệu khách sạn');
+        setLoading(false);
+      }
+    };
+
+    fetchTopHotels();
+  }, []);
+
+  if (loading) {
+    return <div>Đang tải...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
-    <section className="popular-destinations-wrapper">
-      <div className="popular-destinations">
-        <h2 className="travel-title">Khách sạn được yêu thích nhất</h2>
+    <section className="travel-cards-wrapper">
+      <div className="travel-cards">
+        <h2 className="travel-title">Khách sạn hàng đầu</h2>
         <Row gutter={[16, 16]}>
-          {destinations.map((destination, index) => (
-            <Col xs={24} sm={12} md={8} lg={6} key={index}>
+          {hotels.map((hotel) => (
+            <Col xs={24} sm={12} md={8} lg={6} key={hotel._id}>
               <Card
                 hoverable
-                style={{ height: "auto" }}
+                style={{ height: 'auto' }}
                 cover={
                   <img
-                    alt={destination.name}
-                    src={destination.image}
+                    alt={hotel.name}
+                    src={hotel.imagehotel[0] || 'default-image.jpg'}
                     style={{
-                      height: "200px",
-                      width: "100%",
-                      objectFit: "cover",
+                      height: '200px',
+                      width: '100%',
+                      objectFit: 'cover',
                     }}
                   />
                 }
+                onClick={() => navigate(`/detailhotel/${hotel._id}`)} // Chuyển hướng đến trang chi tiết
               >
                 <Meta
-                  title={destination.name}
+                  title={hotel.name}
                   description={
                     <div>
-                      <span className="stars">
-                        {Array.from({ length: destination.stars }, (_, i) => (
-                          <span key={i} className="star">
-                            ⭐
-                          </span>
-                        ))}
+                      <span className="rating" style={{ color: '#1877F2' }}>
+                        {hotel.averageRating ? `${hotel.averageRating.toFixed(1)}/10` : 'Chưa có đánh giá'}
+                      </span>
+                      <span style={{ color: 'gray' }}>
+                        {` (${hotel.reviewsCount || 0} đánh giá)`}
                       </span>
                       <br />
-                      <span className="rating" style={{ color: "#1877F2" }}>
-                        {destination.rating}
-                      </span>
-                      <span style={{ color: "gray" }}>
-                        {` (${destination.description})`}
+                      <span className="lowest-price" style={{ fontWeight: 'bold', fontSize: '18px', color: '#ff3d00' }}>
+                        {hotel.lowestRoomPrice ? `${hotel.lowestRoomPrice.toLocaleString('vi-VN')} VND` : 'Đang cập nhật'}
                       </span>
                     </div>
                   }
                 />
-                <div className="card-footer">
-                  <span className="price">{destination.price}</span>
-                </div>
               </Card>
             </Col>
           ))}

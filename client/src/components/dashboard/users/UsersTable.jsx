@@ -93,15 +93,15 @@ const UsersTable = () => {
 			transition={{ delay: 0.2 }}
 		>
 			<div className='flex justify-between items-center mb-6'>
-				<h2 className='text-xl font-semibold text-gray-100'>Users</h2>
+				<h2 className='text-xl font-semibold text-gray-100'>Người dùng</h2>
 				<div className='relative'>
-					<input
-						type='text'
-						placeholder='Search users...'
-						className='bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
-						value={searchTerm}
-						onChange={handleSearch}
-					/>
+				<input 
+					type="search"
+					placeholder="Tìm người dùng"
+					className="text-white bg-gray-700 placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					value={searchTerm}
+					onChange={handleSearch}
+				/>
 					<Search className='absolute left-3 top-2.5 text-gray-400' size={18} />
 				</div>
 			</div>
@@ -110,11 +110,11 @@ const UsersTable = () => {
 				<table className='min-w-full divide-y divide-gray-700'>
 					<thead>
 						<tr>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Name</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Tên</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Email</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Role</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Status</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Actions</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Vai trò</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Trạng thái</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Thao tác</th>
 						</tr>
 					</thead>
 
@@ -151,9 +151,9 @@ const UsersTable = () => {
 										{user.isVerified ? "Active" : "Inactive"}
 									</span>
 								</td>
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-									<button className='text-indigo-400 hover:text-indigo-300 mr-2' onClick={() => handleEdit(user)}>Edit</button>
-									<button className='text-red-400 hover:text-red-300' onClick={() => handleDelete(user._id)}>Delete</button>
+								<td className='px-6 py-4 whitespace-nowrap text-sm text-white'>
+									<button className='text-indigo-400 hover:text-indigo-300 mr-2' onClick={() => handleEdit(user)}>Sửa</button>
+									<button className='text-red-400 hover:text-red-300' onClick={() => handleDelete(user._id)}>Xóa</button>
 								</td>
 							</motion.tr>
 						))}
@@ -180,7 +180,6 @@ const UsersTable = () => {
 					<div className='mt-4 p-4 bg-gray-700 rounded-lg w-1/3'>
 						<h2 className='text-lg font-semibold text-gray-100'>Chỉnh sửa người dùng</h2>
 						<input 
-							type='text' 
 							value={editForm.name} 
 							onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} 
 							className='bg-gray-600 text-white p-2 rounded mt-2 w-full' 

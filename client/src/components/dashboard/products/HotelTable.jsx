@@ -18,7 +18,7 @@ const HotelTable = () => {
   const [removedImages, setRemovedImages] = useState([]);
   const [form] = Form.useForm();
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false); // Kiểm tra người dùng có phải admin không
+  const [setIsAdmin] = useState(false); // Kiểm tra người dùng có phải admin không
 
   // Lấy thông tin người dùng để kiểm tra quyền admin
   useEffect(() => {
@@ -178,7 +178,7 @@ const HotelTable = () => {
         <h2 className='text-xl font-semibold text-gray-100'>Danh Sách Khách Sạn</h2>
         <div className='relative'>
           <input
-            type='text'
+            type='search'
             placeholder='Tìm kiếm khách sạn...'
             className='bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
             onChange={handleSearch}

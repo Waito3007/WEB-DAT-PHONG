@@ -79,9 +79,9 @@ const AppContent = () => {
 
   return (
     <div
-      className={`flex h-screen ${
-        isAdminPage ? "bg-blue-900" : "bg-gray-100"
-      } text-gray-100 overflow-hidden`}
+      className={`flex h-screen 
+      ${isAdminPage ? "bg-blue-900" : "bg-gray-100"} 
+      text-gray-100 overflow-hidden`}
     >
       {isAdminPage && (
         <div className="fixed inset-0 z-0">
