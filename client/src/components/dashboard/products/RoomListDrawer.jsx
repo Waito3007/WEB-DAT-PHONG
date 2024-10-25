@@ -181,11 +181,14 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
       </Drawer>
       {/* Drawer chỉnh sửa thông tin phòng */}
       <EditRoomDrawer 
-        visible={isEditRoomDrawerVisible} 
-        onClose={() => setIsEditRoomDrawerVisible(false)} 
-        roomId={selectedRoomId} 
-        fetchRooms={fetchRooms} 
-      />
+      visible={isEditRoomDrawerVisible} 
+      onClose={() => {
+      setIsEditRoomDrawerVisible(false);
+      setSelectedRoomId(null);  // Xóa roomId sau khi đóng drawer
+      }}
+      roomId={selectedRoomId}    // Truyền roomId vào EditRoomDrawer
+      fetchRooms={fetchRooms} 
+/>
     </Drawer>
   );
 };

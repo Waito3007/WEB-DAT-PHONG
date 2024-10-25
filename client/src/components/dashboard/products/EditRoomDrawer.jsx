@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Drawer, Button, Form, Input, Checkbox, Upload, message, Spin } from 'antd';
+import { Drawer, Button, Form, Input, Checkbox, Upload, message, Select, Spin } from 'antd';
 import axios from 'axios';
+
+const { Option } = Select; // Khai báo biến Option để sử dụng trong Select
 
 const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
   const [form] = Form.useForm();
@@ -11,6 +13,11 @@ const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
 
   // Hàm lấy thông tin phòng để hiển thị
   const fetchRoomData = async () => {
+    if (!roomId) {
+      message.error('ID phòng không hợp lệ.');
+      return;
+    }
+    
     try {
       const response = await axios.get(`/api/room/${roomId}`);
       setRoomData(response.data);
@@ -18,10 +25,18 @@ const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
         type: response.data.type,
         price: response.data.price,
         availability: response.data.availability,
+        remainingRooms: response.data.remainingRooms
       });
-      setFileList(response.data.imageroom.map(url => ({ uid: url, name: url, url }))); // Giả sử imageroom là array URL
+      setFileList((response.data.imageroom || []).map((url, index) => ({
+        uid: index.toString(),
+        name: `Image-${index}`,
+        status: 'done',
+        url,
+      })));
+      setRemovedImages([]);
     } catch (error) {
       console.error('Error fetching room data:', error);
+      message.error('Lỗi khi tải dữ liệu phòng.');
     }
   };
 
@@ -35,31 +50,46 @@ const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
   const handleSave = async (values) => {
     setIsUpdating(true);
     try {
-      const updatedRoom = { ...values, imageroom: fileList.map(file => file.url) }; // Chỉ lưu URL hình ảnh
-      await axios.put(`/api/room/${roomId}`, updatedRoom);
-      message.success('Cập nhật phòng thành công');
-      fetchRooms(); // Tải lại danh sách phòng
-      onClose(); // Đóng drawer
+      const formData = new FormData();
+      formData.append('type', values.type);
+      formData.append('price', values.price);
+      formData.append('availability', values.availability);
+      formData.append('remainingRooms', values.remainingRooms);
+
+      fileList.forEach((file) => {
+        formData.append('imageroom', file);
+      });
+
+      formData.append('removedImages', JSON.stringify(removedImages));
+
+      await axios.put(`/api/room/${roomId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
+      });
+
+      message.success('Cập nhật phòng thành công!');
+      fetchRooms();
+      onClose(); // Đóng drawer sau khi cập nhật thành công
     } catch (error) {
-      console.error('Error updating room:', error);
-      message.error('Cập nhật phòng không thành công');
+      message.error('Đã xảy ra lỗi khi cập nhật phòng');
     } finally {
       setIsUpdating(false);
     }
   };
 
-  //chỉnh sửa và xóa ảnh
+  // Chỉnh sửa và xóa ảnh
   const handleImageChange = ({ fileList: newFileList }) => {
     setFileList(newFileList.map(file => file.originFileObj || file));
   };
 
-  const handleRemoveImage = async (file, roomId) => {
+  const handleRemoveImage = async (file) => {
     setFileList((prev) => prev.filter((item) => item.uid !== file.uid));
     setRemovedImages((prev) => [...prev, file.url]);
 
     try {
       await axios.put(`/api/room/${roomId}/remove-image`, { imageUrl: file.url }, { withCredentials: true });
-      message.success('Hình ảnh đã được xóa thành công');
     } catch (error) {
       message.error('Đã xảy ra lỗi khi xóa hình ảnh');
     }
@@ -81,26 +111,40 @@ const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
     >
       {roomData ? (
         <Form form={form} onFinish={handleSave}>
-          <Form.Item
-            label="Loại phòng"
-            name="type"
-            rules={[{ required: true, message: 'Vui lòng nhập loại phòng' }]}
-          >
-            <Input className="border-gray-300 rounded-lg" />
+          <Form.Item label="Loại Phòng" name="type" required>
+            <Select placeholder="Chọn loại phòng" required>
+              <Option value="1 phòng 1 người">1 phòng 1 người</Option>
+              <Option value="1 phòng 2 người">1 phòng 2 người</Option>
+              <Option value="2 phòng 2 người">2 phòng 2 người</Option>
+              <Option value="2 phòng 4 người">2 phòng 4 người</Option>
+            </Select>
           </Form.Item>
           <Form.Item
             label="Giá"
             name="price"
-            rules={[{ required: true, message: 'Vui lòng nhập giá phòng' }]}
+            rules={[
+              { required: true, message: 'Vui lòng nhập giá phòng' },
+              { validator: (_, value) => value >= 0 ? Promise.resolve() : Promise.reject('Tiền không được nhỏ hơn 0') },
+            ]}
           >
-            <Input type="number" className="border-gray-300 rounded-lg" />
+            <Input type="number" min={0} />
+          </Form.Item>
+          <Form.Item
+            label="Phòng còn trống"
+            name="remainingRooms"
+            rules={[
+              { required: true, message: 'Vui lòng nhập số lượng phòng còn trống' },
+              { validator: (_, value) => value >= 0 ? Promise.resolve() : Promise.reject('Số lượng phòng còn trống không được nhỏ hơn 0') },
+            ]}
+          >
+            <Input type="number" min={0} />
           </Form.Item>
           <Form.Item
             label="Tình trạng"
             name="availability"
             valuePropName="checked"
           >
-            <Checkbox className="text-blue-600">Còn phòng</Checkbox>
+            <Checkbox>Còn phòng</Checkbox>
           </Form.Item>
           <Form.Item label="Hình ảnh phòng">
             <Upload
@@ -114,7 +158,7 @@ const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
             </Upload>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={isUpdating} className="bg-blue-500 hover:bg-blue-600">
+            <Button type="primary" htmlType="submit" loading={isUpdating}>
               {isUpdating ? 'Đang lưu...' : 'Lưu'}
             </Button>
           </Form.Item>
