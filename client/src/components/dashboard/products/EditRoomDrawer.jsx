@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Drawer, Button, Form, Input, Checkbox, Upload, message, Select, Spin } from 'antd';
 import axios from 'axios';
 
@@ -12,7 +12,7 @@ const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
   const [roomData, setRoomData] = useState(null);
 
   // Hàm lấy thông tin phòng để hiển thị
-  const fetchRoomData = async () => {
+  const fetchRoomData = useCallback(async () => {
     if (!roomId) {
       message.error('ID phòng không hợp lệ.');
       return;
@@ -25,7 +25,7 @@ const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
         type: response.data.type,
         price: response.data.price,
         availability: response.data.availability,
-        remainingRooms: response.data.remainingRooms
+        remainingRooms: response.data.remainingRooms,
       });
       setFileList((response.data.imageroom || []).map((url, index) => ({
         uid: index.toString(),
@@ -38,13 +38,13 @@ const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
       console.error('Error fetching room data:', error);
       message.error('Lỗi khi tải dữ liệu phòng.');
     }
-  };
+  }, [roomId, form]); // Đảm bảo rằng hàm fetchRoomData chỉ thay đổi khi roomId hoặc form thay đổi.
 
   useEffect(() => {
     if (roomId && visible) {
       fetchRoomData();
     }
-  }, [roomId, visible]);
+  }, [roomId, visible, fetchRoomData]); // Thêm fetchRoomData vào dependency array
 
   // Hàm xử lý lưu thông tin phòng
   const handleSave = async (values) => {
