@@ -21,6 +21,8 @@ import AddRoom from './components/hotel_manager/AddRoom';
 import HotelRooms from './components/hotel_manager/HotelRooms'; // Đường dẫn component RoomList
 import RoomDetail from './components/hotel_manager/RoomDetail';
 
+import FavoritesPage from './components/FavoritesPage/FavoritesPage';
+
 
 const AppContent = () => {
   const location = useLocation();
@@ -62,6 +64,10 @@ const AppContent = () => {
         <Route path="/room/:roomId" element={<RoomDetail />} />
         <Route path="/hotels/:hotelId" element={<HotelDetail />} /> {/* Route cho HotelDetail */}
         <Route path="*" element={<NotFoundPage />} />
+
+        <Route path="/FavoritesPage" element={<FavoritesPage />} />
+
+
       </Routes>
     </div>
   );
