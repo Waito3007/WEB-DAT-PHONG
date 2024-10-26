@@ -75,7 +75,7 @@ const HomeNavbar = () => {
         {user ? (
           <div className="user-avatar cursor-pointer" onClick={toggleMenu}>
             <img 
-              src={user.avatar || "https://res-console.cloudinary.com/dackig67m/thumbnails/v1/image/upload/v1728362097/aG90ZWxzL2ZpbGVfbXk5c2l1/drilldown"} 
+              src={user.avatar || "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3485.jpg"} 
               alt="Avatar" 
               className="w-10 h-10 rounded-full" 
             />

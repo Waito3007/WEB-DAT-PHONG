@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, Checkbox } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons'; // Thêm icon
+import { motion } from 'framer-motion'; // Nhập motion từ framer-motion
 import '../../assets/css/Register.css'; // Nhập tệp CSS
 
 const Register = () => {
@@ -62,7 +63,12 @@ const Register = () => {
           alt="Register"
         />
       </div>
-      <div className="w-fit md:w-fit flex flex-col justify-start items-start gap-6 bg-white p-6 rounded-lg shadow-md">
+      <motion.div 
+        className="w-fit md:w-fit flex flex-col justify-start items-start gap-6 bg-white p-6 rounded-lg shadow-md"
+        initial={{ opacity: 0, y: 20 }} // Bắt đầu từ trạng thái ẩn
+        animate={{ opacity: 1, y: 0 }} // Hiện tại
+        transition={{ duration: 0.5 }} // Thời gian hiệu ứng
+      >
         <h2 className="text-black text-4xl font-normal text-center md:text-left">Tạo tài khoản của bạn</h2>
         {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
         <form onSubmit={handleRegister} className="flex flex-col gap-6">
@@ -73,7 +79,7 @@ const Register = () => {
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="w-full px-4 input-field border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" // Thêm border và hiệu ứng
+                className="w-full px-4 input-field border rounded-md focus:outline-none " // Thêm border và hiệu ứng
                 required
                 placeholder="Nhập họ của bạn"
               />
@@ -84,7 +90,7 @@ const Register = () => {
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="w-full px-4 input-field border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" // Thêm border và hiệu ứng
+                className="w-full px-4 input-field border rounded-md focus:outline-none " // Thêm border và hiệu ứng
                 required
                 placeholder="Nhập tên của bạn"
               />
@@ -97,7 +103,7 @@ const Register = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 input-field border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" // Thêm border và hiệu ứng
+              className="w-full px-4 input-field border rounded-md focus:outline-none " // Thêm border và hiệu ứng
               required
               style={{ color: 'black' }} // Thay đổi màu chữ thành đen
               placeholder="Nhập email của bạn"
@@ -109,7 +115,7 @@ const Register = () => {
             <Input.Password
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full input-field border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" // Thêm border và hiệu ứng
+              className="w-full input-field border rounded-md focus:outline-none " // Thêm border và hiệu ứng
               required
               placeholder="Nhập mật khẩu"
             />
@@ -120,7 +126,7 @@ const Register = () => {
             <Input.Password
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full input-field border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" // Thêm border và hiệu ứng
+              className="w-full input-field border rounded-md focus:outline-none " // Thêm border và hiệu ứng
               required
               placeholder="Nhập lại mật khẩu"
             />
@@ -146,7 +152,7 @@ const Register = () => {
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };

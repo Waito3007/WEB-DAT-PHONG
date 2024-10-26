@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { FaMapMarkerAlt, FaStar } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { motion } from "framer-motion"; // Import motion từ framer-motion
 
 const OrderRoom = () => {
   const { hotelId } = useParams();
-  const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
+  const navigate = useNavigate();
   const [hotel, setHotel] = useState(null);
   const [averageRating, setAverageRating] = useState(0);
   const [totalRatings, setTotalRatings] = useState(0);
@@ -33,13 +34,17 @@ const OrderRoom = () => {
 
   const stars = hotel.stars || 1;
 
-  // Xử lý khi ấn vào nút "Chọn phòng"
   const handleSelectRoom = () => {
-    navigate(`/detailroom/${hotel._id}`); // Điều hướng sang trang detailroom khi người dùng ấn nút "Chọn phòng"
+    navigate(`/detailroom/${hotel._id}`);
   };
 
   return (
-    <div className="order-room-container p-4">
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="order-room-container p-4"
+    >
       <div className="hotel-info mb-4">
         <div className="hotel-header flex justify-between items-center">
           <h1 className="hotel-name text-2xl font-bold">{hotel.name}</h1>
@@ -64,11 +69,12 @@ const OrderRoom = () => {
         <span className="price text-xl font-bold">{lowestPrice.toLocaleString('vi-VN')} VND</span>
         <button
           className="book-now-btn text-white py-2 px-4"
-          onClick={handleSelectRoom} 
-          >Chọn phòng
+          onClick={handleSelectRoom}
+        >
+          Chọn phòng
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
