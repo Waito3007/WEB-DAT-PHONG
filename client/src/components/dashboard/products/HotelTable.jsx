@@ -177,15 +177,16 @@ const HotelTable = () => {
       <div className='flex justify-between items-center mb-6'>
         <h2 className='text-xl font-semibold text-gray-100'>Danh Sách Khách Sạn</h2>
         <div className='relative'>
-          <input
-            type='search'
-            placeholder='Tìm kiếm khách sạn...'
-            className='bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
-            onChange={handleSearch}
-            value={searchTerm}
-          />
-          <Search className='absolute left-3 top-2.5 text-gray-400' size={18} />
-        </div>
+            <input
+              type='search'
+              className='bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-12 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+              onChange={handleSearch}
+              value={searchTerm}
+              autoComplete='off' // Ngăn chặn tự động điền
+              placeholder="Tìm kiếm khách sạn..."
+            />
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-2.5 text-gray-400"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          </div>
       </div>
 
       <div className='overflow-x-auto'>
