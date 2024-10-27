@@ -17,22 +17,26 @@ const HotelManagerPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch user role
         const userResponse = await axios.get("/api/profile/me", { withCredentials: true });
         setRole(userResponse.data.role);
-
-        // Fetch hotel count based on role
-        const hotelResponse = await axios.get("/api/hotel/count", { withCredentials: true });
-        setHotelCount(hotelResponse.data.count);
+  
+        // Tải danh sách khách sạn theo vai trò
+        const hotelsResponse = await axios.get(
+          userResponse.data.role === "Admin" ? "/api/hotel" : "/api/hotel/myhotels",
+          { withCredentials: true }
+        );
+  
+        setHotelCount(hotelsResponse.data.length);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu:", error);
       } finally {
         setIsLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   if (isLoading) {
     return <div>Loading...</div>;
