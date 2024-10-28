@@ -100,7 +100,7 @@ const HomeNavbar = () => {
             {menuOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-50">
                 <ul className="py-2">
-                  <li className="px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">Hồ sơ cá nhân của bạn</li>
+                  <li className="px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">Hồ sơ cá nhân</li>
                   <li className="px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">Khách sạn yêu thích</li>
                   <li className="px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">Đặt phòng của bạn</li>
                   {user.role === "Admin" || user.role === "HotelManager" ? (

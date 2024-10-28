@@ -43,7 +43,6 @@ const Register = () => {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        alert('Đăng ký thành công');
         navigate('/login');
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
