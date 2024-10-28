@@ -1,12 +1,13 @@
 /* Đặt màu nền cho toàn bộ trang */
 body, .favorites-page {
   background-color: #f3f4f6; /* Màu nền xám nhạt */
-  min-height: 100vh; /* Chiều cao tối thiểu là chiều cao màn hình */
-  width: 100vw; /* Chiều rộng đầy đủ của màn hình */
+  min-height: 100%; /* Chiều cao tối thiểu là chiều cao màn hình */
+  width: 100%; /* Chiều rộng đầy đủ của màn hình */
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column; /* Đặt chiều dọc cho các phần tử con */
+  overflow-y: auto; /* Cho phép cuộn theo chiều dọc */
 }
 
 /* Header */
@@ -27,7 +28,7 @@ body, .favorites-page {
   max-width: 100%; /* Đặt tối đa bằng 100% để full màn hình */
   margin: 0 auto;
   padding: 32px 16px;
-  overflow-y: auto; /* Cho phép cuộn theo chiều dọc */
+ 
   margin-bottom: 20px;
 
   

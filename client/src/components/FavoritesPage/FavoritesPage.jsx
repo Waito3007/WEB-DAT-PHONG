@@ -39,7 +39,7 @@ export default function FavoritesPage() {
         <div  style={{padding:'10px'   , display:'flex'}}>
           <button className="text-white mx-2">🤍 Yêu thích</button>
           <div className="flex items-center">
-    <img src="x.png" alt="User" className="w-6 h-6" />
+    <img src="avta.png" alt="User" className="w-6 h-6"  style={{ width: "50px",height: "50px"   }}  />
     <span className="mx-2">Người dùng</span>
 </div>
         </div>
@@ -60,13 +60,12 @@ export default function FavoritesPage() {
 
                 <p className="text-gray-600"style={{ marginTop: '10px' }}>📍{hotel.location}</p>
                 <div className="flex items-center my-2">
-                  <span className="text-yellow-500 text-lg"  style={{ color: 'black' }}>⭐⭐⭐⭐⭐ Khách Sạn 5 Sao {hotel.rating}</span>
-                  <span className="text-gray-600 ml-2">{hotel.reviews} đánh giá</span>
+                  <span className="text-yellow-500 text-lg"  style={{ color: 'black' }}>⭐⭐⭐⭐⭐ Khách Sạn 5 Sao </span>
                 </div>
 
                 <div className="flex items-center my-2">
                   <span className="square">{hotel.rating}</span>
-                  <span className="text-gray-600 ml-2">{hotel.reviews} đánh giá</span>
+                  <span className="text-gray-600 ml-2" style={{ fontWeight: "bold",fontSize: "20px" }}>{hotel.reviews} đánh giá</span>
                 </div>
 
 

@@ -22,6 +22,7 @@ import HotelRooms from './components/hotel_manager/HotelRooms'; // Đường d�
 import RoomDetail from './components/hotel_manager/RoomDetail';
 
 import FavoritesPage from './components/FavoritesPage/FavoritesPage';
+import ProfilePage from './components/ProfilePage/ProfilePage';
 
 
 const AppContent = () => {
@@ -66,6 +67,7 @@ const AppContent = () => {
         <Route path="*" element={<NotFoundPage />} />
 
         <Route path="/FavoritesPage" element={<FavoritesPage />} />
+        <Route path="/ProfilePage" element={<ProfilePage />} />
 
 
       </Routes>
