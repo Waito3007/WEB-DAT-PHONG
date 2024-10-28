@@ -9,16 +9,53 @@ const SIDEBAR_ITEMS = [
 		icon: BarChart2,
 		color: "#6366f1",
 		href: "/overview",
+		roles: ["Admin", "HotelManager"], // Cho phép cả Admin và HotelManager
 	},
-	{ name: "Hotelmanager", icon: ShoppingBag, color: "#8B5CF6", href: "/hotelmanager" },
-	{ name: "Users", icon: Users, color: "#EC4899", href: "/users" },
-	{ name: "Sales", icon: DollarSign, color: "#10B981", href: "/sales" },
-	{ name: "Orders", icon: ShoppingCart, color: "#F59E0B", href: "/orders" },
-	{ name: "Analytics", icon: TrendingUp, color: "#3B82F6", href: "/analytics" },
-	{ name: "Settings", icon: Settings, color: "#6EE7B7", href: "/settings" },
+	{
+		name: "Khách sạn trên hệ thống",
+		icon: ShoppingBag,
+		color: "#8B5CF6",
+		href: "/hotelmanager",
+		roles: ["Admin", "HotelManager"],
+	},
+	{
+		name: "Quản lý người dùng",
+		icon: Users,
+		color: "#EC4899",
+		href: "/users",
+		roles: ["Admin"], // Chỉ cho phép Admin
+	},
+	{
+		name: "Sales",
+		icon: DollarSign,
+		color: "#10B981",
+		href: "/sales",
+		roles: ["Admin", "HotelManager"], 
+	},
+	{
+		name: "Orders",
+		icon: ShoppingCart,
+		color: "#F59E0B",
+		href: "/orders",
+		roles: ["Admin", "HotelManager"], 
+	},
+	{
+		name: "Analytics",
+		icon: TrendingUp,
+		color: "#3B82F6",
+		href: "/analytics",
+		roles: ["Admin", "HotelManager"], // Chỉ cho phép Admin
+	},
+	{
+		name: "Settings",
+		icon: Settings,
+		color: "#6EE7B7",
+		href: "/settings",
+		roles: ["Admin", "HotelManager"], // Chỉ cho phép Admin
+	},
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ userRole }) => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
 	return (
@@ -39,7 +76,7 @@ const Sidebar = () => {
 				</motion.button>
 
 				<nav className='mt-8 flex-grow'>
-					{SIDEBAR_ITEMS.map((item) => (
+					{SIDEBAR_ITEMS.filter(item => item.roles.includes(userRole)).map((item) => (
 						<Link key={item.href} to={item.href}>
 							<motion.div className='flex items-center p-4 text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors mb-2'>
 								<item.icon size={20} style={{ color: item.color, minWidth: "20px" }} />
