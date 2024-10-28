@@ -13,7 +13,7 @@ const AccountInfo = () => (
         { label: 'Address', value: 'Hóc Môn, Hồ Chí Minh' },
         { label: 'Date of birth', value: '01-10-2004' }
       ].map((item, index) => (
-        <div key={index} className="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
+        <div key={index} className="flex justify-between items-center border-b pb-2 mb-2"style={{borderColor: "black"}} >
           <div>
             <p className="text-gray-500">{item.label}</p>
             <p className="text-black">{item.value}</p>

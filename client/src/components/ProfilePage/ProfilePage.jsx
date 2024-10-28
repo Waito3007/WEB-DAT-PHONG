@@ -18,12 +18,14 @@ const ProfilePage = () => {
             <div className="room-container">
               <img src="phong1.png" alt="Ảnh phòng nền" className="background-image" />
               <img src="avta.png" alt="Ảnh đại diện" className="profile-image" />
+              <button className="profile-btn">
+              Tải lên ảnh mới
+              </button>
+            
             </div>
 
           </div>
-          <button className="mt-4 mx-auto block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition" style={{marginTop:'30px'}}>
-            Tải lên ảnh mới
-          </button>
+         
         </div>
         <AccountTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         {activeTab === 'Tài khoản' && <AccountInfo />}
