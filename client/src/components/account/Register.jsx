@@ -81,7 +81,7 @@ const Register = () => {
                 onChange={(e) => setFirstName(e.target.value)}
                 className="w-full px-4 input-field border rounded-md focus:outline-none " // Thêm border và hiệu ứng
                 required
-                placeholder="Nhập họ của bạn"
+                placeholder=""
               />
             </div>
             <div className="flex flex-col w-full">
@@ -92,7 +92,7 @@ const Register = () => {
                 onChange={(e) => setLastName(e.target.value)}
                 className="w-full px-4 input-field border rounded-md focus:outline-none " // Thêm border và hiệu ứng
                 required
-                placeholder="Nhập tên của bạn"
+                placeholder=""
               />
             </div>
           </div>
@@ -106,7 +106,7 @@ const Register = () => {
               className="w-full px-4 input-field border rounded-md focus:outline-none " // Thêm border và hiệu ứng
               required
               style={{ color: 'black' }} // Thay đổi màu chữ thành đen
-              placeholder="Nhập email của bạn"
+              placeholder=""
             />
           </div>
 
@@ -117,7 +117,7 @@ const Register = () => {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full input-field border rounded-md focus:outline-none " // Thêm border và hiệu ứng
               required
-              placeholder="Nhập mật khẩu"
+              placeholder=""
             />
           </div>
 
@@ -128,17 +128,17 @@ const Register = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full input-field border rounded-md focus:outline-none " // Thêm border và hiệu ứng
               required
-              placeholder="Nhập lại mật khẩu"
+              placeholder=""
             />
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center border-black">
             <Checkbox
               checked={agreeTerms}
               onChange={(e) => setAgreeTerms(e.target.checked)}
-              className="checkbox"
+              className="checkbox "
             />
-            <span className="text-sm" style={{ color: 'black' }}>
+            <span className="text-sm " style={{ color: 'black' }}>
                 Tôi đồng ý với tất cả các Điều khoản và Chính sách quyền riêng tư
             </span>
           </div>
