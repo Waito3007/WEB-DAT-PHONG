@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import RoomInfo from '../components/Checkout/RoomInfo';
 import Summary from '../components/Checkout/Summary';
-import Payment from '../components/Checkout/Payment'; // Import component Payment
+import Payment from '../components/Checkout/Payment';
 import { useParams } from "react-router-dom";
 import "../assets/css/style.css";
 
@@ -15,7 +15,6 @@ const CheckoutPage = () => {
   useEffect(() => {
     const fetchRoomDetails = async () => {
       try {
-        // Gọi API để lấy dữ liệu phòng dựa trên roomId
         const response = await axios.get(`/api/checkout/${roomId}`);
         setRoomDetails(response.data); // Lưu dữ liệu phòng vào state
         setLoading(false);

@@ -24,7 +24,7 @@ const Login = () => {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        navigate('/');
+        navigate(-1);
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
       }
