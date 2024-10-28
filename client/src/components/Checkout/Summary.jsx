@@ -3,9 +3,9 @@ import React from 'react';
 const Summary = ({ roomDetails }) => {
   if (!roomDetails) return null;
 
-  const roomPrice = roomDetails.price; // Lấy giá phòng từ thông tin chi tiết phòng
-  const tax = roomPrice * 0.1; // Thuế 10%
-  const total = roomPrice + tax; // Tổng cộng
+  const roomPrice = roomDetails.price;
+  const tax = roomPrice * 0.1;
+  const total = roomPrice + tax;
 
   return (
     <div className="summary bg-white p-4 mt-4 rounded-lg shadow-md">
