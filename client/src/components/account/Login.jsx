@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from 'antd';
+import { motion } from 'framer-motion'; // Nhập thư viện Framer Motion
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -35,7 +36,13 @@ const Login = () => {
   };
 
   return (
-    <div className="absolute inset-0 flex flex-col md:flex-row justify-center items-start px-4 py-8 md:px-16 md:py-16">
+    <motion.div 
+      className="absolute inset-0 flex flex-col md:flex-row justify-center items-start px-4 py-8 md:px-16 md:py-16"
+      initial={{ opacity: 0, y: -50 }} // Hiệu ứng ban đầu
+      animate={{ opacity: 1, y: 0 }} // Hiệu ứng khi xuất hiện
+      exit={{ opacity: 0, y: 50 }} // Hiệu ứng khi rời khỏi
+      transition={{ duration: 0.5 }} // Thời gian cho hiệu ứng
+    >
       <div className="w-1/4 h-fit relative mb-8 md:mb-0 shadow-lg rounded-lg overflow-hidden">
         <img
           className="w-full h-auto rounded-lg"
@@ -53,7 +60,7 @@ const Login = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full input-field px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
               style={{ color: 'black' }} // Thay đổi màu chữ thành đen
               required
             />
@@ -64,7 +71,7 @@ const Login = () => {
             <Input.Password
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full input-field h-12 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full input-field h-12 border border-gray-300 rounded-md focus:outline-none"
               required
             />
             <a href="/forgotpassword" className="text-red-500 text-sm text-right mt-1">Quên mật khẩu?</a>
@@ -86,7 +93,7 @@ const Login = () => {
           </p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

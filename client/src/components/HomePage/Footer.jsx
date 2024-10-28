@@ -5,9 +5,9 @@ const Footer = () => {
   return (
     <motion.footer
       className="bg-gray-800 text-white py-10"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      initial={{ opacity: 0, y: 20 }} // Hiệu ứng ban đầu
+      animate={{ opacity: 1, y: 0 }} // Hiệu ứng khi xuất hiện
+      transition={{ duration: 0.5 }} // Thời gian chuyển động
     >
       <div className="container mx-auto px-4">
         <h3 className="text-3xl font-bold text-center mb-6">Stay Night</h3>

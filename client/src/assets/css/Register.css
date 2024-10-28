@@ -13,9 +13,10 @@
 
 /* Tùy chọn: Nếu bạn muốn thay đổi viền khi ô nhập được focus */
 .input-field:focus {
-    border-color: blue !important; /* Đổi màu viền khi focus */
-    outline: none; /* Bỏ viền mặc định khi focus */
+  border-color: black; /* Hoặc chọn màu khác mà bạn muốn */
+  outline: none; /* Không hiển thị outline */
 }
+
 
 label {
     color: #1c1b1f; /* Màu chữ cho nhãn */
