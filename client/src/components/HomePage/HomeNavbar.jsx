@@ -77,7 +77,9 @@ const HomeNavbar = () => {
     navigate("/overview");
     setLoading(false);
   };
-
+  const handleProfilePage = () => {
+    navigate("/profilePage");
+  };
   return (
     <div className="navbar flex justify-between items-center p-4 bg-gray-800 relative">
       <div className="navbar-title">
@@ -104,7 +106,10 @@ const HomeNavbar = () => {
             {menuOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-50">
                 <ul className="py-2">
-                  <li className="px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
+                  <li
+                    className="px-4 py-2 text-black hover:bg-gray-100 cursor-pointer"
+                    onClick={handleProfilePage}
+                  >
                     Hồ sơ cá nhân
                   </li>
                   <li className="px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">

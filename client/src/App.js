@@ -35,7 +35,7 @@ import DetailHotelPage from "./pages/DetailHotelPage";
 import DetailRoomPage from "./pages/DetailRoomPage";
 import HotelImage from "./components/DetailHotel/HotelImage";
 import CheckoutPage from "./pages/CheckoutPage";
-import ProfilePage from "./pages/ProfilePage";
+import ProfilePage from "./components/Profile/Profile";
 
 const AppContent = () => {
   const location = useLocation();
@@ -123,6 +123,11 @@ const AppContent = () => {
         <Route path="/t2/:hotelId" element={<HotelImage />} />
         <Route path="/detailhotel/:hotelId" element={<DetailHotelPage />} />
         <Route path="/detailroom/:hotelId" element={<DetailRoomPage />} />
+        <Route path="/profilepage" element={<ProfilePage />} />
+        <Route
+          path="/detailroom/:hotelId/checkout/:roomId"
+          element={<CheckoutPage />}
+        />
         <Route
           path="/detailroom/:hotelId/checkout/:roomId"
           element={<CheckoutPage />}
