@@ -35,6 +35,10 @@ import DetailHotelPage from "./pages/DetailHotelPage";
 import DetailRoomPage from "./pages/DetailRoomPage";
 import HotelImage from "./components/DetailHotel/HotelImage";
 import CheckoutPage from "./pages/CheckoutPage";
+<<<<<<< HEAD
+=======
+import Profile from "./components/Profile/Profile";
+>>>>>>> origin/huy
 import ProfilePage from "./pages/ProfilePage";
 
 const AppContent = () => {
@@ -128,12 +132,15 @@ const AppContent = () => {
           path="/detailroom/:hotelId/checkout/:roomId"
           element={<CheckoutPage />}
         />
+<<<<<<< HEAD
         <Route
           path="/detailroom/:hotelId/checkout/:roomId"
           element={<CheckoutPage />}
         />
         <Route path="/success" element={<Success />} />
         <Route path="/confirmpayment" element={<ConfirmPayment />} />
+=======
+>>>>>>> origin/huy
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

@@ -1,4 +1,5 @@
 const express = require("express");
+<<<<<<< HEAD
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
@@ -34,12 +35,25 @@ let userData = {
 app.get("/api/Profile/me", authenticateToken, (req, res) => {
   try {
     res.json(userData);
+=======
+const router = express.Router();
+const auth = require("../../middleware/auth"); // Middleware để xác thực
+
+// GET /api/profile/me
+router.get("/me", auth, async (req, res) => {
+  try {
+    // Giả sử bạn đã có một hàm lấy user
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    res.json(user);
+>>>>>>> origin/huy
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
   }
 });
 
+<<<<<<< HEAD
 // PUT /api/profile/me để cập nhật thông tin người dùng
 app.put("/api/Profile/me", authenticateToken, (req, res) => {
   const updates = req.body;
@@ -69,3 +83,6 @@ app.put("/api/Profile/me", authenticateToken, (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+=======
+module.exports = router;
+>>>>>>> origin/huy
