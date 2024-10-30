@@ -29,6 +29,8 @@ import AddRoom from "./components/dashboard/products/AddRoom";
 import HotelRooms from "./components/hotel_manager/HotelRooms"; 
 import RoomDetail from "./components/hotel_manager/RoomDetail";
 import SearchPlaces from "./components/HomePage/SearchPlaces";
+import Success from "./components/Checkout/Success";
+import ConfirmPayment from "./components/Checkout/confirm-payment";
 import DetailHotelPage from "./pages/DetailHotelPage";
 import DetailRoomPage from "./pages/DetailRoomPage"; 
 import HotelImage from "./components/DetailHotel/HotelImage";
@@ -91,7 +93,7 @@ const AppContent = () => {
   return (
     <div
     className={`${
-        isAdminPage ? "flex h-screen bg-blue-900" : "bg-gray-100"
+        isAdminPage ? "flex h-screen bg-blue-900" : "bg-white"
       } text-gray-100 overflow-hidden`}
     >
       {isAdminPage && (
@@ -124,6 +126,8 @@ const AppContent = () => {
         <Route path="/detailhotel/:hotelId" element={<DetailHotelPage />} />
         <Route path="/detailroom/:hotelId" element={<DetailRoomPage />} />
         <Route path="/detailroom/:hotelId/checkout/:roomId" element={<CheckoutPage />} />
+        <Route path="/success" element={<Success/>} />
+        <Route path="/confirmpayment" element={<ConfirmPayment/>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

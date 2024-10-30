@@ -1,51 +1,50 @@
-// components/Checkout/Payment.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const Payment = ({ roomDetails }) => {
-  const [checkInDate, setCheckInDate] = useState('');
-  const [checkOutDate, setCheckOutDate] = useState('');
+const Payment = ({ roomDetails, checkInDate, checkOutDate, email, phone }) => {
+  const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
+  const { roomId } = useParams(); // Nhận roomId từ URL
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get('/api/profile/me'); // API lấy thông tin người dùng
+        setUserId(response.data.userId);
+      } catch (error) {
+        navigate('/login'); // Chuyển hướng về /login nếu lỗi
+      }
+    };
+    fetchUserId();
+  }, [navigate]);
 
   const handlePayment = async () => {
+    // Kiểm tra các trường có được điền đầy đủ và hợp lệ không
+    if (!checkInDate || !checkOutDate || !email || !phone) {
+      alert("Vui lòng nhập đầy đủ các thông tin cần thiết.");
+      return;
+    }
+
     try {
+      // Gửi yêu cầu thanh toán qua MoMo
       const response = await axios.post('/api/checkout/payment', {
-        amount: roomDetails.price, // Số tiền thanh toán
+        amount: roomDetails.price,
+        checkInDate,
+        checkOutDate,
+        phoneBooking: phone,
+        emailBooking: email,
+        userId: userId || undefined, // Gửi userId nếu có, nếu không thì không gửi
+        roomId, // Gửi roomId từ URL
       });
 
-      // Chuyển hướng đến MoMo
-      window.location.href = response.data.payUrl; // Thay đổi url thành địa chỉ của MoMo
+      // Chuyển hướng đến URL thanh toán MoMo
+      window.location.href = response.data.payUrl; 
     } catch (error) {
       console.error('Lỗi khi thanh toán:', error);
       alert('Có lỗi xảy ra khi thanh toán. Vui lòng thử lại!');
     }
   };
-
-  // Hàm để lưu thông tin đặt phòng sau khi thanh toán thành công
-  const handleConfirmPayment = async () => {
-    const paymentStatus = 'Completed'; // Hoặc lấy từ phản hồi từ MoMo nếu có
-    const userId = 'ID_CỦA_NGƯỜI_DÙNG'; // Thay thế bằng ID người dùng thực tế
-
-    try {
-      const response = await axios.post('/api/checkout/confirm', {
-        userId, // ID người dùng
-        roomId: roomDetails._id, // ID phòng
-        checkInDate,
-        checkOutDate,
-        paymentStatus,
-      });
-
-      console.log(response.data);
-    } catch (error) {
-      console.error('Lỗi khi lưu booking:', error);
-    }
-  };
-
-  // Gọi hàm confirm payment khi component được mount
-  useEffect(() => {
-    if (window.location.search) {
-      handleConfirmPayment();
-    }
-  }, []);
 
   return (
     <div className="payment bg-white p-4 mt-4 rounded-lg shadow-md">

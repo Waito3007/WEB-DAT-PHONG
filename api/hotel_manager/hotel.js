@@ -61,6 +61,29 @@ router.get('/myhotels', auth, async (req, res) => {
   }
 });
 
+router.get('/api/hotel', async (req, res) => {
+  try {
+    const hotels = await Hotel.find().populate('manager');
+
+    const hotelWithLowestPrice = await Promise.all(
+      hotels.map(async (hotel) => {
+        const rooms = await Room.find({ hotel: hotel._id });
+        const lowestRoomPrice = rooms.length > 0 ? Math.min(...rooms.map(room => room.price)) : null;
+        
+        return {
+          ...hotel.toObject(),
+          lowestRoomPrice,
+        };
+      })
+    );
+
+    res.json(hotelWithLowestPrice);
+  } catch (error) {
+    console.error("Error fetching hotels:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 // Route lấy thông tin khách sạn cụ thể
 router.get('/:hotelId', auth, async (req, res) => {
   try {
@@ -121,8 +144,6 @@ router.delete('/:hotelId', auth, async (req, res) => {
     return res.status(500).json({ msg: 'Đã xảy ra lỗi trong quá trình xóa khách sạn' });
   }
 });
-
-
 
 // Route cập nhật khách sạn
 router.put('/:hotelId', auth, upload.array('imagehotel', 5), async (req, res) => {
@@ -206,5 +227,7 @@ router.put('/:hotelId/remove-image', auth, async (req, res) => {
     res.status(500).json({ message: 'Đã xảy ra lỗi' });
   }
 });
+
+
 
 module.exports = router;

@@ -1,35 +1,118 @@
-import React from "react";
+import React, { useEffect, useState } from "react"; 
 import { FaSearch } from "react-icons/fa";
 
-function SearchPlaces() {
+function SearchHotel({ setFilteredHotels, setHotels, hotels }) {
+  const [provinces, setProvinces] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const provinceResponse = await fetch("https://esgoo.net/api-tinhthanh/1/0.htm");
+        const provinceData = await provinceResponse.json();
+        if (provinceData.error === 0) {
+          setProvinces(provinceData.data);
+        } else {
+          setError("Lỗi khi lấy danh sách tỉnh thành");
+        }
+
+        const hotelResponse = await fetch("/api/hotel");
+        const hotelData = await hotelResponse.json();
+        setHotels(hotelData); // Cập nhật danh sách khách sạn
+        setFilteredHotels(hotelData); // Thiết lập danh sách khách sạn ban đầu
+      } catch (err) {
+        setError("Lỗi khi gọi API");
+      } finally {
+        setLoading(false); 
+      }
+    };
+
+    fetchData();
+  }, [setFilteredHotels, setHotels]);
+
+  const handleProvinceChange = (event) => {
+    const provinceId = event.target.value;
+    setSelectedProvince(provinceId);
+  
+    const provinceName = provinces.find((p) => p.id === provinceId)?.full_name;
+  
+    // Mảng chứa các từ cần loại trừ
+    const excludeWords = ["thành phố", "tỉnh"];
+  
+    if (provinceName) {
+      // Loại bỏ các từ không mong muốn
+      const cleanedProvinceName = excludeWords.reduce((name, word) => {
+        return name.replace(new RegExp(word, 'i'), ''); // Loại bỏ từ, không phân biệt chữ hoa chữ thường
+      }, provinceName)
+      .trim() // Xóa khoảng trắng ở đầu và cuối
+      .toLowerCase(); // Chuyển về chữ thường
+  
+      // Lọc danh sách khách sạn dựa trên cleanedProvinceName
+      const filtered = hotels.filter((hotel) =>
+        hotel.location.toLowerCase().includes(cleanedProvinceName)
+      );
+  
+      setFilteredHotels(filtered);
+    } else {
+      setFilteredHotels(hotels); 
+    }
+  };
+  
+  
+  
+  
+  
+
+  const handleSearch = () => {
+    // Logic cho tìm kiếm
+  };
+
+  if (loading) return <p>Đang tải dữ liệu...</p>; 
+  if (error) return <p>{error}</p>; 
+
   return (
     <section className="search-hotel">
       <div className="search-container-hotel">
         <div className="input-group-hotel">
           <div className="input-hotel">
             <label htmlFor="destination">Điểm đến</label>
-            <input type="text" id="destination" placeholder="Nhập điểm đến" />
-          </div>
-          <div className="input-hotel">
-            <label htmlFor="check-in">Ngày nhận phòng</label>
-            <input type="date" id="check-in" />
-          </div>
-          <div className="input-hotel">
-            <label htmlFor="check-out">Ngày trả phòng</label>
-            <input type="date" id="check-out" />
-          </div>
-          <div className="input-hotel">
-            <label htmlFor="room-select">Phòng</label>
-            <select id="room-select">
-              <option value="1-room-2-guests">1 phòng, 1 người</option>
-              <option value="2-room-2-guests">1 phòng, 2 người</option>
-              <option value="2-room-2-guests">2 phòng, 2 người</option>
-              <option value="2-room-2-guests">2 phòng, 4 người</option>
+            <select
+              id="destination"
+              value={selectedProvince}
+              onChange={handleProvinceChange}
+            >
+              <option value="">Chọn Tỉnh Thành</option>
+              {provinces.map((province) => (
+                <option key={province.id} value={province.id}>
+                  {province.full_name}
+                </option>
+              ))}
             </select>
           </div>
           <div className="input-hotel">
-            {/* Nút tìm kiếm thay thế bằng icon */}
-            <button className="search-btn">
+            <label htmlFor="check-in">Ngày nhận phòng</label>
+            <input 
+              type="date" 
+              id="check-in" 
+              value={checkInDate} 
+              onChange={(e) => setCheckInDate(e.target.value)} 
+            />
+          </div>
+          <div className="input-hotel">
+            <label htmlFor="check-out">Ngày trả phòng</label>
+            <input 
+              type="date" 
+              id="check-out" 
+              value={checkOutDate} 
+              onChange={(e) => setCheckOutDate(e.target.value)} 
+            />
+          </div>
+          <div className="input-hotel">
+            <button className="search-btn" onClick={handleSearch}>
               <FaSearch />
             </button>
           </div>
@@ -39,4 +122,4 @@ function SearchPlaces() {
   );
 }
 
-export default SearchPlaces;
+export default SearchHotel;

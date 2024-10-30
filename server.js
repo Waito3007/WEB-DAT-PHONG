@@ -35,16 +35,15 @@ app.use('/api/detail', Detail);
 app.use('/api/checkout', Checkout);
 app.get('/', (req, res) => {
   res.send('Welcome to Hotel Booking API');
+  
 });
-
+app.use(cors({
+  origin: 'http://localhost:3000' // Cho phép yêu cầu từ frontend
+}));
 // Lắng nghe trên cổng
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   
 });
-
-// Add profile route
-const profileRoute = require('./api/account/profile'); // Import profile route
-app.use('/api/profile', profileRoute); // Add profile route
 
