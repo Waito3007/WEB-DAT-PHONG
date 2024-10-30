@@ -5,7 +5,7 @@ import Summary from '../components/Checkout/Summary';
 import Payment from '../components/Checkout/Payment';
 import { useParams } from "react-router-dom";
 import "../assets/css/style.css";
-
+import HeroSection from "../components/HomePage/HomeNavbar";
 const CheckoutPage = () => {
   const { roomId } = useParams(); 
   const [roomDetails, setRoomDetails] = useState(null);
@@ -35,8 +35,10 @@ const CheckoutPage = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="checkout-page container mx-auto p-6 text-black">
-      <h1 className="text-2xl font-bold mb-4">Thanh Toán</h1>
+   <div className="checkout-page ">
+     <HeroSection/>
+    <div className="container mx-auto p-6 text-black">      
+      <h1 className="text-2xl font-bold mt-6 mb-4">Thanh Toán</h1>
       <div className="flex flex-col md:flex-row mt-16">
         <div className="room-info w-full md:w-2/3 pr-6">
           <RoomInfo 
@@ -59,7 +61,7 @@ const CheckoutPage = () => {
         </div>
       </div>
     </div>
+    </div>
   );
 };
-
 export default CheckoutPage;

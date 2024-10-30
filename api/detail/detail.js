@@ -34,7 +34,7 @@ router.get('/:hotelId', async (req, res) => {
   }
 });
 
-// Lấy thông tin hình ảnh của khách sạn theo ID
+// Lấy thông tin hình ảnh của khách sạn và hình ảnh các phòng theo ID
 router.get('/:hotelId/image', async (req, res) => {
   const { hotelId } = req.params;
 
@@ -43,32 +43,65 @@ router.get('/:hotelId/image', async (req, res) => {
   }
 
   try {
+    // Tìm khách sạn
     const hotel = await Hotel.findById(hotelId).select('imagehotel');
     if (!hotel) {
       return res.status(404).json({ message: 'Khách sạn không tìm thấy.' });
     }
 
-    const images = hotel.imagehotel.slice(0, 5); // Lấy tối đa 5 ảnh
-    if (images.length === 0) {
+    // Tìm tất cả các phòng của khách sạn
+    const rooms = await Room.find({ hotel: hotelId }).select('imageroom');
+    
+    // Tạo mảng chứa tất cả hình ảnh
+    const images = {
+      hotelImages: hotel.imagehotel.slice(0, 5), // Lấy tối đa 5 hình ảnh khách sạn
+      roomImages: rooms.flatMap(room => room.imageroom), // Lấy tất cả hình ảnh phòng
+    };
+
+    // Kiểm tra nếu không có hình ảnh nào
+    if (images.hotelImages.length === 0 && images.roomImages.length === 0) {
       return res.status(204).json({ message: 'Khách sạn không có ảnh nào.' }); // 204 No Content
     }
 
-    res.json(images);
+    res.json(images); // Trả về hình ảnh khách sạn và phòng
   } catch (error) {
-    console.error('Error fetching hotel images:', error);
+    console.error('Error fetching hotel and room images:', error);
     res.status(500).json({ message: 'Có lỗi xảy ra khi lấy thông tin.', error: error.message });
   }
 });
+
 router.get('/:hotelId/rooms', async (req, res) => {
+  const { hotelId } = req.params;
+
   try {
-    const rooms = await Room.find({ hotel: req.params.hotelId }).populate('hotel');
-    if (rooms.length === 0) {
-      return res.status(404).json({ message: 'Không tìm thấy phòng nào cho khách sạn này.' });
+    // Tìm khách sạn theo hotelId
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) {
+      return res.status(404).json({ message: 'Khách sạn không tồn tại' });
     }
-    res.json(rooms);
+
+    // Lấy danh sách phòng liên quan đến khách sạn
+    const rooms = await Room.find({ hotel: hotelId }); // Giả sử bạn đã có trường 'hotel' trong model Room
+    res.status(200).json(rooms);
   } catch (error) {
-    console.error("Error fetching rooms:", error);
-    res.status(500).json({ message: 'Có lỗi xảy ra khi lấy thông tin phòng.' });
+    console.error('Error fetching rooms:', error);
+    res.status(500).json({ message: 'Đã xảy ra lỗi khi lấy thông tin phòng' });
+  }
+});
+
+module.exports = router;
+
+// Lấy tất cả các đánh giá theo hotelId
+router.get('/:hotelId/ratings', async (req, res) => {
+  try {
+    const { hotelId } = req.params;
+    const ratings = await Rate.find({ hotel: hotelId })
+      .populate('user', 'name avatar') // Lấy thông tin người dùng
+      .exec();
+
+    res.json(ratings);
+  } catch (error) {
+    res.status(500).json({ message: 'Có lỗi xảy ra khi lấy đánh giá' });
   }
 });
 module.exports = router;
