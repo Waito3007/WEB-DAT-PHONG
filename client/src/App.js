@@ -24,17 +24,18 @@ import SearchPage from "./pages/SearchPage";
 // Hotel Manager
 import HotelAdd from "./components/hotel_manager/AddHotel";
 import MyHotel from "./components/hotel_manager/MyHotel";
-import HotelDetail from "./components/hotel_manager/HotelDetail"; 
+import HotelDetail from "./components/hotel_manager/HotelDetail";
 import AddRoom from "./components/dashboard/products/AddRoom";
-import HotelRooms from "./components/hotel_manager/HotelRooms"; 
+import HotelRooms from "./components/hotel_manager/HotelRooms";
 import RoomDetail from "./components/hotel_manager/RoomDetail";
 import SearchPlaces from "./components/HomePage/SearchPlaces";
 import Success from "./components/Checkout/Success";
 import ConfirmPayment from "./components/Checkout/confirm-payment";
 import DetailHotelPage from "./pages/DetailHotelPage";
-import DetailRoomPage from "./pages/DetailRoomPage"; 
+import DetailRoomPage from "./pages/DetailRoomPage";
 import HotelImage from "./components/DetailHotel/HotelImage";
 import CheckoutPage from "./pages/CheckoutPage";
+import ProfilePage from "./pages/ProfilePage";
 
 const AppContent = () => {
   const location = useLocation();
@@ -71,10 +72,7 @@ const AppContent = () => {
   ].includes(location.pathname);
 
   // Các trang mà HotelManager không được phép truy cập
-  const restrictedPagesForHotelManager = [
-    "/users",
-
-  ].includes(location.pathname);
+  const restrictedPagesForHotelManager = ["/users"].includes(location.pathname);
 
   if (isLoading) {
     return <div>Loading...</div>; // Hiển thị loading trong khi chờ dữ liệu
@@ -92,7 +90,7 @@ const AppContent = () => {
 
   return (
     <div
-    className={`${
+      className={`${
         isAdminPage ? "flex h-screen bg-blue-900" : "bg-gray-100"
       } text-gray-100 overflow-hidden`}
     >
@@ -125,9 +123,17 @@ const AppContent = () => {
         <Route path="/t2/:hotelId" element={<HotelImage />} />
         <Route path="/detailhotel/:hotelId" element={<DetailHotelPage />} />
         <Route path="/detailroom/:hotelId" element={<DetailRoomPage />} />
-        <Route path="/detailroom/:hotelId/checkout/:roomId" element={<CheckoutPage />} />
-        <Route path="/success" element={<Success/>} />
-        <Route path="/confirmpayment" element={<ConfirmPayment/>} />
+        <Route path="/profilepage" element={<ProfilePage />} />
+        <Route
+          path="/detailroom/:hotelId/checkout/:roomId"
+          element={<CheckoutPage />}
+        />
+        <Route
+          path="/detailroom/:hotelId/checkout/:roomId"
+          element={<CheckoutPage />}
+        />
+        <Route path="/success" element={<Success />} />
+        <Route path="/confirmpayment" element={<ConfirmPayment />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

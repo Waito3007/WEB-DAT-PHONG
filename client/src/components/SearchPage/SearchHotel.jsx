@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function SearchPlaces() {
   const [provinces, setProvinces] = useState([]);

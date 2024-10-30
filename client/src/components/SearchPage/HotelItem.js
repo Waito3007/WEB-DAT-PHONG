@@ -1,9 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const HotelItem = ({ hotel }) => {
   return (
     <div className="hotel-card border rounded-lg shadow-md overflow-hidden">
-      <img src={hotel.imagehotel[0]} alt={hotel.name} className="w-full h-48 object-cover" />
+      <img
+        src={hotel.imagehotel[0]}
+        alt={hotel.name}
+        className="w-full h-48 object-cover"
+      />
       <div className="hotel-details p-4">
         <h3 className="text-lg font-bold text-black name">{hotel.name}</h3>
         <p className="text-black location">{hotel.location}</p>
@@ -14,9 +19,9 @@ const HotelItem = ({ hotel }) => {
         </div>
 
         <span className="lowest-price font-bold text-xl text-orange-600">
-          {hotel.lowestRoomPrice !== null 
-            ? `${hotel.lowestRoomPrice.toLocaleString('vi-VN')} VND` 
-            : 'Đang cập nhật'}
+          {hotel.lowestRoomPrice !== null
+            ? `${hotel.lowestRoomPrice.toLocaleString("vi-VN")} VND`
+            : "Đang cập nhật"}
         </span>
 
         <div className="button-container mt-4">
