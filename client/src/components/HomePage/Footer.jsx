@@ -1,5 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion"; // Import framer-motion for animation
+import { Facebook, Twitter, Instagram } from "lucide-react"; // Import biểu tượng từ lucide-react
+
 
 const Footer = () => {
   return (
@@ -12,14 +14,14 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <h3 className="text-3xl font-bold text-center mb-6">Stay Night</h3>
         
-        <div className="flex justify-center space-x-4 mb-6">
+        <div className="flex justify-center space-x-6 mb-8">
           <a
-            href="https://www.facebook.com"
+            href="https://www.facebook.com/consauchetduoi"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-blue-600 transition-colors duration-300"
+            className="text-gray-400 hover:text-blue-500 transition-colors duration-300"
           >
-            <i className="fab fa-facebook fa-2x"></i>
+            <Facebook className="w-6 h-6" />
           </a>
           <a
             href="https://www.twitter.com"
@@ -27,7 +29,7 @@ const Footer = () => {
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-blue-400 transition-colors duration-300"
           >
-            <i className="fab fa-twitter fa-2x"></i>
+            <Twitter className="w-6 h-6" />
           </a>
           <a
             href="https://www.instagram.com"
@@ -35,15 +37,7 @@ const Footer = () => {
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-pink-500 transition-colors duration-300"
           >
-            <i className="fab fa-instagram fa-2x"></i>
-          </a>
-          <a
-            href="https://www.youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-red-600 transition-colors duration-300"
-          >
-            <i className="fab fa-youtube fa-2x"></i>
+            <Instagram className="w-6 h-6" />
           </a>
         </div>
 

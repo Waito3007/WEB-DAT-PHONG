@@ -1,52 +1,78 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"; 
 import { FaSearch } from "react-icons/fa";
 
-function SearchPlaces() {
+function SearchHotel({ setFilteredHotels, setHotels, hotels }) {
   const [provinces, setProvinces] = useState([]);
-  const [hotels, setHotels] = useState([]); // Danh sách khách sạn từ cơ sở dữ liệu
-  const [filteredHotels, setFilteredHotels] = useState([]); // Danh sách khách sạn đã lọc theo tỉnh thành
   const [selectedProvince, setSelectedProvince] = useState("");
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    // Gọi API lấy danh sách tỉnh thành
-    fetch("https://esgoo.net/api-tinhthanh/1/0.htm")
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.error === 0) {
-          setProvinces(data.data);
+    const fetchData = async () => {
+      try {
+        const provinceResponse = await fetch("https://esgoo.net/api-tinhthanh/1/0.htm");
+        const provinceData = await provinceResponse.json();
+        if (provinceData.error === 0) {
+          setProvinces(provinceData.data);
         } else {
-          console.error("Lỗi khi lấy danh sách tỉnh thành:", data);
+          setError("Lỗi khi lấy danh sách tỉnh thành");
         }
-      })
-      .catch((error) => {
-        console.error("Lỗi khi gọi API:", error);
-      });
 
-    // Giả sử chúng ta lấy danh sách khách sạn từ một API khác
-    fetch("/api/hotels")
-      .then((response) => response.json())
-      .then((data) => setHotels(data))
-      .catch((error) => console.error("Lỗi khi gọi API khách sạn:", error));
-  }, []);
+        const hotelResponse = await fetch("/api/hotel");
+        const hotelData = await hotelResponse.json();
+        setHotels(hotelData); // Cập nhật danh sách khách sạn
+        setFilteredHotels(hotelData); // Thiết lập danh sách khách sạn ban đầu
+      } catch (err) {
+        setError("Lỗi khi gọi API");
+      } finally {
+        setLoading(false); 
+      }
+    };
 
-  // Hàm xử lý khi thay đổi tỉnh thành
+    fetchData();
+  }, [setFilteredHotels, setHotels]);
+
   const handleProvinceChange = (event) => {
     const provinceId = event.target.value;
     setSelectedProvince(provinceId);
-
-    // Tìm tên tỉnh thành từ `provinces`
+  
     const provinceName = provinces.find((p) => p.id === provinceId)?.full_name;
-
-    // Lọc các khách sạn có địa chỉ chứa tên tỉnh thành
+  
+    // Mảng chứa các từ cần loại trừ
+    const excludeWords = ["thành phố", "tỉnh"];
+  
     if (provinceName) {
+      // Loại bỏ các từ không mong muốn
+      const cleanedProvinceName = excludeWords.reduce((name, word) => {
+        return name.replace(new RegExp(word, 'i'), ''); // Loại bỏ từ, không phân biệt chữ hoa chữ thường
+      }, provinceName)
+      .trim() // Xóa khoảng trắng ở đầu và cuối
+      .toLowerCase(); // Chuyển về chữ thường
+  
+      // Lọc danh sách khách sạn dựa trên cleanedProvinceName
       const filtered = hotels.filter((hotel) =>
-        hotel.location.includes(provinceName)
+        hotel.location.toLowerCase().includes(cleanedProvinceName)
       );
+  
       setFilteredHotels(filtered);
     } else {
-      setFilteredHotels(hotels); // Nếu không chọn tỉnh nào, hiển thị toàn bộ khách sạn
+      setFilteredHotels(hotels); 
     }
   };
+  
+  
+  
+  
+  
+
+  const handleSearch = () => {
+    // Logic cho tìm kiếm
+  };
+
+  if (loading) return <p>Đang tải dữ liệu...</p>; 
+  if (error) return <p>{error}</p>; 
 
   return (
     <section className="search-hotel">
@@ -69,41 +95,31 @@ function SearchPlaces() {
           </div>
           <div className="input-hotel">
             <label htmlFor="check-in">Ngày nhận phòng</label>
-            <input type="date" id="check-in" />
+            <input 
+              type="date" 
+              id="check-in" 
+              value={checkInDate} 
+              onChange={(e) => setCheckInDate(e.target.value)} 
+            />
           </div>
           <div className="input-hotel">
             <label htmlFor="check-out">Ngày trả phòng</label>
-            <input type="date" id="check-out" />
+            <input 
+              type="date" 
+              id="check-out" 
+              value={checkOutDate} 
+              onChange={(e) => setCheckOutDate(e.target.value)} 
+            />
           </div>
           <div className="input-hotel">
-            <label htmlFor="room-select">Phòng</label>
-            <select id="room-select">
-              <option value="1-room-1-guest">1 phòng, 1 người</option>
-              <option value="1-room-2-guests">1 phòng, 2 người</option>
-              <option value="2-room-2-guests">2 phòng, 2 người</option>
-              <option value="2-room-4-guests">2 phòng, 4 người</option>
-            </select>
-          </div>
-          <div className="input-hotel">
-            <button className="search-btn">
+            <button className="search-btn" onClick={handleSearch}>
               <FaSearch />
             </button>
           </div>
-        </div>
-
-        {/* Hiển thị danh sách khách sạn đã lọc */}
-        <div className="hotel-list">
-          {filteredHotels.map((hotel) => (
-            <div key={hotel.id} className="hotel-item">
-              <h3>{hotel.name}</h3>
-              <p>{hotel.location}</p>
-              <p>{hotel.description}</p>
-            </div>
-          ))}
         </div>
       </div>
     </section>
   );
 }
 
-export default SearchPlaces;
+export default SearchHotel;

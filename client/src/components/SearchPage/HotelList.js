@@ -1,38 +1,32 @@
-import React, { useEffect, useState } from "react";
-import Filter from "./Filter";
+import React from "react";
+import { Rate } from "antd"; // Import Rate từ Ant Design
 import HotelItem from "./HotelItem";
 
-const HotelList = () => {
-  const [hotels, setHotels] = useState([]);
-
-  useEffect(() => {
-    // Gọi API lấy danh sách khách sạn
-    fetch("/api/hotel") // Địa chỉ API của bạn
-      .then((response) => response.json())
-      .then((data) => {
-        setHotels(data); // Giả sử data là mảng khách sạn
-      })
-      .catch((error) => {
-        console.error("Lỗi khi gọi API:", error);
-      });
-  }, []);
-
+const HotelList = ({ hotels = [] }) => { // Khởi tạo hotels với giá trị mặc định là mảng rỗng
   return (
     <div className="container">
       <div className="flex">
-        {/* Phần lọc */}
-        <Filter />
-
-        {/* Danh sách khách sạn */}
         <div className="hotel-list w-full">
           <h2 className="text-xl font-semibold text-black">Khách sạn</h2>
           <div className="grid grid-cols-1 gap-4">
-            {hotels.map((hotel) => (
-              <HotelItem // Truyền toàn bộ hotel vào đây
-                key={hotel.id} // Sử dụng id để làm khóa
-                hotel={hotel} // Truyền đối tượng hotel
-              />
-            ))}
+            {Array.isArray(hotels) && hotels.length > 0 ? ( // Kiểm tra xem hotels có phải là mảng và không rỗng
+              hotels.map((hotel) => {
+                // Tính giá phòng thấp nhất từ mảng phòng thuộc khách sạn
+                const lowestRoomPrice = hotel.rooms && hotel.rooms.length > 0 
+                  ? Math.min(...hotel.rooms.map(room => room.price)) 
+                  : null;
+
+                return (
+                  <HotelItem 
+                    key={hotel._id} 
+                    hotel={hotel} 
+                    lowestRoomPrice={lowestRoomPrice} // Truyền giá phòng thấp nhất vào HotelItem
+                  />
+                );
+              })
+            ) : (
+              <p>Không có khách sạn nào được tìm thấy.</p> // Thông báo nếu không có khách sạn
+            )}
           </div>
           <button className="show-more-button">Hiển thị thêm</button>
         </div>
