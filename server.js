@@ -46,10 +46,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-<<<<<<< HEAD
-=======
 
 // Add profile route
 const profileRoute = require("./api/account/profile"); // Import profile route
 app.use("/api/profile", profileRoute); // Add profile route
->>>>>>> origin/huy
