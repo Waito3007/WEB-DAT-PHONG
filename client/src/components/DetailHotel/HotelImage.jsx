@@ -83,7 +83,7 @@ const HotelImage = () => {
         {/* Nút Xem thêm được đặt đè lên ảnh cuối */}
         {hasRoomImages && (
           <Button 
-          type="link" 
+          type="primary" 
           onClick={showModal} 
           className="absolute bottom-2 right-2 z-10 text-white bg-blue-500 rounded-md transition-opacity duration-300 hover:opacity-80">
           Xem thêm
