@@ -22,7 +22,7 @@ const Footer = () => {
           <div className="md:flex md:justify-between">
             <div className="mb-6 md:mb-0">
               <img
-                src="logovip.png"
+                src="https://res.cloudinary.com/dackig67m/image/upload/v1730387091/logovip_qp8hz1.png"
                 alt="StayNight Logo"
                 onClick={() => {
                     window.scrollTo({ top: 0, behavior: 'smooth' }); // Cuộn về đầu trang

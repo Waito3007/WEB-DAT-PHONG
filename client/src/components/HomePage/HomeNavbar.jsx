@@ -72,7 +72,7 @@ const HomeNavbar = () => {
     <div className="navbar flex justify-between items-center p-4 bg-gray-800 relative">
       <div className="navbar-title">
   <img
-    src="logovip.png"
+    src="https://res.cloudinary.com/dackig67m/image/upload/v1730387091/logovip_qp8hz1.png"
     alt="Stay Night Logo"
     className="h-10" // điều chỉnh chiều cao hình ảnh 
     onClick={handleHome}
