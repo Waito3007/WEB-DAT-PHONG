@@ -20,9 +20,14 @@ router.post('/addhotel', auth, upload.array('imagehotel', 5), async (req, res) =
   const { name, location, description, rooms, stars } = req.body;
 
   try {
-    const managerId = req.user.userId;
+    const managerId = req.userId; // Lấy userId từ middleware auth
 
-    // Lấy đường dẫn ảnh sau khi upload (có thể sử dụng dịch vụ như Cloudinary)
+    // Kiểm tra xem có tệp nào không
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ msg: 'Không có tệp nào được tải lên' });
+    }
+
+    // Lấy đường dẫn ảnh sau khi upload
     const imageUrls = req.files.map(file => file.path);
     
     // Tạo khách sạn mới theo mô hình
@@ -39,17 +44,18 @@ router.post('/addhotel', auth, upload.array('imagehotel', 5), async (req, res) =
     await newHotel.save();
     res.status(201).json({ msg: 'Khách sạn đã được thêm thành công', hotel: newHotel });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ msg: 'Lỗi server' });
+    console.error(err); // In ra toàn bộ lỗi
+    res.status(500).json({ msg: 'Lỗi server', error: err.message });
   }
 });
+
 
 
 
 // Route lấy danh sách khách sạn của người dùng hiện tại
 router.get('/myhotels', auth, async (req, res) => {
   try {
-    const managerId = req.user.userId;
+    const managerId = req.userId; // Lấy userId từ middleware
 
     const hotels = await Hotel.find({ manager: managerId })
       .populate('manager', 'name email'); 
@@ -60,7 +66,6 @@ router.get('/myhotels', auth, async (req, res) => {
     res.status(500).json({ msg: 'Lỗi server' });
   }
 });
-
 router.get('/api/hotel', async (req, res) => {
   try {
     const hotels = await Hotel.find().populate('manager');

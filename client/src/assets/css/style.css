@@ -289,7 +289,6 @@ select:focus {
 
 .price {
   font-weight: bold;
-  font-size: 18px; /* Thay đổi kích thước chữ */
   color: #ff3d00; /* Đổi màu cho giá */
 }
 
@@ -345,13 +344,6 @@ select:focus {
   align-items: center;
   margin-top: 10px; /* Thay đổi khoảng cách */
 }
-
-.price {
-  font-weight: bold;
-  font-size: 18px; /* Thay đổi kích thước chữ */
-  color: #ff3d00; /* Đổi màu cho giá */
-}
-
 .book-btn {
   background-color: #00bfae; /* Màu nền cho nút */
   color: white; /* Màu chữ cho nút */
@@ -399,14 +391,6 @@ select:focus {
   align-items: center;
   margin-top: 10px; /* Thay đổi khoảng cách */
 }
-
-.price {
-  font-weight: bold;
-  font-size: 18px; /* Thay đổi kích thước chữ */
-  color: #ff3d00; /* Đổi màu cho giá */
-}
-
-
 .stars {
   color: gold; /* Màu cho sao */
   font-size: 18px; /* Kích thước cho sao */

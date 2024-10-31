@@ -72,6 +72,7 @@ const MyHotelTable = () => {
   const handleSave = async (values) => {
     setIsUpdating(true);
     try {
+      
       const formData = new FormData();
       formData.append('name', values.name);
       formData.append('location', values.location);

@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import axios from 'axios'; 
 const salesByCategory = [
-	{ name: "Electronics", value: 400 },
-	{ name: "Clothing", value: 300 },
-	{ name: "Home & Garden", value: 200 },
-	{ name: "Books", value: 100 },
-	{ name: "Others", value: 150 },
+	{ name: "1 phòng 1 người", value: 400 },
+	{ name: "1 phòng 1 người", value: 300 },
+	{ name: "1 phòng 1 người", value: 200 },
+	{ name: "1 phòng 1 người", value: 100 },
 ];
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088FE"];

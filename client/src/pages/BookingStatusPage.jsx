@@ -12,7 +12,7 @@ const BookingStatusPage = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await axios.get('/api/booking');
+        const response = await axios.get('/api/booking/booking/admin');
         setBookings(response.data);
       } catch (err) {
         setError(err.message);
@@ -37,9 +37,9 @@ const BookingStatusPage = () => {
   }
 
   return (
-    <div className="container mx-auto mt-5">
-      <h1 className="text-2xl font-semibold mb-5">Trạng thái Đặt phòng</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl text-black font-semibold mb-5">Trạng thái Đặt phòng</h1>
+      <div className="">
         {bookings.map((booking) => (
           <BookingCard key={booking._id} booking={booking} />
         ))}

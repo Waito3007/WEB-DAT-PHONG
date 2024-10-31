@@ -32,12 +32,12 @@ const HotelImage = () => {
     setIsModalVisible(false);
   };
 
-  // Hàm tạo URL mới từ Cloudinary để resize ảnh
+  //tạo URL mới từ Cloudinary để resize ảnh
   const resizeImage = (url, width, height) => {
     return url.replace('/upload/', `/upload/w_${width},h_${height},c_fill/`);
   };
   
-  // Dùng Cloudinary để lấy kích thước phù hợp
+  // Dùng Cloudinary
   const getResponsiveSize = () => {
     const width = window.innerWidth; // Lấy chiều rộng của cửa sổ
     if (width >= 1024) { // Desktop
@@ -57,7 +57,7 @@ const HotelImage = () => {
       <div className="mr-0 md:mr-8 mb-4 md:mb-0 flex-shrink-0">
         {hasHotelImages && (
           <div className="w-full md:w-[700px] h-[400px] overflow-hidden bg-gray-100 flex items-center justify-center">
-            <Image
+            <Image preview={false}
               src={resizeImage(images.hotelImages[0], hotel.width, hotel.height)} // Resize ảnh khách sạn
               alt="Ảnh Khách Sạn"
               className="object-cover w-full h-full"
@@ -71,7 +71,7 @@ const HotelImage = () => {
         <div className="grid grid-cols-2 gap-2">
           {hasRoomImages && images.roomImages.slice(0, 4).map((image, index) => (
             <div key={index} className="w-full sm:w-[200px] h-[200px] overflow-hidden bg-gray-100 flex items-center justify-center">
-              <Image
+              <Image preview={false}
                 src={resizeImage(image, room.width, room.height)} // Resize ảnh phòng
                 alt={`Ảnh Phòng ${index + 1}`}
                 className="object-cover w-full h-full"
@@ -80,7 +80,6 @@ const HotelImage = () => {
           ))}
         </div>
         
-        {/* Nút Xem thêm được đặt đè lên ảnh cuối */}
         {hasRoomImages && (
           <Button 
           type="primary" 
@@ -92,37 +91,38 @@ const HotelImage = () => {
         )}
       </div>
 
-      {/* Modal hiển thị tất cả ảnh */}
       <Modal
-        title="Tất cả ảnh"
-        visible={isModalVisible}
-        onCancel={handleCancel}
-        footer={null}
-        width={800} // Kích thước modal
-      >
-        <div className="flex flex-wrap gap-2">
-          {hasHotelImages && images.hotelImages.map((image, index) => (
-            <div key={`hotel-${index}`} className="w-[150px] h-[100px] overflow-hidden bg-gray-100 flex items-center justify-center">
-              <Image
-                src={resizeImage(image, 150, 100)} // Resize ảnh khách sạn trong modal
-                alt={`Ảnh Khách Sạn ${index + 1}`}
-                className="object-cover w-full h-full"
-              />
-            </div>
-          ))}
-          {hasRoomImages && images.roomImages.map((image, index) => (
-            <div key={`room-${index}`} className="w-[150px] h-[100px] overflow-hidden bg-gray-100 flex items-center justify-center">
-              <Image
-                src={resizeImage(image, 150, 100)} // Resize ảnh phòng trong modal
-                alt={`Ảnh Phòng ${index + 1}`}
-                className="object-cover w-full h-full"
-              />
-            </div>
-          ))}
-        </div>
-      </Modal>
+  title="Tất cả ảnh"
+  visible={isModalVisible}
+  onCancel={handleCancel}
+  footer={null}
+  width={1000} // Kích thước modal lớn hơn
+>
+  <div className="grid grid-cols-3 gap-4"> 
+    {hasHotelImages && images.hotelImages.map((image, index) => (
+      <div key={`hotel-${index}`} className="w-full h-full overflow-hidden bg-gray-100 flex items-center justify-center">
+        <Image 
+          preview={{ src: resizeImage(image, 600, 400) }} 
+          src={resizeImage(image, 300, 200)} // Resize 
+          alt={`Ảnh Khách Sạn ${index + 1}`}
+          className="object-cover w-full h-full cursor-pointer" 
+        />
+      </div>
+    ))}
+    {hasRoomImages && images.roomImages.map((image, index) => (
+      <div key={`room-${index}`} className="w-full h-full overflow-hidden bg-gray-100 flex items-center justify-center">
+        <Image 
+          preview={{ src: resizeImage(image, 600, 400) }} 
+          src={resizeImage(image, 300, 200)} // Resize 
+          alt={`Ảnh Phòng ${index + 1}`}
+          className="object-cover w-full h-full cursor-pointer" 
+        />
+      </div>
+    ))}
+  </div>
+</Modal>
+
     </div>
   );
 };
-
 export default HotelImage;

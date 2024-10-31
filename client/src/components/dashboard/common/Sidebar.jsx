@@ -26,7 +26,7 @@ const SIDEBAR_ITEMS = [
 		roles: ["Admin"], // Chỉ cho phép Admin
 	},
 	{
-		name: "Sales",
+		name: "Doanh Thu",
 		icon: DollarSign,
 		color: "#10B981",
 		href: "/sales",
