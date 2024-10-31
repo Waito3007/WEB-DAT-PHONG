@@ -72,7 +72,10 @@ const SalesOverviewChart = ({ bookings }) => {
 					<AreaChart data={monthlySalesData}>
 						<CartesianGrid strokeDasharray='3 3' stroke='#374151' />
 						<XAxis dataKey='month' stroke='#9CA3AF' />
-						<YAxis stroke='#9CA3AF' />
+						<YAxis 
+							stroke='#9CA3AF' 
+							tick={{ fontSize: 15 }} // Thay đổi kích thước chữ ở đây
+						/>
 						<Tooltip
 							content={({ active, payload }) => {
 								if (active && payload && payload.length) {
