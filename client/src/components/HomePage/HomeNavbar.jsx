@@ -71,8 +71,15 @@ const HomeNavbar = () => {
   return (
     <div className="navbar flex justify-between items-center p-4 bg-gray-800 relative">
       <div className="navbar-title">
-        <button className="text-white text-2xl m-0" onClick={handleHome}>staynight</button>
-      </div>
+  <img
+    src="logovip.png"
+    alt="Stay Night Logo"
+    className="h-10" // điều chỉnh chiều cao hình ảnh 
+    onClick={handleHome}
+    style={{ cursor: 'pointer' }}
+  />
+</div>
+
       <div className="navbar-buttons relative">
         {user ? (
           <div className="user-avatar cursor-pointer" onClick={toggleMenu}>
