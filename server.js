@@ -8,6 +8,7 @@ const userTableRouter = require('./api/dashboard/usertable');
 const hotelapi = require('./api/hotel_manager/hotel');
 const Room = require('./api/hotel_manager/room'); 
 const Profile = require('./api/account/profile'); 
+const Booking = require('./api/booking/booking'); 
 const HomePage = require('./api/homepage/tophotel');// Đường dẫn mới cho room
 const Detail = require('./api/detail/detail');
 const Checkout = require('./api/checkout/checkout');
@@ -31,6 +32,7 @@ app.use('/api/usertable', userTableRouter); // Router lấy list người dùng
 app.use('/api/room', Room); // Thêm route cho phòng
 app.use('/api/hotel', hotelapi);
 app.use('/api/homepage', HomePage);
+app.use('/api/booking', Booking);
 app.use('/api/detail', Detail);
 app.use('/api/checkout', Checkout);
 app.get('/', (req, res) => {

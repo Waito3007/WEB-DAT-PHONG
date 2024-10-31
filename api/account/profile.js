@@ -3,12 +3,12 @@ const router = express.Router();
 const User = require('../../models/User'); // Điều chỉnh đường dẫn nếu cần
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-
+const auth = require('../../middleware/auth');
 // Sử dụng cookie-parser
 router.use(cookieParser());
 
 // Route Lấy thông tin người dùng
-router.get('/me', async (req, res) => {
+router.get('/me',auth, async (req, res) => {
   try {
     // Lấy token từ cookie
     const token = req.cookies.token;
@@ -32,15 +32,8 @@ router.get('/me', async (req, res) => {
 });
 // API để đăng xuất
 router.post('/logout', (req, res) => {
-  // Xóa cookie chứa token
-  res.clearCookie('token', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // Đảm bảo secure flag khi ở production
-    sameSite: 'strict', 
-  });
-
-  // Trả về phản hồi thành công
-  res.status(200).json({ msg: 'Đăng xuất thành công' });
+  res.clearCookie('token'); // Xóa cookie token
+  res.json({ msg: 'Đăng xuất thành công' });
 });
 
 module.exports = router;

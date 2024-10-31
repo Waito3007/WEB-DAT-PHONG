@@ -35,7 +35,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
 
     // Gửi token cho client qua cookie
-    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+    res.cookie('token', token, { httpOnly: true, maxAge: 365 * 24 * 60 * 60 * 1000 });
     // Trả về thông báo đăng nhập thành công
     res.json({ msg: 'Đăng nhập thành công' });
 

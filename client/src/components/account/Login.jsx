@@ -12,17 +12,17 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
-
+  
     try {
       const response = await fetch('/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('token', data.token);
+        // Chỉ cần lưu thông tin người dùng, không lưu token
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate(-1);
       } else {

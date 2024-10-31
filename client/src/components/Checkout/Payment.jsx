@@ -10,10 +10,15 @@ const Payment = ({ roomDetails, checkInDate, checkOutDate, email, phone }) => {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get('/api/profile/me'); // API lấy thông tin người dùng
-        setUserId(response.data.userId);
+        const response = await axios.get('/api/profile/me', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Thêm token vào header
+          },
+        });
+        setUserId(response.data._id); // Lưu ID người dùng
       } catch (error) {
-        navigate('/login'); // Chuyển hướng về /login nếu lỗi
+        console.error('Lỗi lấy thông tin người dùng:', error);
+        navigate('/login'); // Chuyển hướng về /login nếu có lỗi
       }
     };
     fetchUserId();
