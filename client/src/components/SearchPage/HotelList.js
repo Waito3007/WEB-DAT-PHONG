@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Filter from "./Filter";
 import HotelItem from "./HotelItem";
+import { useNavigate } from "react-router-dom";
 
 const HotelList = () => {
   const [hotels, setHotels] = useState([]);
