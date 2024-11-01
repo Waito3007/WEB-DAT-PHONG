@@ -33,6 +33,10 @@ const HomeNavbar = () => {
     navigate("/login");
   };
 
+  const handleProfile = () => {
+    navigate("/myprofile");
+  };
+
   const handleSignUp = () => {
     navigate("/register");
   };
@@ -91,7 +95,7 @@ const HomeNavbar = () => {
             {menuOpen && (
               <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-md z-50">
                 <ul className="py-2">
-                  <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
+                  <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer" onClick={handleProfile}>
                     <User className="w-4 h-4 mr-2" /> Hồ sơ cá nhân
                   </li>
                   <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
