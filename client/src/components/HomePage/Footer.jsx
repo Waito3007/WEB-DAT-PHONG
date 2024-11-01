@@ -8,6 +8,7 @@ const Footer = () => {
     const handleHome = () => {
         navigate("/");
       };
+      
   return (
     <motion.footer
       // className="bg-gray-800 text-white py-10"
