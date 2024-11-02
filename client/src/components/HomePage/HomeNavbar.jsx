@@ -41,6 +41,7 @@ const HomeNavbar = () => {
     navigate("/register");
   };
 
+  
   const handleHome = () => {
     navigate("/");
   };
