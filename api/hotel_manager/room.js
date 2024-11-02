@@ -16,7 +16,7 @@ const getPublicIdFromUrl = (url) => {
 // Route thêm phòng
 router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req, res) => {
   const { hotelId } = req.params;
-  const { type, price, availability } = req.body;
+  const { type, price, availability, remainingRooms } = req.body;
 
   try {
     const hotel = await Hotel.findById(hotelId);
@@ -32,6 +32,7 @@ router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req
       price,
       availability,
       imageroom: imageRoomUrls,
+      remainingRooms,
     });
 
     await newRoom.save();

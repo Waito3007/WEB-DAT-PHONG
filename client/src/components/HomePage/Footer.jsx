@@ -63,7 +63,7 @@ const Footer = () => {
                 </h2>
                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                   <li className="mb-4">
-                    <a href="https://flowbite.com/" className="hover:underline">
+                    <a onClick={handleHome} className="hover:underline cursor-pointer">
                     Trang chủ
                     </a>
                   </li>
