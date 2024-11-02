@@ -12,7 +12,7 @@ function SearchHotel({ setFilteredHotels, setHotels, hotels }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const provinceResponse = await fetch("https://esgoo.net/api-tinhthanh/1/0.htm");
+        const provinceResponse = await fetch("/api/tinhthanh");
         const provinceData = await provinceResponse.json();
         if (provinceData.error === 0) {
           setProvinces(provinceData.data);

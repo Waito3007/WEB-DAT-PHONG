@@ -31,7 +31,10 @@ const Footer = () => {
     const handleHome = () => {
         navigate("/");
       };
-      
+    const home =() =>{
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    }  
   return (
     <motion.footer
       // className="bg-gray-800 text-white py-10"
@@ -48,9 +51,7 @@ const Footer = () => {
             <img
                 src={logoSrc}
                 alt="StayNight Logo"
-                onClick={() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onClick={home}
                 className="h-20 cursor-pointer dark:brightness-200"
               />
 
@@ -63,13 +64,13 @@ const Footer = () => {
                 </h2>
                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                   <li className="mb-4">
-                    <a href="https://flowbite.com/" className="hover:underline">
+                    <a className="hover:underline cursor-pointer" onClick={handleHome}>
                     Trang chủ
                     </a>
                   </li>
                   <li>
-                    <a href="https://tailwindcss.com/" className="hover:underline">
-                      Tailwind CSS
+                    <a href="./" className="hover:underline">
+                      Đặt phòng
                     </a>
                   </li>
                 </ul>
