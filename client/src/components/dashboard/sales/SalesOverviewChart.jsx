@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 const SalesOverviewChart = ({ bookings }) => {
 	const [monthlySalesData, setMonthlySalesData] = useState([]);
+	const [loading, setLoading] = useState(true); // State cho trạng thái loading
 
 	const monthsInVietnamese = [
 		'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 
@@ -44,6 +45,7 @@ const SalesOverviewChart = ({ bookings }) => {
 			}));
 
 		setMonthlySalesData(salesDataArray);
+		setLoading(false); // Đánh dấu là đã hoàn thành tính toán
 	};
 
 	const isPaymentCompleted = (booking) => booking.paymentStatus !== 'Pending'; // Hàm kiểm tra trạng thái thanh toán
@@ -51,6 +53,8 @@ const SalesOverviewChart = ({ bookings }) => {
 	useEffect(() => {
 		if (bookings.length > 0) {
 			calculateMonthlySales();
+		} else {
+			setLoading(false); // Nếu không có booking, cũng đánh dấu là hoàn thành
 		}
 	}, [bookings]);
 
@@ -67,39 +71,52 @@ const SalesOverviewChart = ({ bookings }) => {
 			transition={{ delay: 0.3 }} // Thay đổi độ trễ nếu cần
 		>
 			<h2 className='text-xl font-semibold text-gray-100 mb-4'>Tổng quan về doanh thu</h2>
-			<div style={{ width: "100%", height: 300 }}>
-				<ResponsiveContainer>
-					<AreaChart data={monthlySalesData}>
-						<CartesianGrid strokeDasharray='3 3' stroke='#374151' />
-						<XAxis dataKey='month' stroke='#9CA3AF' />
-						<YAxis 
-							stroke='#9CA3AF' 
-							tick={{ fontSize: 15 }} // Thay đổi kích thước chữ ở đây
-						/>
-						<Tooltip
-							content={({ active, payload }) => {
-								if (active && payload && payload.length) {
-									return (
-										<div className='bg-gray-800 p-2 rounded'>
-											<p className='text-white'>{`Doanh thu: ${formatCurrency(payload[0].value)}`}</p>
-										</div>
-									);
-								}
-								return null;
-							}}
-							contentStyle={{ backgroundColor: "rgba(31, 41, 55, 0.8)", borderColor: "#4B5563" }}
-							itemStyle={{ color: "#E5E7EB" }}
-						/>
-						<Area 
-							type='monotone' 
-							dataKey='sales' 
-							stroke='#8B5CF6' 
-							fill='#8B5CF6' 
-							fillOpacity={0.3} 
-						/>
-					</AreaChart>
-				</ResponsiveContainer>
-			</div>
+
+			{/* Hiển thị hiệu ứng loading nếu đang tải dữ liệu */}
+			{loading ? (
+				<div className="flex justify-center items-center" style={{ height: '300px' }}>
+					<motion.div
+						initial={{ scale: 0 }}
+						animate={{ scale: 1 }}
+						transition={{ repeat: Infinity, duration: 0.5, ease: "easeInOut" }}
+						className="w-10 h-10 border-4 border-t-transparent border-blue-500 rounded-full"
+					/>
+				</div>
+			) : (
+				<div style={{ width: "100%", height: 300 }}>
+					<ResponsiveContainer>
+						<AreaChart data={monthlySalesData}>
+							<CartesianGrid strokeDasharray='3 3' stroke='#374151' />
+							<XAxis dataKey='month' stroke='#9CA3AF' />
+							<YAxis 
+								stroke='#9CA3AF' 
+								tick={{ fontSize: 15 }} // Thay đổi kích thước chữ ở đây
+							/>
+							<Tooltip
+								content={({ active, payload }) => {
+									if (active && payload && payload.length) {
+										return (
+											<div className='bg-gray-800 p-2 rounded'>
+												<p className='text-white'>{`Doanh thu: ${formatCurrency(payload[0].value)}`}</p>
+											</div>
+										);
+									}
+									return null;
+								}}
+								contentStyle={{ backgroundColor: "rgba(31, 41, 55, 0.8)", borderColor: "#4B5563" }}
+								itemStyle={{ color: "#E5E7EB" }}
+							/>
+							<Area 
+								type='monotone' 
+								dataKey='sales' 
+								stroke='#8B5CF6' 
+								fill='#8B5CF6' 
+								fillOpacity={0.3} 
+							/>
+						</AreaChart>
+					</ResponsiveContainer>
+				</div>
+			)}
 		</motion.div>
 	);
 };

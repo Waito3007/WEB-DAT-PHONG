@@ -12,6 +12,7 @@ const Booking = require('./api/booking/booking');
 const HomePage = require('./api/homepage/tophotel');// Đường dẫn mới cho room
 const Detail = require('./api/detail/detail');
 const Checkout = require('./api/checkout/checkout');
+const SearchHotel = require('./api/search/searchhotel');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const app = express();
@@ -35,6 +36,7 @@ app.use('/api/homepage', HomePage);
 app.use('/api/booking', Booking);
 app.use('/api/detail', Detail);
 app.use('/api/checkout', Checkout);
+app.use('/api/searchhotel', SearchHotel);
 app.get('/', (req, res) => {
   res.send('Welcome to Hotel Booking API');
   
