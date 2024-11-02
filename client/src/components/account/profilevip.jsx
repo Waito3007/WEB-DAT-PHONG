@@ -19,10 +19,6 @@ const ProfileVip = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             const token = localStorage.getItem('token');
-            if (!token) {
-                navigate('/login');
-                return;
-            }
 
             try {
                 const response = await fetch('/api/profile/me', {
