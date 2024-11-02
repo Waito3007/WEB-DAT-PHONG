@@ -1,13 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"; // Import framer-motion for animation
 
 const Footer = () => {
     const navigate = useNavigate();
+    const [logoSrc, setLogoSrc] = useState("");
 
+  useEffect(() => {
+    // Kiểm tra chế độ sáng/tối của trình duyệt và cập nhật logo
+    const updateLogo = () => {
+      const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      setLogoSrc(isDarkMode
+        ? "https://res.cloudinary.com/dackig67m/image/upload/v1730387091/logovip_qp8hz1.png"
+        : "https://res.cloudinary.com/dackig67m/image/upload/v1730529122/STAY_NIGHT_yvyy0m.png"
+      );
+    };
+
+    // Gọi hàm lần đầu tiên khi component được mount
+    updateLogo();
+
+    // Theo dõi sự thay đổi của `prefers-color-scheme`
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateLogo);
+
+    // Dọn dẹp sự kiện khi component bị unmount
+    return () => {
+      window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", updateLogo);
+    };
+  }, []);
+  
     const handleHome = () => {
         navigate("/");
       };
+    const home =() =>{
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    }  
   return (
     <motion.footer
       // className="bg-gray-800 text-white py-10"
@@ -17,18 +44,17 @@ const Footer = () => {
     >
       
 
-      <footer className="bg-white dark:bg-gray-900">
+      <footer className="bg-white dark:bg-gray-900 border dark:text-gray-100 border-black">
         <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
           <div className="md:flex md:justify-between">
             <div className="mb-6 md:mb-0">
-              <img
-                src="logovip.png"
+            <img
+                src={logoSrc}
                 alt="StayNight Logo"
-                onClick={() => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' }); // Cuộn về đầu trang
-                  }}                
-                  className="h-20 cursor-pointer"
+                onClick={home}
+                className="h-20 cursor-pointer dark:brightness-200"
               />
+
             </div>
             <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
               {/* Resources */}
@@ -38,13 +64,13 @@ const Footer = () => {
                 </h2>
                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                   <li className="mb-4">
-                    <a href="https://flowbite.com/" className="hover:underline">
+                    <a className="hover:underline cursor-pointer" onClick={handleHome}>
                     Trang chủ
                     </a>
                   </li>
                   <li>
-                    <a href="https://tailwindcss.com/" className="hover:underline">
-                      Tailwind CSS
+                    <a href="./" className="hover:underline">
+                      Đặt phòng
                     </a>
                   </li>
                 </ul>
