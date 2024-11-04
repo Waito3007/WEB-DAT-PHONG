@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import AvatarCropper from './AvatarCropper'; // Đường dẫn chính xác tùy theo cấu trúc thư mục của bạn
 import { useNavigate } from 'react-router-dom';
 import { UploadOutlined } from '@ant-design/icons';
-import { Drawer, Button, Form, Input, message, Upload, Modal, Spin } from 'antd';
+import { Drawer, Button, Form, Input, message, Modal, Spin } from 'antd';
 import axios from 'axios'; // Import axios
+import AvatarEdit from 'react-avatar-edit'; // Nhập thư viện
+import './Profilevip.css'; // Đảm bảo tạo file CSS và nhập vào
 
 const ProfileVip = () => {
     const [user, setUser] = useState(null);
@@ -58,16 +59,7 @@ const ProfileVip = () => {
     }, [navigate]);
 
 
-    const handleUploadChange = (info) => {
-        if (info.file.status === 'done') {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                setAvatarSrc(e.target.result);
-                setShowCropper(true); // Hiển thị modal cắt ảnh
-            };
-            reader.readAsDataURL(info.file.originFileObj);
-        }
-    };
+
 
     const handleEditSubmit = async (values) => {
         const token = localStorage.getItem('token');
@@ -119,50 +111,39 @@ const ProfileVip = () => {
         }
     };
 
-    const uploadBlob = async (blob) => {
-        const formData = new FormData();
-        formData.append('avatar', blob, 'avatar.png'); // 'avatar' là tên field, 'avatar.png' là tên file
     
-        try {
-            const response = await fetch('/api/profile/upload-avatar', { // Thay thế bằng URL của bạn
-                method: 'POST',
-                body: formData,
-            });
-    
-            if (!response.ok) {
-                throw new Error('Failed to upload image');
-            }
-    
-            const data = await response.json(); // Giả sử server trả về JSON
-            return data; // Trả về dữ liệu từ server nếu cần
-        } catch (error) {
-            console.error('Upload failed:', error);
-            throw error; // Ném lỗi để xử lý ở nơi gọi hàm
-        }
+    const onCrop = (preview) => {
+        setAvatarSrc(preview); // Lưu hình ảnh đã cắt vào state
     };
-    
-    const handleUpload = async ({ file }) => {
-        setLoading(true); // Bắt đầu quá trình tải lên
+
+    const onClose = () => {
+        setShowCropper(false);
+    };
+
+    const handleUpload = async () => {
+        if (!avatarSrc) return; // Nếu không có ảnh đã cắt thì không làm gì cả
+
+        setLoading(true);
         const formData = new FormData();
-        formData.append('avatar', file); // Thêm file vào formData
-    
+        const blob = await fetch(avatarSrc).then(res => res.blob());
+        formData.append('avatar', blob, 'avatar.png'); // Thêm blob vào formData
+
         try {
             const response = await axios.post('/api/profile/upload-avatar', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data', // Đặt header cho request
+                    'Content-Type': 'multipart/form-data',
                 },
             });
-    
-            // Kiểm tra phản hồi từ server
+
             if (response.data && response.data.imageUrl) {
-                setAvatarUrl(response.data.imageUrl); // Lưu URL vào state
-                message.success('Tải lên ảnh thành công!'); // Thông báo thành công
-                window.location.reload(); // Tải lại toàn bộ trang
+                setAvatarUrl(response.data.imageUrl);
+                message.success('Tải lên ảnh thành công!');
+                window.location.reload();
             }
         } catch (error) {
-            message.error('Tải lên ảnh thất bại!'); // Thông báo lỗi nếu có
+            message.error('Tải lên ảnh thất bại!');
         } finally {
-            setLoading(false); // Kết thúc quá trình tải lên
+            setLoading(false);
         }
     };
     
@@ -192,13 +173,7 @@ const ProfileVip = () => {
                     className="rounded-full h-32 w-32 object-cover align-middle border-none max-w-full"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-                <Upload 
-                showUploadList={false}
-                customRequest={handleUpload}
-                accept="image/*"
-            >
-                <UploadOutlined style={{ fontSize: '24px', color: 'white', opacity: 0.8 }} />
-            </Upload>                
+                <UploadOutlined onClick={() => setShowCropper(true)} style={{ fontSize: '24px', color: 'white', opacity: 0.8 }} />
                 </div>
             </div>
                                 <div className="text-left ml-4">
@@ -484,26 +459,32 @@ const ProfileVip = () => {
                 </div>
             </section>
 
-            {showCropper && (
-                <Modal
-                    visible={showCropper}
-                    footer={null}
-                    onCancel={() => setShowCropper(false)}
-                    title="Cắt ảnh đại diện"
-                >
-                    <AvatarCropper 
-                        src={avatarSrc} 
-                        onCropComplete={(blob) => {
-                            setLoading(true);
-                            // Giả sử bạn có một hàm uploadBlob để upload ảnh
-                            uploadBlob(blob).then(() => {
-                                setLoading(false);
-                                setShowCropper(false);
-                            });
-                        }} 
+             {/* Modal cho AvatarEdit */}
+            <Modal
+                width={1000}
+                visible={showCropper}
+                onCancel={onClose}
+                onOk={handleUpload}
+                title="Chỉnh sửa ảnh đại diện"
+                footer={[
+                    <Button key="cancel" onClick={onClose} className="cancel-button">
+                        Hủy
+                    </Button>,
+                    <Button key="save" type="primary" onClick={handleUpload} className="save-button">
+                        Lưu
+                    </Button>,
+                ]}
+                className="avatar-modal"
+            >
+                <div className="avatar-edit-container">
+                    <AvatarEdit
+                        width={900}
+                        height={400}
+                        onCrop={onCrop}
+                        onClose={onClose}
                     />
-                </Modal>
-            )}
+                </div>
+            </Modal>
 
             {/* Modal for loading */}
             <Modal
