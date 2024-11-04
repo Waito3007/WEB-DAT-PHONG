@@ -108,7 +108,7 @@ router.get('/:hotelId', auth, async (req, res) => {
 // Route xóa khách sạn
 router.delete('/:hotelId', auth, async (req, res) => {
   const { hotelId } = req.params;
-  const userId = req.user.userId; // Lấy userId từ middleware auth
+  const userId = req.userId; // Lấy userId từ middleware auth
   const { password } = req.body; // Lấy mật khẩu từ body
 
   try {

@@ -207,7 +207,12 @@ select:focus {
 .destination-content {
   padding-left: 20px; /* Create space between the image and text */
 }
+.destination-title{
+  white-space: normal; /* Cho phép xuống dòng */
+  overflow: hidden;    /* Ẩn phần thừa nếu có */
+  text-overflow: ellipsis; /* Thêm dấu "..." nếu tiêu đề quá dài */
 
+}
 .ant-card-meta-title {
   font-size: 18px;
   font-weight: bold;

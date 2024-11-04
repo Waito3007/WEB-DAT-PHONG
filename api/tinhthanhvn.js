@@ -196,7 +196,8 @@ const provincesData = {
           "full_name": "Tỉnh Cà Mau",
           "full_name_en": "Ca Mau Province",
           "latitude": "9.0180177",
-          "longitude": "105.0869724"
+          "longitude": "105.0869724",
+          "image":"https://ik.imagekit.io/tvlk/blog/2021/10/du-lich-ca-mau-1-1024x573.jpg?tr=dpr-2,w-675"
         },
         {
           "id": "92",
@@ -432,7 +433,8 @@ const provincesData = {
           "full_name": "Tỉnh Phú Thọ",
           "full_name_en": "Phu Tho Province",
           "latitude": "21.3007538",
-          "longitude": "105.1349604"
+          "longitude": "105.1349604",
+          "image":"https://xdcs.cdnchinhphu.vn/446259493575335936/2023/9/18/phutho-1695032211549821736525.jpg"
         },
         {
           "id": "54",
@@ -450,7 +452,8 @@ const provincesData = {
           "full_name": "Tỉnh Quảng Bình",
           "full_name_en": "Quang Binh Province",
           "latitude": "17.509599",
-          "longitude": "106.4004452"
+          "longitude": "106.4004452",
+          "image":"https://tourquangbinh.vn/wp-content/uploads/2024/07/1-di-choi-dong-hoi-buoi-toi-va-nhung-hoat-dong-thu-vi-ve-dem-quang-binh.jpg"
         },
         {
           "id": "49",
