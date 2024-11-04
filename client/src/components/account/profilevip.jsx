@@ -17,6 +17,8 @@ const ProfileVip = () => {
     const [bookingHistory, setBookingHistory] = useState([]); // State cho lịch sử đặt phòng
     const navigate = useNavigate();
 
+
+    //lấy dữ liệu
     useEffect(() => {
         const fetchProfile = async () => {
             const token = localStorage.getItem('token');
@@ -60,7 +62,7 @@ const ProfileVip = () => {
 
 
 
-
+    //chỉnh sửa thông tin cá nhân
     const handleEditSubmit = async (values) => {
         const token = localStorage.getItem('token');
         try {
@@ -87,6 +89,7 @@ const ProfileVip = () => {
         }
     };
 
+    //thay đổi mật khẩu
     const handleChangePasswordSubmit = async (values) => {
         const token = localStorage.getItem('token');
         try {
@@ -112,14 +115,14 @@ const ProfileVip = () => {
     };
 
     
+
+    //thay đổi ảnh đại diện
     const onCrop = (preview) => {
         setAvatarSrc(preview); // Lưu hình ảnh đã cắt vào state
     };
-
     const onClose = () => {
         setShowCropper(false);
     };
-
     const handleUpload = async () => {
         if (!avatarSrc) return; // Nếu không có ảnh đã cắt thì không làm gì cả
 
