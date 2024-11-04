@@ -73,7 +73,7 @@ const Login = () => {
               className="w-full input-field h-12 border border-gray-300 rounded-md focus:outline-none"
               required
             />
-            <a href="/forgotpassword" className="text-red-500 text-sm text-right mt-1">Quên mật khẩu?</a>
+            <a href="/ForgetPassword" className="text-red-500 text-sm text-right mt-1">Quên mật khẩu?</a>
           </div>
 
           <div className="flex items-center justify-center">

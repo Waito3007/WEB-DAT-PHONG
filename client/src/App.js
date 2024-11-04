@@ -11,6 +11,9 @@ import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/account/Login";
 import Register from "./components/account/Register";
+import ForgetPassword from "./components/account/ForgetPassword";
+import ResetPassword from "./components/account/Resetpassword";
+
 // Admin
 import Sidebar from "./components/dashboard/common/Sidebar";
 import OverviewPage from "./pages/OverviewPage";
@@ -35,7 +38,6 @@ import DetailHotelPage from "./pages/DetailHotelPage";
 import DetailRoomPage from "./pages/DetailRoomPage"; 
 import HotelImage from "./components/DetailHotel/HotelImage";
 import CheckoutPage from "./pages/CheckoutPage";
-
 const AppContent = () => {
   const location = useLocation();
   const [role, setRole] = useState(""); // Lưu role người dùng
@@ -104,6 +106,8 @@ const AppContent = () => {
       )}
       {isAdminPage && <Sidebar userRole={role} />}
       <Routes>
+        <Route path="/ResetPassword/:token" element={<ResetPassword />} />
+        <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
