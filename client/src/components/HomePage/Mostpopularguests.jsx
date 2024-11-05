@@ -14,7 +14,7 @@ const PopularDestinations = () => {
   useEffect(() => {
     const fetchTopHotels = async () => {
       try {
-        const response = await axios.get('/api/homepage/top4hotel');
+        const response = await axios.get('/api/homepage/random-hotel');
         setHotels(response.data);
         setLoading(false);
       } catch (err) {
@@ -37,7 +37,7 @@ const PopularDestinations = () => {
   return (
     <section className="travel-cards-wrapper">
       <div className="travel-cards">
-        <h2 className="travel-title">Khách sạn hàng đầu</h2>
+        <h2 className="travel-title">Có thể bạn thích</h2>
         <Row gutter={[16, 16]}>
           {hotels.map((hotel) => (
             <Col xs={24} sm={12} md={8} lg={6} key={hotel._id}>
