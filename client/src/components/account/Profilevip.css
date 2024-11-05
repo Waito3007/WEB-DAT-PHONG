@@ -1,0 +1,49 @@
+.profile-vip-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.upload-input {
+    margin: 20px 0;
+}
+
+.avatar-modal .ant-modal-header {
+    text-align: center;
+    background-color: #f0f2f5;
+}
+
+.avatar-modal .ant-modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1890ff;
+}
+
+.avatar-edit-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fafafa;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.cancel-button, .save-button {
+    width: 80px;
+    border-radius: 5px;
+}
+
+.save-button {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.cancel-button {
+    background-color: #ff4d4f;
+    color: #fff;
+}
+
+.cancel-button:hover, .save-button:hover {
+    opacity: 0.9;
+}
