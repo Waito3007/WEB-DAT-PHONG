@@ -544,7 +544,6 @@ select:focus {
 }
 .book-button {
   margin-top: 4rem; /* Khoảng cách trên */
-  background-color: black; /* Màu nền */
   color: #fff; /* Màu chữ */
   padding: 0.5rem; /* Padding */
   border-radius: 0.5rem; /* Bo tròn góc */
@@ -557,7 +556,6 @@ select:focus {
 }
 .button-container {
   display: flex; /* Đặt chế độ flex cho container */
-  justify-content: flex-start; /* Căn nút về bên trái */
   margin-top: 0.5rem; /* Khoảng cách trên button */
   align-self: flex-start; /* Đưa button sát vào ảnh */
   width: 100%;

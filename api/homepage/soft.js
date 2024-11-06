@@ -4,14 +4,13 @@ const Hotel = require('../../models/Hotel');
 const Rate = require('../../models/Rate');
 const Room = require('../../models/Room');
 
-// Route lấy 4 khách sạn có nhiều đánh giá nhất, đánh giá cao nhất, và giá phòng thấp nhất
+// Route lấy 4 khách sạn có nhiều đánh giá nhất, đánh giá cao nhất
 router.get('/top4hotel', async (req, res) => {
   try {
-    // Tính toán điểm đánh giá trung bình và số lượng đánh giá cho từng khách sạn
     const topHotels = await Hotel.aggregate([
       {
         $lookup: {
-          from: 'rates', // Tên collection "rates" từ model Rate
+          from: 'rates',
           localField: '_id',
           foreignField: 'hotel',
           as: 'reviews'
@@ -23,41 +22,41 @@ router.get('/top4hotel', async (req, res) => {
           location: 1,
           description: 1,
           imagehotel: 1,
-          reviewsCount: { $size: '$reviews' }, // Số lượng đánh giá
-          averageRating: { $avg: '$reviews.rating' } // Điểm đánh giá trung bình
+          reviewsCount: { $size: '$reviews' }, 
+          averageRating: { $avg: '$reviews.rating' } 
         }
       },
       { 
         $sort: { reviewsCount: -1, averageRating: -1 } // Sắp xếp theo số lượng đánh giá và điểm trung bình
       },
       { 
-        $limit: 4 // Giới hạn kết quả trả về 4 khách sạn
+        $limit: 4 //trả về 4 khách sạn
       }
     ]);
 
-    // Lấy giá phòng thấp nhất cho mỗi khách sạn
-    const hotelsWithLowestPrice = await Promise.all(
+    // Lấy giá phòng thấp nhất và cao nhất
+    const hotelsWithPriceRange = await Promise.all(
       topHotels.map(async hotel => {
-        const rooms = await Room.find({ hotel: hotel._id }).sort({ price: 1 }).limit(1); // Lấy phòng có giá thấp nhất
-        const lowestRoomPrice = rooms.length > 0 ? rooms[0].price : null;
-
+        const rooms = await Room.find({ hotel: hotel._id }).sort({ price: 1 }); // Sắp xếp giá phòng từ thấp đến cao
+        const lowestPrice = rooms.length > 0 ? rooms[0].price : null;
+        const highestPrice = rooms.length > 0 ? rooms[rooms.length - 1].price : null;
         return {
           ...hotel,
-          lowestRoomPrice
+          lowestPrice,  // Giá thấp nhất
+          highestPrice  // Giá cao nhất
         };
       })
     );
-
-    if (hotelsWithLowestPrice.length === 0) {
+    if (hotelsWithPriceRange.length === 0) {
       return res.status(404).json({ msg: 'Không có khách sạn nào' });
     }
-
-    res.status(200).json(hotelsWithLowestPrice); // Trả về danh sách 4 khách sạn kèm giá phòng thấp nhất
+    res.status(200).json(hotelsWithPriceRange); // Trả về danh sách 4 khách sạn kèm giá thấp nhất và cao nhất
   } catch (err) {
     console.error('Lỗi server:', err);
     res.status(500).json({ msg: 'Lỗi server' });
   }
 });
+
 
 router.get('/random-hotel', async (req, res) => {
   try {
@@ -66,16 +65,17 @@ router.get('/random-hotel', async (req, res) => {
       { $sample: { size: 4 } } // Random lấy 4 khách sạn bất kỳ
     ]);
 
-    // Tính khoảng giá (thấp nhất - cao nhất) cho từng khách sạn
+    // Lấy giá phòng thấp nhất và cao nhất cho mỗi khách sạn
     const hotelsWithPriceRange = await Promise.all(
       randomHotels.map(async hotel => {
         const rooms = await Room.find({ hotel: hotel._id }).sort({ price: 1 }); // Sắp xếp giá phòng từ thấp đến cao
         const lowestPrice = rooms.length > 0 ? rooms[0].price : null;
         const highestPrice = rooms.length > 0 ? rooms[rooms.length - 1].price : null;
-        
+
         return {
           ...hotel,
-          priceRange: lowestPrice && highestPrice ? `${lowestPrice} - ${highestPrice}` : null
+          lowestPrice,  // Giá thấp nhất
+          highestPrice  // Giá cao nhất
         };
       })
     );
@@ -84,11 +84,12 @@ router.get('/random-hotel', async (req, res) => {
       return res.status(404).json({ msg: 'Không có khách sạn nào' });
     }
 
-    res.status(200).json(hotelsWithPriceRange); // Trả về danh sách khách sạn kèm khoảng giá
+    res.status(200).json(hotelsWithPriceRange); // Trả về danh sách khách sạn kèm giá thấp nhất và cao nhất
   } catch (err) {
     console.error('Lỗi server:', err);
     res.status(500).json({ msg: 'Lỗi server' });
   }
 });
+
 
 module.exports = router;

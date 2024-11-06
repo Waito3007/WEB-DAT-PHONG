@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"; 
 import { FaSearch } from "react-icons/fa";
+import 'antd/dist/antd';
 
 function SearchHotel({ setFilteredHotels, setHotels, hotels }) {
   const [provinces, setProvinces] = useState([]);
@@ -20,7 +21,7 @@ function SearchHotel({ setFilteredHotels, setHotels, hotels }) {
           setError("Lỗi khi lấy danh sách tỉnh thành");
         }
 
-        const hotelResponse = await fetch("/api/hotel");
+        const hotelResponse = await fetch("/api/searchhotel/Search");
         const hotelData = await hotelResponse.json();
         setHotels(hotelData); // Cập nhật danh sách khách sạn
         setFilteredHotels(hotelData); // Thiết lập danh sách khách sạn ban đầu

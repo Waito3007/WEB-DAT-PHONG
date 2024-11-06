@@ -1,7 +1,7 @@
 import React from "react";
 import { Rate } from "antd"; // Import Rate từ Ant Design
 
-const HotelItem = ({ hotel, lowestRoomPrice }) => {
+const HotelItem = ({ hotel }) => {
   return (
     <div className="hotel-card border rounded-lg shadow-md overflow-hidden">
       {/* Hiển thị hình ảnh nếu có */}
@@ -17,23 +17,23 @@ const HotelItem = ({ hotel, lowestRoomPrice }) => {
         <p className="text-black location">{hotel.location || 'Vị trí không rõ'}</p>
 
         <div className="rating-reviews-container flex justify-between items-center mt-2">
-          <p className="rating text-black flex items-center">
-            <Rate disabled defaultValue={hotel.stars || 0} />
-          </p>
-          <p className="reviews text-black">
-            {hotel.reviews && hotel.reviews.length > 0 ? hotel.reviews.length : 'Chưa có đánh giá'} đánh giá
-          </p>
+          <Rate disabled defaultValue={hotel.averageRating || 0} allowHalf />
+          <span className="text-black font-bold ml-auto">
+            {hotel.averageRating ? `${hotel.averageRating} Điểm` : 'N/A'}
+          </span>
         </div>
 
-        <span className="lowest-price font-bold text-xl text-orange-600">
-          {lowestRoomPrice !== null 
-            ? `${lowestRoomPrice.toLocaleString('vi-VN')} VND` 
-            : 'Đang cập nhật'}
-        </span>
+        <div className="lowest-price-container flex justify-end mt-2">
+          <span className="lowest-price font-bold text-xl price">
+            {hotel.lowestRoomPrice 
+              ? `${hotel.lowestRoomPrice.toLocaleString('vi-VN')} VND` 
+              : 'Đang cập nhật'}
+          </span>
+        </div>
 
-        <div className="button-container mt-4">
-          <button className="book-button bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition">
-            Đặt phòng
+        <div className="button-container mt-4 flex justify-end">
+          <button className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition">
+            Đặt ngay
           </button>
         </div>
       </div>

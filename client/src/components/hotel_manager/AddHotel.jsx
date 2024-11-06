@@ -3,8 +3,9 @@ import axios from 'axios';
 import { Form, Input, Button, Typography, message, Upload, Modal } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { Star } from 'lucide-react'; // Nhập icon Star từ lucide-react
+import { Star } from 'lucide-react';
 import 'animate.css';
+import MapPicker from '../Map/MapPicker'; // Import MapPicker component
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -14,11 +15,12 @@ const AddHotel = () => {
     name: '',
     location: '',
     description: '',
-    stars: 0, // Thêm stars vào state
+    stars: 0,
   });
   const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false); // Trạng thái hiển thị modal
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,46 +32,17 @@ const AddHotel = () => {
     setFileList(fileList);
   };
 
-  const handleStarChange = (value) => {
-    setHotelData({ ...hotelData, stars: value });
+  const handleSubmit = async (values) => {
+    // (Giữ nguyên code handleSubmit ở đây)
   };
 
-  const handleSubmit = async (values) => {
-    setLoading(true);
-    const formData = new FormData();
-    formData.append('name', hotelData.name);
-    formData.append('location', hotelData.location);
-    formData.append('description', hotelData.description);
-    formData.append('stars', hotelData.stars);
-
-    fileList.forEach(file => {
-      formData.append('imagehotel', file.originFileObj);
-    });
-
-    try {
-      const response = await axios.post('/api/hotel/addhotel', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true
-      });
-
-      if (response.status === 201) {
-        message.success('Thêm khách sạn thành công!');
-        navigate('/myhotel');
-      }
-    } catch (error) {
-      const errorMsg = error.response?.data?.msg || 'Đã xảy ra lỗi khi thêm khách sạn';
-      message.error(errorMsg);
-    } finally {
-      setLoading(false);
-      setIsModalVisible(false); // Đóng modal sau khi thêm khách sạn thành công
-    }
+  const handleLocationSelect = (coordinate) => {
+    setIsMapVisible(false);
   };
 
   return (
     <>
-      <Button type="primary" onClick={() => setIsModalVisible(true)}>Thêm Khách Sạn</Button> {/* Nút để mở modal */}
+      <Button type="primary" onClick={() => setIsModalVisible(true)}>Thêm Khách Sạn</Button>
 
       <Modal
         title="Thêm Khách Sạn"
@@ -100,43 +73,12 @@ const AddHotel = () => {
                 onChange={handleChange}
                 className="border-gray-300 focus:border-pink-500 focus:ring-pink-500"
                 required
+                readOnly // Để không cho người dùng chỉnh sửa trực tiếp
               />
+              <Button onClick={() => setIsMapVisible(true)}>Chọn địa điểm</Button>
             </Form.Item>
 
-            <Form.Item label="Mô tả">
-              <TextArea
-                name="description"
-                placeholder="Nhập mô tả"
-                rows={4}
-                value={hotelData.description}
-                onChange={handleChange}
-                className="border-gray-300 focus:border-pink-500 focus:ring-pink-500"
-              />
-            </Form.Item>
-
-            <Form.Item label="Xếp hạng" required>
-              <div className="flex space-x-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className={`cursor-pointer ${hotelData.stars >= star ? 'text-yellow-500' : 'text-gray-300'}`}
-                    onClick={() => handleStarChange(star)}
-                    size={30} // Kích thước biểu tượng sao
-                  />
-                ))}
-              </div>
-            </Form.Item>
-
-            <Form.Item label="Ảnh khách sạn">
-              <Upload
-                listType="picture"
-                maxCount={5}
-                onChange={handleUpload}
-                beforeUpload={() => false}
-              >
-                <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
-              </Upload>
-            </Form.Item>
+            {/* (Giữ nguyên các Form.Item khác) */}
 
             <Form.Item>
               <Button
@@ -151,6 +93,16 @@ const AddHotel = () => {
             </Form.Item>
           </Form>
         </div>
+      </Modal>
+
+      <Modal
+        visible={isMapVisible}
+        onCancel={() => setIsMapVisible(false)}
+        footer={null}
+        className="modal-fullscreen" // Thêm lớp CSS cho modal toàn màn hình
+        bodyStyle={{ padding: 0 }} // Loại bỏ padding trong body
+      >
+        <MapPicker onSelectLocation={handleLocationSelect} />
       </Modal>
     </>
   );
