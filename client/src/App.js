@@ -11,9 +11,11 @@ import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/account/Login";
 import Register from "./components/account/Register";
+
+import ForgetPassword from "./components/account/ForgetPassword";
+import ResetPassword from "./components/account/Resetpassword";
 import Profile from "./components/account/profilevip";
 import ProfilePage from "./pages/ProfilePage";
-
 // Admin
 import Sidebar from "./components/dashboard/common/Sidebar";
 import OverviewPage from "./pages/OverviewPage";
@@ -108,6 +110,8 @@ const AppContent = () => {
       )}
       {isAdminPage && <Sidebar userRole={role} />}
       <Routes>
+        <Route path="/ResetPassword/:token" element={<ResetPassword />} />
+        <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/myprofile" element={<ProfilePage />} />
         <Route path="/login" element={<Login />} />
