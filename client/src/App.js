@@ -11,9 +11,11 @@ import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/account/Login";
 import Register from "./components/account/Register";
+
 import ForgetPassword from "./components/account/ForgetPassword";
 import ResetPassword from "./components/account/Resetpassword";
-
+import Profile from "./components/account/profilevip";
+import ProfilePage from "./pages/ProfilePage";
 // Admin
 import Sidebar from "./components/dashboard/common/Sidebar";
 import OverviewPage from "./pages/OverviewPage";
@@ -38,6 +40,8 @@ import DetailHotelPage from "./pages/DetailHotelPage";
 import DetailRoomPage from "./pages/DetailRoomPage"; 
 import HotelImage from "./components/DetailHotel/HotelImage";
 import CheckoutPage from "./pages/CheckoutPage";
+import BookingStatusPage from "./pages/BookingStatusPage";
+
 const AppContent = () => {
   const location = useLocation();
   const [role, setRole] = useState(""); // Lưu role người dùng
@@ -95,7 +99,7 @@ const AppContent = () => {
   return (
     <div
     className={`${
-        isAdminPage ? "flex h-screen bg-blue-900" : "bg-gray-100"
+        isAdminPage ? "flex h-screen bg-blue-900" : "bg-white"
       } text-gray-100 overflow-hidden`}
     >
       {isAdminPage && (
@@ -109,8 +113,10 @@ const AppContent = () => {
         <Route path="/ResetPassword/:token" element={<ResetPassword />} />
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/" element={<HomePage />} />
+        <Route path="/myprofile" element={<ProfilePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/hotelmanager" element={<HotelManagerPage />} />
         <Route path="/sales" element={<SalesPage />} />
@@ -132,6 +138,7 @@ const AppContent = () => {
         <Route path="/detailroom/:hotelId/checkout/:roomId" element={<CheckoutPage />} />
         <Route path="/success" element={<Success/>} />
         <Route path="/confirmpayment" element={<ConfirmPayment/>} />
+        <Route path="/bookingstatus" element={<BookingStatusPage/>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

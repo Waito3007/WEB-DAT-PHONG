@@ -59,4 +59,5 @@ router.get('/top4hotel', async (req, res) => {
   }
 });
 
+
 module.exports = router;

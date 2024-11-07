@@ -207,7 +207,12 @@ select:focus {
 .destination-content {
   padding-left: 20px; /* Create space between the image and text */
 }
+.destination-title{
+  white-space: normal; /* Cho phép xuống dòng */
+  overflow: hidden;    /* Ẩn phần thừa nếu có */
+  text-overflow: ellipsis; /* Thêm dấu "..." nếu tiêu đề quá dài */
 
+}
 .ant-card-meta-title {
   font-size: 18px;
   font-weight: bold;
@@ -289,7 +294,6 @@ select:focus {
 
 .price {
   font-weight: bold;
-  font-size: 18px; /* Thay đổi kích thước chữ */
   color: #ff3d00; /* Đổi màu cho giá */
 }
 
@@ -345,13 +349,6 @@ select:focus {
   align-items: center;
   margin-top: 10px; /* Thay đổi khoảng cách */
 }
-
-.price {
-  font-weight: bold;
-  font-size: 18px; /* Thay đổi kích thước chữ */
-  color: #ff3d00; /* Đổi màu cho giá */
-}
-
 .book-btn {
   background-color: #00bfae; /* Màu nền cho nút */
   color: white; /* Màu chữ cho nút */
@@ -399,14 +396,6 @@ select:focus {
   align-items: center;
   margin-top: 10px; /* Thay đổi khoảng cách */
 }
-
-.price {
-  font-weight: bold;
-  font-size: 18px; /* Thay đổi kích thước chữ */
-  color: #ff3d00; /* Đổi màu cho giá */
-}
-
-
 .stars {
   color: gold; /* Màu cho sao */
   font-size: 18px; /* Kích thước cho sao */
@@ -580,8 +569,6 @@ select:focus {
   justify-content: space-between;
   align-items: center;
   padding-top: 100px;
-  margin-left: 10%;
-  margin-right: 10%;
 }
 
 .hotel-header {

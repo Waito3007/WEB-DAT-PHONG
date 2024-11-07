@@ -8,9 +8,12 @@ const userTableRouter = require('./api/dashboard/usertable');
 const hotelapi = require('./api/hotel_manager/hotel');
 const Room = require('./api/hotel_manager/room'); 
 const Profile = require('./api/account/profile'); 
-const HomePage = require('./api/homepage/tophotel');// Đường dẫn mới cho room
+const Booking = require('./api/booking/booking'); 
+const HomePage = require('./api/homepage/soft');// Đường dẫn mới cho room
 const Detail = require('./api/detail/detail');
 const Checkout = require('./api/checkout/checkout');
+const SearchHotel = require('./api/search/searchhotel');
+const tinhthanhvn = require('./api/tinhthanhvn');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const app = express();
@@ -31,8 +34,11 @@ app.use('/api/usertable', userTableRouter); // Router lấy list người dùng
 app.use('/api/room', Room); // Thêm route cho phòng
 app.use('/api/hotel', hotelapi);
 app.use('/api/homepage', HomePage);
+app.use('/api/booking', Booking);
 app.use('/api/detail', Detail);
 app.use('/api/checkout', Checkout);
+app.use('/api/searchhotel', SearchHotel);
+app.use('/api/tinhthanh', tinhthanhvn);
 app.get('/', (req, res) => {
   res.send('Welcome to Hotel Booking API');
   

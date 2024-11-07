@@ -1,64 +1,32 @@
 import React from "react";
-import Filter from "./Filter";
-import HotelItem from "./HotelItem"; // Đổi tên import ở đây
+import { Rate } from "antd"; // Import Rate từ Ant Design
+import HotelItem from "./HotelItem";
 
-const HotelList = () => {
-  const hotels = [
-    {
-      name: "Aimee House Homestay",
-      location: "Hà Nội",
-      rating: "⭐⭐⭐⭐⭐",
-      reviews: "9.0/10 (120 đánh giá)",
-      price: "12.000.000",
-      image: "Hp1.png",
-    },
-    {
-      name: "Stay night Hồ Chí Minh",
-      location: "Hồ Chí Minh",
-      rating: "⭐⭐⭐⭐⭐",
-      reviews: "8.7/10 (85 đánh giá)",
-      price: "12.000.000",
-      image: "Hp1.png",
-    },
-    {
-      name: "Stay Night Cần Thơ",
-      location: "Cần Thơ",
-      rating: "⭐⭐⭐⭐⭐",
-      reviews: "8.9/10 (90 đánh giá)",
-      price: "12.000.000",
-      image: "Hp1.png",
-    },
-    {
-      name: "Stay night Sapa",
-      location: "Sapa",
-      rating: "⭐⭐⭐⭐⭐",
-      reviews: "8.8/10 (110 đánh giá)",
-      price: "12.000.000",
-      image: "Hp1.png",
-    },
-  ];
-
+const HotelList = ({ hotels = [] }) => { // Khởi tạo hotels với giá trị mặc định là mảng rỗng
   return (
     <div className="container">
       <div className="flex">
-        {/* Phần lọc */}
-        <Filter />
-
-        {/* Danh sách khách sạn */}
         <div className="hotel-list w-full">
           <h2 className="text-xl font-semibold text-black">Khách sạn</h2>
           <div className="grid grid-cols-1 gap-4">
-            {hotels.map((hotel, index) => (
-              <HotelItem // Đổi tên component ở đây
-                key={index}
-                name={hotel.name}
-                location={hotel.location}
-                rating={hotel.rating}
-                reviews={hotel.reviews}
-                price={hotel.price}
-                image={hotel.image}
-              />
-            ))}
+            {Array.isArray(hotels) && hotels.length > 0 ? ( // Kiểm tra xem hotels có phải là mảng và không rỗng
+              hotels.map((hotel) => {
+                // Tính giá phòng thấp nhất từ mảng phòng thuộc khách sạn
+                const lowestRoomPrice = hotel.rooms && hotel.rooms.length > 0 
+                  ? Math.min(...hotel.rooms.map(room => room.price)) 
+                  : null;
+
+                return (
+                  <HotelItem 
+                    key={hotel._id} 
+                    hotel={hotel} 
+                    lowestRoomPrice={lowestRoomPrice} // Truyền giá phòng thấp nhất vào HotelItem
+                  />
+                );
+              })
+            ) : (
+              <p>Không có khách sạn nào được tìm thấy.</p> // Thông báo nếu không có khách sạn
+            )}
           </div>
           <button className="show-more-button">Hiển thị thêm</button>
         </div>

@@ -8,7 +8,7 @@ const BookingSchema = new mongoose.Schema({
   checkOutDate: { type: Date, required: true },
   phoneBooking: { type: String, required: true },
   emailBooking: { type: String, required: true },
-  paymentStatus: { type: String, enum: ['Pending', 'Complete'], default: 'Pending' },
+  paymentStatus: { type: String, enum: ['Pending', 'Complete','CheckIn','CheckOut'], default: 'Pending' },
   orderId: { type: String, required: true }, // Thêm trường orderId
 });
 
