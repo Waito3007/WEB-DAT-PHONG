@@ -437,6 +437,7 @@ select:focus {
 
 .input-hotel {
   flex-grow: 1;
+  
 }
 
 .input-hotel input,
@@ -528,13 +529,16 @@ select:focus {
   padding: 1rem; /* Padding cho thẻ khách sạn */
   display: flex; /* Chế độ flex */
   background-color: #fff; /* Màu nền */
-  width: 200%; /* Đặt chiều rộng toàn bộ */
+  width:800px; /* Đặt chiều rộng toàn bộ */
   max-width: 900px; /* Chiều rộng tối đa của thẻ khách sạn */
+  min-width: 500px;
   margin: 1rem; /* Khoảng cách giữa các khách sạn */
   height: 300px; /* Thêm chiều cao cố định cho thẻ khách sạn */
   align-items: flex-start; /* Căn chỉnh nội dung ở đầu */
 }
-
+.hotel-details{
+  width:100%;
+}
 .hotel-card img {
   border-radius: 0.5rem; /* rounded-lg */
   height: 17rem; /* h-60 */

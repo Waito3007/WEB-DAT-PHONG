@@ -4,7 +4,6 @@ const Hotel = require('../../models/Hotel');
 const Room = require('../../models/Room');
 router.get('/Search', async (req, res) => {
   try {
-    console.log('Fetching hotels...');
     const allHotels = await Hotel.aggregate([
       {
         $lookup: {
@@ -25,7 +24,6 @@ router.get('/Search', async (req, res) => {
         }
       }
     ]);
-    console.log('Fetched hotels:', allHotels);
     const hotelsWithRoomDetails = await Promise.all(
       allHotels.map(async hotel => {
         const rooms = await Room.find({ hotel: hotel._id }).sort({ price: 1 });

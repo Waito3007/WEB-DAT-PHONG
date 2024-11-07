@@ -4,7 +4,7 @@ import 'antd/dist/antd';
 
 function SearchHotel({ setFilteredHotels, setHotels, hotels }) {
   const [provinces, setProvinces] = useState([]);
-  const [selectedProvince, setSelectedProvince] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // Thay selectedProvince bằng searchTerm
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
   const [loading, setLoading] = useState(true);
@@ -35,88 +35,61 @@ function SearchHotel({ setFilteredHotels, setHotels, hotels }) {
     fetchData();
   }, [setFilteredHotels, setHotels]);
 
-  const handleProvinceChange = (event) => {
-    const provinceId = event.target.value;
-    setSelectedProvince(provinceId);
-  
-    const provinceName = provinces.find((p) => p.id === provinceId)?.full_name;
-  
-    // Mảng chứa các từ cần loại trừ
-    const excludeWords = ["thành phố", "tỉnh"];
-  
-    if (provinceName) {
-      // Loại bỏ các từ không mong muốn
-      const cleanedProvinceName = excludeWords.reduce((name, word) => {
-        return name.replace(new RegExp(word, 'i'), ''); // Loại bỏ từ, không phân biệt chữ hoa chữ thường
-      }, provinceName)
-      .trim() // Xóa khoảng trắng ở đầu và cuối
-      .toLowerCase(); // Chuyển về chữ thường
-  
-      // Lọc danh sách khách sạn dựa trên cleanedProvinceName
-      const filtered = hotels.filter((hotel) =>
-        hotel.location.toLowerCase().includes(cleanedProvinceName)
-      );
-  
-      setFilteredHotels(filtered);
-    } else {
-      setFilteredHotels(hotels); 
-    }
-  };
-  
-  
-  
-  
-  
+  const handleSearchChange = (event) => {
+    const searchTerm = event.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
 
-  const handleSearch = () => {
-    // Logic cho tìm kiếm
+    // Từ cần loại trừ
+    const excludeWords = ["thành phố", "tỉnh"];
+
+    const cleanedSearchTerm = excludeWords.reduce((name, word) => {
+      return name.replace(new RegExp(word, 'i'), '');
+    }, searchTerm).trim();
+
+    // Lọc danh sách khách sạn dựa trên searchTerm đã làm sạch
+    const filtered = hotels.filter((hotel) =>
+      hotel.location.toLowerCase().includes(cleanedSearchTerm) ||
+      hotel.name.toLowerCase().includes(cleanedSearchTerm) // Thêm điều kiện tìm theo tên khách sạn
+    );
+
+    setFilteredHotels(filtered);
   };
 
   if (loading) return <p>Đang tải dữ liệu...</p>; 
   if (error) return <p>{error}</p>; 
 
   return (
-    <section className="search-hotel">
+    <section className="search-hotel justify-start">
       <div className="search-container-hotel">
         <div className="input-group-hotel">
-          <div className="input-hotel">
-            <label htmlFor="destination">Điểm đến</label>
-            <select
-              id="destination"
-              value={selectedProvince}
-              onChange={handleProvinceChange}
-            >
-              <option value="">Chọn Tỉnh Thành</option>
-              {provinces.map((province) => (
-                <option key={province.id} value={province.id}>
-                  {province.full_name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="input-hotel">
-            <label htmlFor="check-in">Ngày nhận phòng</label>
-            <input 
-              type="date" 
-              id="check-in" 
-              value={checkInDate} 
-              onChange={(e) => setCheckInDate(e.target.value)} 
-            />
-          </div>
-          <div className="input-hotel">
-            <label htmlFor="check-out">Ngày trả phòng</label>
-            <input 
-              type="date" 
-              id="check-out" 
-              value={checkOutDate} 
-              onChange={(e) => setCheckOutDate(e.target.value)} 
-            />
-          </div>
-          <div className="input-hotel">
-            <button className="search-btn" onClick={handleSearch}>
-              <FaSearch />
-            </button>
-          </div>
+          
+        <div className="relative w-full">
+        <input
+        id="destination"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        placeholder="Nhập tên tỉnh thành hoặc tên khách sạn"
+        className="pl-10 py-2 px-4 w-full text-black border border-black rounded-lg focus:border-gray-300  "
+      />
+      <svg
+        className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 20 20"
+      >
+        <path
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+        />
+      </svg>
+  </div>
+
+  
+          
         </div>
       </div>
     </section>
