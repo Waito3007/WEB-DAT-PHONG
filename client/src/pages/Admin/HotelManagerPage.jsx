@@ -5,9 +5,9 @@ import Header from "../../components/dashboard/common/Header";
 import StatCard from "../../components/dashboard/common/StatCard";
 import { HomeIcon, AlertTriangle, DollarSign, TrendingUp } from "lucide-react";
 import CategoryDistributionChart from "../../components/dashboard/overview/CategoryDistributionChart";
-import SalesTrendChart from "../../components/dashboard/products/SalesTrendChart";
-import HotelTable from "../../components/dashboard/products/HotelTable";
-import MyHotelTable from "../../components/dashboard/products/MyHotelTable";
+import SalesTrendChart from "../../components/dashboard/hotelmanage/SalesTrendChart";
+import HotelTable from "../../components/dashboard/hotelmanage/HotelTable";
+import MyHotelTable from "../../components/dashboard/hotelmanage/MyHotelTable";
 
 const HotelManagerPage = () => {
   const [role, setRole] = useState("");

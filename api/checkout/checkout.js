@@ -25,7 +25,7 @@ router.post('/payment', async (req, res) => {
   const secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
   const orderInfo = 'pay with MoMo';
   const partnerCode = 'MOMO';
-  const redirectUrl = 'http://localhost:3000/success'; // Chuyển hướng về trang success
+  const redirectUrl = 'http://localhost:3000/success'; // Chuyển hướng trang thành công
   const ipnUrl = 'payWithMethod'; 
   const requestType = "payWithMethod";
   const amount = req.body.amount;
@@ -68,11 +68,7 @@ router.post('/payment', async (req, res) => {
   };
 
   try {
-    console.log('Gửi yêu cầu thanh toán MoMo:', requestBody);
     const response = await axios(options);
-    console.log('Phản hồi từ MoMo:', response.data);
-
-    // Sau khi nhận được payUrl, gửi yêu cầu xác nhận booking
     const confirmResponse = await axios.post('http://localhost:5000/api/checkout/confirm', {
       userId: req.body.userId,
       roomId: req.body.roomId,
@@ -81,7 +77,8 @@ router.post('/payment', async (req, res) => {
       phoneBooking: req.body.phoneBooking,
       emailBooking: req.body.emailBooking,
       paymentStatus: 'Pending',
-      orderId: orderId // Gửi orderId để lưu vào booking
+      orderId: orderId,
+      priceBooking: req.body.amount, // Lưu giá vào booking
     });
 
     res.json({ payUrl: response.data.payUrl, orderId: orderId, bookingId: confirmResponse.data.bookingId });
@@ -90,6 +87,7 @@ router.post('/payment', async (req, res) => {
     res.status(500).json({ message: 'Có lỗi xảy ra khi thanh toán' });
   }
 });
+
 
 /// Định nghĩa API xác nhận booking
 router.post('/confirmchange', async (req, res) => {
@@ -128,10 +126,10 @@ router.post('/confirmchange', async (req, res) => {
 
 // API xác nhận và lưu booking sau khi thanh toán thành công
 router.post('/confirm', async (req, res) => {
-  const { userId, roomId, checkInDate, checkOutDate, phoneBooking, emailBooking, paymentStatus, orderId } = req.body;
+  const { userId, roomId, checkInDate, checkOutDate, phoneBooking, emailBooking, paymentStatus, orderId, priceBooking } = req.body;
 
   const newBooking = new Booking({
-    user: userId ? userId : undefined,
+    user: userId || undefined,
     room: roomId,
     bookingDate: new Date(),
     checkInDate: new Date(checkInDate),
@@ -139,7 +137,8 @@ router.post('/confirm', async (req, res) => {
     phoneBooking: phoneBooking,
     emailBooking: emailBooking,
     paymentStatus: paymentStatus || 'Pending',
-    orderId: orderId
+    orderId: orderId,
+    priceBooking: priceBooking,
   });
 
   try {
@@ -150,6 +149,7 @@ router.post('/confirm', async (req, res) => {
     res.status(500).json({ message: 'Có lỗi xảy ra khi lưu thông tin đặt phòng' });
   }
 });
+
 // API kiểm tra trạng thái thanh toán
 router.get('/payment-status/:orderId', async (req, res) => {
   const { orderId } = req.params;
