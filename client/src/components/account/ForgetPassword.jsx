@@ -63,7 +63,7 @@ const ForgotPassword = () => {
               type="submit" 
               className="w-full bg-black text-white py-2 rounded-md text-lg h-12 hover:bg-gray-800 transition duration-300 ease-in-out"
             >
-              Gửi liên kết đặt lại mật khẩu
+              Tiếp tục
             </button>
           </div>
         </form>

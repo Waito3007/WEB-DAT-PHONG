@@ -7,7 +7,6 @@ const cookieParser = require('cookie-parser');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
-
 const auth = require('../../middleware/auth');
 const upload = require('../../middleware/upload');
 const cloudinary = require('cloudinary').v2;
@@ -203,9 +202,6 @@ router.post('/forgot-password', async (req, res) => {
 router.post('/reset', async (req, res) => {
   const { token, newPassword } = req.body;
 
-  // Log token ra console để kiểm tra
-  console.log('Received token:', token);
-
   try {
     const user = await User.findOne({
       resetPasswordToken: token,
@@ -213,20 +209,23 @@ router.post('/reset', async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json({ msg: 'Token không hợp lệ hoặc đã hết hạn.' });
+      return res.status(400).json({ msg: 'Liên kết đã hết hạn hoặc không hợp lệ.' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(newPassword, salt);
+    // Đặt mật khẩu mới (không mã hóa)
+    user.password = newPassword;
+
+    // Xóa token đặt lại mật khẩu và thời gian hết hạn sau khi đặt lại thành công
     user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = Date.now() + 240; // Token có hiệu lực trong 1 giờ
+    user.resetPasswordExpires = undefined;
+
     await user.save();
+
     res.status(200).json({ msg: 'Đặt lại mật khẩu thành công.' });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Lỗi server' });
   }
 });
-
 
 module.exports = router;
