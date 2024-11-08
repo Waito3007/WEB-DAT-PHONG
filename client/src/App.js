@@ -11,7 +11,7 @@ import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/account/Login";
 import Register from "./components/account/Register";
-import Profile from "./components/account/profilevip";
+import Profile from "./components/account/Profile";
 import ProfilePage from "./pages/ProfilePage";
 
 // Admin
