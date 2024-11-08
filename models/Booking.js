@@ -8,8 +8,9 @@ const BookingSchema = new mongoose.Schema({
   checkOutDate: { type: Date, required: true },
   phoneBooking: { type: String, required: true },
   emailBooking: { type: String, required: true },
-  paymentStatus: { type: String, enum: ['Pending', 'Complete','CheckIn','CheckOut'], default: 'Pending' },
-  orderId: { type: String, required: true }, // Thêm trường orderId
+  paymentStatus: { type: String, enum: ['Pending', 'Complete', 'CheckIn', 'CheckOut'], default: 'Pending' },
+  orderId: { type: String, required: true },
+  priceBooking: { type: Number, required: true }, 
 });
 
 module.exports = mongoose.model('Booking', BookingSchema);

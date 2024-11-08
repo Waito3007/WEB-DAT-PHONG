@@ -12,7 +12,6 @@ router.post('/register', async (req, res) => {
     if (user) {
       return res.status(400).json({ msg: 'Email đã tồn tại' });
     }
-
     // Tạo người dùng mới
     user = new User({ name, email, password, role, registrationDate });
 

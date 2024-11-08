@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema({
   registrationDate: { type: Date, default: Date.now }, // Ngày đăng ký
   age: { type: Number,  default: null  }, // Tuổi
   avatar: { type: String, default: '' },
+  resetPasswordToken: { type: String, default: null }, // Token dùng để đặt lại mật khẩu
+  resetPasswordExpires: { type: Date, default: null }, // Thời gian hết hạn của token
 });
 
 // Mã hóa mật khẩu trước khi lưu

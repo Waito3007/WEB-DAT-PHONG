@@ -11,9 +11,11 @@ import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/account/Login";
 import Register from "./components/account/Register";
-import Profile from "./components/account/Profile";
-import ProfilePage from "./pages/ProfilePage";
 
+import ForgetPassword from "./components/account/ForgetPassword";
+import ResetPassword from "./components/account/Resetpassword";
+import Profile from "./components/account/profilevip";
+import ProfilePage from "./pages/ProfilePage";
 // Admin
 import Sidebar from "./components/dashboard/common/Sidebar";
 import OverviewPage from "./pages/OverviewPage";
@@ -28,7 +30,7 @@ import SearchPage from "./pages/SearchPage";
 import HotelAdd from "./components/hotel_manager/AddHotel";
 import MyHotel from "./components/hotel_manager/MyHotel";
 import HotelDetail from "./components/hotel_manager/HotelDetail"; 
-import AddRoom from "./components/dashboard/products/AddRoom";
+import AddRoom from "./components/dashboard/hotelmanage/AddRoom";
 import HotelRooms from "./components/hotel_manager/HotelRooms"; 
 import RoomDetail from "./components/hotel_manager/RoomDetail";
 import SearchPlaces from "./components/HomePage/SearchPlaces";
@@ -108,6 +110,8 @@ const AppContent = () => {
       )}
       {isAdminPage && <Sidebar userRole={role} />}
       <Routes>
+        <Route path="/ResetPassword/:token" element={<ResetPassword />} />
+        <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/myprofile" element={<ProfilePage />} />
         <Route path="/login" element={<Login />} />
