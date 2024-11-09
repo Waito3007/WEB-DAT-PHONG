@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UploadOutlined } from '@ant-design/icons';
+import { Eye, EyeOff } from 'lucide-react'; // Import icon Eye và EyeOff
 import { Drawer, Button, Form, Input, message, Modal, Spin, Pagination, Table } from 'antd';
 import axios from 'axios'; // Import axios
 import AvatarEdit from 'react-avatar-edit'; // Nhập thư viện
@@ -20,7 +21,11 @@ const ProfileVip = () => {
     //phân trang
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5); // Số dòng hiển thị trên mỗi trang
+     const [showBookingId, setShowBookingId] = useState(true);
+     const [isOrderIdVisible, setIsOrderIdVisible] = useState(true); // Trạng thái hiển thị của cột Mã Đặt Phòng
     
+    // Toggle function
+    const toggleOrderIdVisibility = () => setIsOrderIdVisible(!isOrderIdVisible);
 
     //lấy dữ liệu
     useEffect(() => {
@@ -44,15 +49,18 @@ const ProfileVip = () => {
                 navigate('/login');
             }
         };
-
+        
         const fetchBookingHistory = async (token) => {
             try {
                 const response = await fetch('/api/booking', {
                     headers: { 'Authorization': `Bearer ${token}` },
                 });
                 const data = await response.json();
+        
                 if (response.ok) {
-                    setBookingHistory(data); // Cập nhật lịch sử đặt phòng
+                    // Sắp xếp `bookingHistory` theo `bookingDate` từ mới nhất đến cũ nhất
+                    const sortedData = data.sort((a, b) => new Date(b.bookingDate) - new Date(a.bookingDate));
+                    setBookingHistory(sortedData); // Cập nhật lịch sử đặt phòng với dữ liệu đã sắp xếp
                 } else {
                     console.error('Không thể lấy lịch sử đặt phòng');
                 }
@@ -60,6 +68,7 @@ const ProfileVip = () => {
                 console.error('Lỗi mạng hoặc server:', err);
             }
         };
+        
 
         fetchProfile();
     }, [navigate]);
@@ -170,14 +179,23 @@ const ProfileVip = () => {
         }
     };
     
+    // Cấu hình các cột của bảng, bao gồm bộ lọc
     const columns = [
         {
-            title: 'Mã Đặt Phòng',
+            title: (
+                <div className="flex items-center space-x-2">
+                    <span>Mã Đặt Phòng</span>
+                    <button onClick={toggleOrderIdVisibility} style={{ border: 'none', background: 'transparent' }}>
+                        {isOrderIdVisible ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                </div>
+            ),
             dataIndex: 'orderId',
             key: 'orderId',
-            filterMultiple: false, // Giới hạn chọn một bộ lọc
+            filterMultiple: false,
             onFilter: (value, record) => record.orderId.includes(value),
-            filters: bookingHistory.map(booking => ({ text: booking.orderId, value: booking.orderId })),
+            filters: bookingHistory.map((booking) => ({ text: booking.orderId, value: booking.orderId })),
+            render: (text) => (isOrderIdVisible ? text : '*********'),
         },
         {
             title: 'Tên Khách Sạn',
@@ -185,40 +203,45 @@ const ProfileVip = () => {
             key: 'hotelName',
             filterMultiple: true,
             onFilter: (value, record) => record.room.hotel.name.includes(value),
-            filters: Array.from(new Set(bookingHistory.map(booking => booking.room.hotel.name)))
-                .map(name => ({ text: name, value: name })),
+            filters: Array.from(new Set(bookingHistory.map((booking) => booking.room.hotel.name)))
+                .sort()
+                .map((name) => ({ text: name, value: name })),
         },
         {
             title: 'Loại Phòng',
             dataIndex: ['room', 'type'],
             key: 'roomType',
-            filters: Array.from(new Set(bookingHistory.map(booking => booking.room.type)))
-                .map(type => ({ text: type, value: type })),
             onFilter: (value, record) => record.room.type.includes(value),
+            filters: Array.from(new Set(bookingHistory.map((booking) => booking.room.type)))
+                .sort()
+                .map((type) => ({ text: type, value: type })),
         },
         {
             title: 'Ngày Check In',
             dataIndex: 'checkInDate',
             key: 'checkInDate',
             render: (date) => formatDate(date),
+            sorter: (a, b) => new Date(a.checkInDate) - new Date(b.checkInDate),
         },
         {
             title: 'Ngày Check Out',
             dataIndex: 'checkOutDate',
             key: 'checkOutDate',
             render: (date) => formatDate(date),
+            sorter: (a, b) => new Date(a.checkOutDate) - new Date(b.checkOutDate),
         },
         {
             title: 'Tình Trạng Thanh Toán',
             dataIndex: 'paymentStatus',
             key: 'paymentStatus',
+            onFilter: (value, record) => record.paymentStatus === value,
             filters: [
                 { text: 'Đã thanh toán', value: 'Complete' },
                 { text: 'Chưa thanh toán', value: 'Pending' },
             ],
-            onFilter: (value, record) => record.paymentStatus === value,
         },
-    ];
+    ].filter(Boolean);
+    
 
     return (
         <main className="profile-page">
@@ -502,21 +525,20 @@ const ProfileVip = () => {
               <section className="py-16">
             <div className="relative mx-auto px-4">
                 <h2 className="text-2xl font-ROBOTO text-black mb-4">LỊCH SỬ ĐẶT PHÒNG</h2>
-                <div className="overflow-x-auto">
-                    <Table
-                        columns={columns}
-                        dataSource={bookingHistory}
-                        pagination={{
-                            current: currentPage,
-                            pageSize: itemsPerPage,
-                            total: bookingHistory.length,
-                            onChange: onPageChange,
-                        }}
-                        rowKey="id" // Đảm bảo mỗi hàng có một key duy nhất
-                    />
-                </div>
+                <Table
+                    columns={columns}
+                    dataSource={bookingHistory}
+                    pagination={{
+                        current: currentPage,
+                        pageSize: itemsPerPage,
+                        total: bookingHistory.length,
+                        onChange: onPageChange,
+                    }}
+                    rowKey="id"
+                />
             </div>
         </section>
+
              {/* Modal cho AvatarEdit */}
             <Modal
                 width={1000}
