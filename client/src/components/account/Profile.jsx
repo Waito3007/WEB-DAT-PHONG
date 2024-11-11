@@ -14,7 +14,7 @@ const Profile = () => {
       }
 
       try {
-        const response = await fetch('/api/profile', {
+        const response = await fetch('/api/profile/me', {
           headers: { 'Authorization': `Bearer ${token}` },
         });
         const data = await response.json();

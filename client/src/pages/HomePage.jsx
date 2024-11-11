@@ -5,7 +5,7 @@ import HeroSection from "../components/HomePage/HomeNavbar";
 import ImageHome from "../components/HomePage/imagehome";
 import SearchPlaces from "../components/HomePage/SearchPlaces";
 import PopularDestinations from "../components/HomePage/PopularDestinations";
-import TravelCards from "../components/HomePage/Tophotel";
+import TopHotel from "../components/HomePage/Tophotel";
 import Mostpopularguests from "../components/HomePage/Mostpopularguests";
 import Endow from "../components/HomePage/endow";
 import Footer from "../components/HomePage/Footer";
@@ -22,7 +22,7 @@ function HomePage() {
       <ImageHome />
       <SearchPlaces />
       <PopularDestinations />
-      <TravelCards />
+      <TopHotel />
       <Mostpopularguests />
       <Endow />
       <Footer />

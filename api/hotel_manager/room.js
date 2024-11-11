@@ -6,7 +6,6 @@ const Hotel = require('../../models/Hotel');
 const auth = require('../../middleware/auth'); // Middleware xác thực
 const upload = require('../../middleware/upload'); // Middleware upload ảnh (Cloudinary)
 
-
 // Hàm lấy publicId từ URL của Cloudinary
 const getPublicIdFromUrl = (url) => {
   const matches = url.match(/\/v\d+\/(.+)\.(jpg|jpeg|png|gif|webp)/);
@@ -16,7 +15,7 @@ const getPublicIdFromUrl = (url) => {
 // Route thêm phòng
 router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req, res) => {
   const { hotelId } = req.params;
-  const { type, price, availability } = req.body;
+  const { type, price, availability, remainingRooms } = req.body;
 
   try {
     const hotel = await Hotel.findById(hotelId);
@@ -32,6 +31,7 @@ router.post('/:hotelId/add-room', auth, upload.array('imageroom', 5), async (req
       price,
       availability,
       imageroom: imageRoomUrls,
+      remainingRooms,
     });
 
     await newRoom.save();
@@ -167,8 +167,27 @@ router.put('/:roomId/remove-image', async (req, res) => {
               res.status(500).json({ message: 'Đã xảy ra lỗi' });
           }
         });
-
-
-     
-
+        router.get('/', async (req, res) => {
+          try {
+            // Lấy danh sách khách sạn cùng với các phòng liên quan
+            const hotels = await Hotel.find()
+              .populate('manager', 'name')  // Lấy tên người quản lý
+              .populate({
+                path: 'rooms',  // Lấy các phòng của khách sạn
+                select: 'type price availability imageroom remainingRooms',  // Chọn các trường cần thiết từ bảng Room
+              });
+        
+            // Truy vấn thông tin chi tiết cho từng phòng dựa vào roomId
+            for (const hotel of hotels) {
+              for (const room of hotel.rooms) {
+                // Tìm thông tin loại phòng dựa vào roomId
+                const roomDetails = await Room.findById(room._id).select('type price availability');
+                room.type = roomDetails.type;  // Cập nhật loại phòng vào room
+              }
+            }       
+            res.json(hotels); // Trả về thông tin các khách sạn với phòng đã được cập nhật
+          } catch (error) {
+            res.status(500).json({ message: 'Lỗi khi lấy danh sách khách sạn', error });
+          }
+        });        
 module.exports = router;

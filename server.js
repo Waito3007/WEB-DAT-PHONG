@@ -9,9 +9,11 @@ const hotelapi = require('./api/hotel_manager/hotel');
 const Room = require('./api/hotel_manager/room'); 
 const Profile = require('./api/account/profile'); 
 const Booking = require('./api/booking/booking'); 
-const HomePage = require('./api/homepage/tophotel');// Đường dẫn mới cho room
+const HomePage = require('./api/homepage/soft');// Đường dẫn mới cho room
 const Detail = require('./api/detail/detail');
 const Checkout = require('./api/checkout/checkout');
+const SearchHotel = require('./api/search/searchhotel');
+const tinhthanhvn = require('./api/tinhthanhvn');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const app = express();
@@ -35,6 +37,8 @@ app.use('/api/homepage', HomePage);
 app.use('/api/booking', Booking);
 app.use('/api/detail', Detail);
 app.use('/api/checkout', Checkout);
+app.use('/api/searchhotel', SearchHotel);
+app.use('/api/tinhthanh', tinhthanhvn);
 app.get('/', (req, res) => {
   res.send('Welcome to Hotel Booking API');
   
@@ -45,7 +49,7 @@ app.use(cors({
 // Lắng nghe trên cổng
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server đang chạy trên cổng ${PORT}`);
   
 });
 

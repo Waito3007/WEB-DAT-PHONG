@@ -1,10 +1,10 @@
 // src/pages/BookingStatusPage.js
 import React, { useEffect, useState } from 'react';
 import { Card, Spinner } from 'flowbite-react';
-import BookingCard from '../components/BookingStatus/BookingCard'; // Giả sử bạn sẽ tạo BookingCard
+import BookingCard from '../components/BookingStatus/BookingCard'; // Assume you will create BookingCard
 import axios from 'axios';
 
-const BookingStatusPage = () => {
+const BookingStatusPage = ({ userRole }) => { // Assuming userRole is passed as a prop
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,7 +12,11 @@ const BookingStatusPage = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await axios.get('/api/booking/booking/admin');
+        const endpoint = userRole === 'admin' 
+          ? '/api/booking/booking/admin' 
+          : '/api/booking/booking/manager';
+        
+        const response = await axios.get(endpoint);
         setBookings(response.data);
       } catch (err) {
         setError(err.message);
@@ -22,7 +26,7 @@ const BookingStatusPage = () => {
     };
 
     fetchBookings();
-  }, []);
+  }, [userRole]); // Dependency array includes userRole
 
   if (loading) {
     return (

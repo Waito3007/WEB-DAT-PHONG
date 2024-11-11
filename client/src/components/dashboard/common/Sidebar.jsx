@@ -1,7 +1,9 @@
 import { BarChart2, DollarSign, Menu, Settings, ShoppingBag, ShoppingCart, TrendingUp, Users } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+
 
 const SIDEBAR_ITEMS = [
 	{
@@ -33,7 +35,7 @@ const SIDEBAR_ITEMS = [
 		roles: ["Admin", "HotelManager"], 
 	},
 	{
-		name: "Orders",
+		name: "Đặt phòng",
 		icon: ShoppingCart,
 		color: "#F59E0B",
 		href: "/orders",
@@ -51,12 +53,19 @@ const SIDEBAR_ITEMS = [
 		icon: Settings,
 		color: "#6EE7B7",
 		href: "/settings",
-		roles: ["Admin", "HotelManager"], // Chỉ cho phép Admin
+		roles: ["", ""], 
 	},
 ];
 
 const Sidebar = ({ userRole }) => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+	const navigate = useNavigate();
+
+
+
+const handleHome = () => {
+	navigate("/");
+  };
 
 	return (
 		<motion.div
@@ -97,6 +106,11 @@ const Sidebar = ({ userRole }) => {
 						</Link>
 					))}
 				</nav>
+				{/* Logo ở cuối sidebar */}
+				<div className="mt-auto p-6 flex justify-center">
+					<img src="https://res.cloudinary.com/dackig67m/image/upload/v1730387091/logovip_qp8hz1.png" onClick={handleHome} alt="Logo" className="h-16 w-fit" />
+				</div>
+			
 			</div>
 		</motion.div>
 	);

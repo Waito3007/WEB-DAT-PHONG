@@ -18,18 +18,14 @@ const getPublicIdFromUrl = (url) => {
 // Thêm khách sạn
 router.post('/addhotel', auth, upload.array('imagehotel', 5), async (req, res) => {
   const { name, location, description, rooms, stars } = req.body;
-
   try {
-    const managerId = req.userId; // Lấy userId từ middleware auth
-
+    const managerId = req.userId; // Lấy userId
     // Kiểm tra xem có tệp nào không
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ msg: 'Không có tệp nào được tải lên' });
     }
-
     // Lấy đường dẫn ảnh sau khi upload
-    const imageUrls = req.files.map(file => file.path);
-    
+    const imageUrls = req.files.map(file => file.path);  
     // Tạo khách sạn mới theo mô hình
     const newHotel = new Hotel({
       name,
@@ -40,11 +36,9 @@ router.post('/addhotel', auth, upload.array('imagehotel', 5), async (req, res) =
       imagehotel: imageUrls,
       stars: stars || 3  // Mặc định số sao là 3 nếu không có giá trị
     });
-
     await newHotel.save();
     res.status(201).json({ msg: 'Khách sạn đã được thêm thành công', hotel: newHotel });
   } catch (err) {
-    console.error(err); // In ra toàn bộ lỗi
     res.status(500).json({ msg: 'Lỗi server', error: err.message });
   }
 });
@@ -108,7 +102,7 @@ router.get('/:hotelId', auth, async (req, res) => {
 // Route xóa khách sạn
 router.delete('/:hotelId', auth, async (req, res) => {
   const { hotelId } = req.params;
-  const userId = req.user.userId; // Lấy userId từ middleware auth
+  const userId = req.userId; // Lấy userId từ middleware auth
   const { password } = req.body; // Lấy mật khẩu từ body
 
   try {

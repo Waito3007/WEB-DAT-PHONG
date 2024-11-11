@@ -207,7 +207,12 @@ select:focus {
 .destination-content {
   padding-left: 20px; /* Create space between the image and text */
 }
+.destination-title{
+  white-space: normal; /* Cho phép xuống dòng */
+  overflow: hidden;    /* Ẩn phần thừa nếu có */
+  text-overflow: ellipsis; /* Thêm dấu "..." nếu tiêu đề quá dài */
 
+}
 .ant-card-meta-title {
   font-size: 18px;
   font-weight: bold;
@@ -432,6 +437,7 @@ select:focus {
 
 .input-hotel {
   flex-grow: 1;
+  
 }
 
 .input-hotel input,
@@ -523,13 +529,16 @@ select:focus {
   padding: 1rem; /* Padding cho thẻ khách sạn */
   display: flex; /* Chế độ flex */
   background-color: #fff; /* Màu nền */
-  width: 200%; /* Đặt chiều rộng toàn bộ */
+  width:800px; /* Đặt chiều rộng toàn bộ */
   max-width: 900px; /* Chiều rộng tối đa của thẻ khách sạn */
+  min-width: 500px;
   margin: 1rem; /* Khoảng cách giữa các khách sạn */
   height: 300px; /* Thêm chiều cao cố định cho thẻ khách sạn */
   align-items: flex-start; /* Căn chỉnh nội dung ở đầu */
 }
-
+.hotel-details{
+  width:100%;
+}
 .hotel-card img {
   border-radius: 0.5rem; /* rounded-lg */
   height: 17rem; /* h-60 */
@@ -539,7 +548,6 @@ select:focus {
 }
 .book-button {
   margin-top: 4rem; /* Khoảng cách trên */
-  background-color: black; /* Màu nền */
   color: #fff; /* Màu chữ */
   padding: 0.5rem; /* Padding */
   border-radius: 0.5rem; /* Bo tròn góc */
@@ -552,7 +560,6 @@ select:focus {
 }
 .button-container {
   display: flex; /* Đặt chế độ flex cho container */
-  justify-content: flex-start; /* Căn nút về bên trái */
   margin-top: 0.5rem; /* Khoảng cách trên button */
   align-self: flex-start; /* Đưa button sát vào ảnh */
   width: 100%;

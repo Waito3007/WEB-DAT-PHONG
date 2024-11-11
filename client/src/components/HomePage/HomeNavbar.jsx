@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Heart, Calendar, Hotel, LogOut } from "lucide-react";
+import { User, Heart, Calendar, Hotel, LogOut, Menu } from "lucide-react";
 
 const HomeNavbar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const fetchUser = async () => {
     try {
@@ -31,6 +32,10 @@ const HomeNavbar = () => {
 
   const handleLogin = () => {
     navigate("/login");
+  };
+
+  const handleProfile = () => {
+    navigate("/myprofile");
   };
 
   const handleSignUp = () => {
@@ -68,12 +73,37 @@ const HomeNavbar = () => {
     navigate("/overview");
   };
 
+  const toggleResponsiveMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <div className="navbar flex justify-between items-center p-4 bg-gray-800 relative">
+      {/* Logo */}
       <div className="navbar-title">
-        <button className="text-white text-2xl m-0" onClick={handleHome}>staynight</button>
+        <img
+          src="https://res.cloudinary.com/dackig67m/image/upload/v1730387091/logovip_qp8hz1.png"
+          alt="Stay Night Logo"
+          className="h-10"
+          onClick={handleHome}
+          style={{ cursor: 'pointer' }}
+        />
       </div>
-      <div className="navbar-buttons relative">
+
+      {/* Middle Navigation Links */}
+      <div className="navbar-links hidden md:flex space-x-6">
+      <span className="cursor-pointer" onClick={handleHome}>Trang chủ</span>
+      <span className="cursor-pointer" onClick={() => navigate("/searchpage")}>Đặt Phòng</span>
+      <span className="cursor-pointer" onClick={() => navigate("/")}>Liên hệ</span>
+      </div>
+
+      {/* Mobile Menu Icon */}
+      <div className="md:hidden flex items-center">
+        <Menu className="w-8 h-8 text-white cursor-pointer" onClick={toggleResponsiveMenu} />
+      </div>
+
+      {/* User Controls */}
+      <div className="navbar-buttons hidden md:flex relative">
         {user ? (
           <div className="user-avatar cursor-pointer" onClick={toggleMenu}>
             <img 
@@ -84,7 +114,7 @@ const HomeNavbar = () => {
             {menuOpen && (
               <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-md z-50">
                 <ul className="py-2">
-                  <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
+                  <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer" onClick={handleProfile}>
                     <User className="w-4 h-4 mr-2" /> Hồ sơ cá nhân
                   </li>
                   <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
@@ -106,18 +136,43 @@ const HomeNavbar = () => {
             )}
           </div>
         ) : (
-          <>
-            <div className="inline-flex rounded-md shadow-sm" role="group">
-              <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white" onClick={handleLogin}>
-                Đăng nhập
-              </button>
-              <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white" onClick={handleSignUp}>               
-                Đăng ký
-              </button>   
-            </div>
-          </>
+          <div className="inline-flex rounded-md shadow-sm" role="group">
+            <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white" onClick={handleLogin}>
+              Đăng nhập
+            </button>
+            <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white" onClick={handleSignUp}>
+              Đăng ký
+            </button>   
+          </div>
         )}
       </div>
+
+      {/* Responsive Dropdown Menu */}
+      {isMenuOpen && (
+        <div className="absolute top-16 left-0 right-0 bg-gray-800 text-white md:hidden z-50 p-4">
+          <div className="flex flex-col space-y-4">
+            <span className="cursor-pointer" onClick={handleHome}>Trang chủ</span>
+            <span className="cursor-pointer" onClick={() => navigate("/searchpage")}>Đặt Phòng</span>
+            <span className="cursor-pointer" onClick={() => navigate("/")}>Liên hệ</span>
+            {user ? (
+              <>
+                <span className="cursor-pointer" onClick={handleProfile}>Hồ sơ cá nhân</span>
+                <span className="cursor-pointer" onClick={() => navigate("/favorite")}>Khách sạn yêu thích</span>
+                <span className="cursor-pointer" onClick={() => navigate("/bookings")}>Đặt phòng của bạn</span>
+                {user.role === "Admin" || user.role === "HotelManager" ? (
+                  <span className="cursor-pointer" onClick={handleManageHotel}>Quản lý khách sạn</span>
+                ) : null}
+                <span className="cursor-pointer" onClick={handleLogout}>Đăng xuất</span>
+              </>
+            ) : (
+              <>
+                <span className="cursor-pointer" onClick={handleLogin}>Đăng nhập</span>
+                <span className="cursor-pointer" onClick={handleSignUp}>Đăng ký</span>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

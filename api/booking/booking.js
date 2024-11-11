@@ -16,10 +16,10 @@ router.get('/', auth, async (req, res) => {
         select: 'type price imageroom hotel', // Lấy thêm `hotel` từ Room
         populate: {
           path: 'hotel', // Populate Hotel qua Room
-          select: 'name location description stars imagehotel', // Chọn các trường từ Hotel
+          select: 'name location description stars imagehotel ', // Chọn các trường từ Hotel
         },
       })
-      .select('checkInDate checkOutDate phoneBooking emailBooking paymentStatus orderId bookingDate');
+      .select('checkInDate checkOutDate phoneBooking emailBooking paymentStatus orderId bookingDate priceBooking');
 
     // Kiểm tra nếu không có đặt phòng nào được tìm thấy
     if (!bookings || bookings.length === 0) {
