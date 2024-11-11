@@ -30,7 +30,7 @@ const ResetPassword = () => {
       const data = await response.json();
       if (response.ok) {
         setSuccess('Mật khẩu đã được cập nhật thành công!');
-        setTimeout(() => navigate('/login'), 3000);
+        setTimeout(() => navigate('/login'), 600);
       } else {
         setError(data.msg || 'Có lỗi xảy ra, vui lòng thử lại.');
       }
