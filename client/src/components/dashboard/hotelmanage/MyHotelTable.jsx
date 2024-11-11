@@ -1,38 +1,32 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Edit, Search, Trash2, PlusCircle, Eye } from 'lucide-react';
-import { Modal, Input, Button, message, Upload, Form, Drawer,Rate, Table } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Edit, Trash2, PlusCircle, Eye } from 'lucide-react';
+import { Modal, Input, Button, message, Form,Rate } from 'antd';
 import RoomListDrawer from './RoomListDrawer'; // Import component
-import { useParams } from 'react-router-dom';
+import EditHotelModal from './EditHotelModal';
+import AddHotelModal from './AddHotelModal'; // Import AddHotelModal
+
 
 
 const MyHotelTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [roomSearchTerm, setRoomSearchTerm] = useState(''); // Tìm kiếm phòng
   const [loading, setLoading] = useState(false); 
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hotelsPerPage] = useState(5);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
   const [currentHotel, setCurrentHotel] = useState(null);
   const [fileList, setFileList] = useState([]);
-  const [removedImages, setRemovedImages] = useState([]);
   const [form] = Form.useForm();
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [password, setPassword] = useState('');
-  const [isRoomDrawerVisible, setIsRoomDrawerVisible] = useState(false);
-  const [roomList, setRoomList] = useState([]);
   const [addHotelForm] = Form.useForm(); // Form instance for Add Hotel
   const [selectedHotelRooms, setSelectedHotelRooms] = useState([]);
   const [isModalRoomVisible, setIsModalRoomVisible] = useState(false);
 
-  const roomsPerPage = 10; // Số phòng mỗi trang
-  const { hotelId } = useParams();
-  const [selectedHotel, setSelectedHotel] = useState(null);
+
 
 
 
@@ -50,10 +44,6 @@ const MyHotelTable = () => {
   }, [fetchHotels]);
   
 
-  //them anh moi khi them khach san
-  const handleUpload = ({ fileList }) => {
-    setFileList(fileList);
-  };
 
   const showModal = (hotel) => {
     setCurrentHotel(hotel);
@@ -67,96 +57,17 @@ const MyHotelTable = () => {
     setIsModalVisible(true);
   };
 
-
-//cap nhat khách sạn
-  const handleSave = async (values) => {
-    setIsUpdating(true);
-    try {
-      
-      const formData = new FormData();
-      formData.append('name', values.name);
-      formData.append('location', values.location);
-      formData.append('description', values.description);
-      formData.append('stars', values.stars);
-      fileList.forEach((file) => {
-        formData.append('imagehotel', file);
-      });
-      formData.append('removedImages', JSON.stringify(removedImages));
-
-      await axios.put(`/api/hotel/${currentHotel._id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
-      });
-
-      message.success('Khách sạn đã được cập nhật thành công');
-      setIsModalVisible(false);
-      fetchHotels();
-    } catch (error) {
-      message.error('Đã xảy ra lỗi khi cập nhật khách sạn');
-    } finally {
-      setIsUpdating(false);
-    }
+//cập nhật khách sạn
+  const handleUpdateHotel = () => {
+    fetchHotels();  // Refresh the hotel list after updating
   };
 
-
-  //xóa ảnh
-  const handleRemoveImage = async (file) => {
-    if (file.uid) {
-      setFileList(prev => prev.filter(item => item.uid !== file.uid));
-      setRemovedImages(prev => [...prev, file.url]);
-
-      try {
-        await axios.put(`/api/hotel/${currentHotel._id}/remove-image`, { imageUrl: file.url }, { withCredentials: true });
-      } catch (error) {
-        message.error('Đã xảy ra lỗi khi xóa hình ảnh');
-      }
-    }
+//thêm khách sạn
+  const handleAddHotel = () => {
+    fetchHotels(); // Refresh the hotel list after adding a hotel
   };
 
-
-  //thêm khách sạn
-  const handleAddHotel = async (values) => {
-    setLoading(true);
-    const formData = new FormData();
-    formData.append('name', values.name);
-    formData.append('location', values.location);
-    formData.append('description', values.description);
-    formData.append('stars', values.stars); // Bổ sung trường đánh giá sao
   
-    // Đính kèm file ảnh
-    fileList.forEach(file => {
-      formData.append('imagehotel', file.originFileObj);
-    });
-  
-    try {
-      const response = await axios.post('/api/hotel/addhotel', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true
-      });
-  
-      if (response.status === 201) {
-        message.success('Thêm khách sạn thành công!');
-        fetchHotels();
-        setIsAddModalVisible(false);
-        addHotelForm.resetFields();
-        setFileList([]);
-      }
-    } catch (error) {
-      const errorMsg = error.response?.data?.msg || 'Đã xảy ra lỗi khi thêm khách sạn';
-      message.error(errorMsg);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-
-  const handleImageChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList.map(file => file.originFileObj || file));
-  };
 
   const showDeleteModal = (hotel) => {
     setCurrentHotel(hotel);
@@ -187,11 +98,6 @@ const MyHotelTable = () => {
   };
 
 
-  const handleSearchRoom = (e) => {
-    const term = e.target.value.toLowerCase();
-    setRoomSearchTerm(term); // Sử dụng roomSearchTerm thay vì searchTerm
-    setCurrentPage(1);
-  };
 
   // Xem danh sách phòng
   const handleViewRooms = (hotelId) => {
@@ -205,22 +111,6 @@ const MyHotelTable = () => {
     setSelectedHotelRooms([]);
   };
 
-
-  // Gọi hàm filteredRooms để lọc và phân trang
-  const filteredRooms = roomList.filter(
-    (room) => room.type.toLowerCase().includes(roomSearchTerm) // Sử dụng roomSearchTerm để lọc
-  );
-
-const indexOfLastRoom = currentPage * roomsPerPage;
-const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
-const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
-
-const paginateRooms = (pageNumber) => setCurrentPage(pageNumber);
-
-const roomPageNumbers = [];
-for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
-  roomPageNumbers.push(i);
-}
   
   const filteredHotels = hotels.filter(
     (hotel) => hotel.name.toLowerCase().includes(searchTerm) || hotel.location.toLowerCase().includes(searchTerm)
@@ -259,11 +149,11 @@ for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-2.5 text-gray-400"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
           </div>
           <button
-            className='text-green-500 hover:text-green-700'
-            onClick={() => setIsAddModalVisible(true)}
-          >
-            <PlusCircle size={24} />
-          </button>
+          className="text-green-500 hover:text-green-700"
+          onClick={() => setIsAddModalVisible(true)}
+        >
+          <PlusCircle size={24} />
+        </button>
         </div>
       </div>
 
@@ -337,102 +227,21 @@ for (let i = 1; i <= Math.ceil(filteredRooms.length / roomsPerPage); i++) {
       />
 
       {/* Modal for Edit Hotel */}
-      <Modal
-        title={isUpdating ? 'Cập nhật khách sạn' : 'Chỉnh sửa khách sạn'}
-        visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        footer={null}
-      >
-        <Form form={form} layout="vertical" onFinish={handleSave}>
-          <Form.Item name="name" label="Tên khách sạn" rules={[{ required: true, message: 'Vui lòng nhập tên khách sạn!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="location" label="Vị trí" rules={[{ required: true, message: 'Vui lòng nhập vị trí!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="description" label="Mô tả">
-            <Input.TextArea rows={4} />
-          </Form.Item>
-          {/* Stars rating field */}
-    <Form.Item
-      name="stars"
-      label="Xếp Hạng"
-      rules={[{ required: true, message: 'Vui lòng chọn xếp hạng!' }]}
-    >
-      <Rate allowHalf />
-    </Form.Item>
-          <Form.Item label="Hình ảnh">
-            <Upload
-              action={null}
-              fileList={fileList}
-              onChange={handleImageChange}
-              onRemove={handleRemoveImage}
-              beforeUpload={() => false} // Prevent automatic upload
-              listType="picture"
-            >
-              <Button icon={<UploadOutlined />}>Chọn Hình Ảnh</Button>
-            </Upload>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={isUpdating}>
-              {isUpdating ? 'Đang cập nhật...' : 'Cập nhật'}
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <EditHotelModal
+          hotel={currentHotel}
+          isVisible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+          onUpdate={handleUpdateHotel}
+        />
 
       
-      <Modal
-  title="Thêm Khách Sạn"
-  visible={isAddModalVisible}
-  onCancel={() => setIsAddModalVisible(false)}
-  footer={null}
->
-  <Form form={addHotelForm} layout="vertical" onFinish={handleAddHotel}>
-    <Form.Item
-      name="name"
-      label="Tên khách sạn"
-      rules={[{ required: true, message: 'Vui lòng nhập tên khách sạn!' }]}
-    >
-      <Input />
-    </Form.Item>
-    <Form.Item
-      name="location"
-      label="Vị trí"
-      rules={[{ required: true, message: 'Vui lòng nhập vị trí!' }]}
-    >
-      <Input />
-    </Form.Item>
-    <Form.Item name="description" label="Mô tả">
-      <Input.TextArea rows={4} />
-    </Form.Item>
-    {/* Stars rating field */}
-    <Form.Item
-      name="stars"
-      label="Xếp Hạng"
-      rules={[{ required: true, message: 'Vui lòng chọn xếp hạng!' }]}
-    >
-      <Rate allowHalf />
-    </Form.Item>
-    <Form.Item label="Hình ảnh">
-      <Upload
-        action={null}
-        fileList={fileList}
-        onChange={handleUpload}
-        onRemove={handleRemoveImage}
-        beforeUpload={() => false} // Prevent automatic upload
-        listType="picture"
-      >
-        <Button icon={<UploadOutlined />}>Chọn Hình Ảnh</Button>
-      </Upload>
-    </Form.Item>
-    <Form.Item>
-      <Button type="primary" htmlType="submit" loading={loading}>
-        {loading ? 'Đang thêm...' : 'Thêm khách sạn'}
-      </Button>
-    </Form.Item>
-  </Form>
-</Modal>
+     {/* Modal thêm khách sạn */}
+     <AddHotelModal
+        visible={isAddModalVisible}
+        onCancel={() => setIsAddModalVisible(false)}
+        onAddHotel={handleAddHotel} // Gọi lại hàm refresh sau khi thêm khách sạn
+      />
+
 
 
       {/* Delete Confirmation Modal */}
