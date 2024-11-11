@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Card, Col, Row } from "antd";
-import "antd/dist/antd"; // Đảm bảo bạn đã thêm css
+import { useNavigate } from "react-router-dom"; // Ensure you use react-router-dom for navigation
+import "antd/dist/antd";
 
 const { Meta } = Card;
 
 const PopularDestinations = () => {
   const [destinations, setDestinations] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDestinations = async () => {
@@ -26,13 +28,17 @@ const PopularDestinations = () => {
     fetchDestinations();
   }, []);
 
+  const handleCardClick = (destination) => {
+    navigate(`/searchpage?location=${encodeURIComponent(destination.full_name)}`);
+  };
+
   return (
     <section className="popular-destinations">
       <h3 className="section-title">Địa điểm nổi bật</h3>
       <Row gutter={16} justify="center">
         {destinations.map((destination) => (
           <Col xs={24} sm={12} md={6} key={destination.id}>
-            <Card hoverable>
+            <Card hoverable onClick={() => handleCardClick(destination)}>
               <Row>
                 <Col span={8}>
                   <div className="destination-image-wrapper">
@@ -46,7 +52,7 @@ const PopularDestinations = () => {
                 <Col span={16}>
                   <div className="destination-content">
                     <Meta
-                      title={<div className="destination-title">{destination.full_name}</div>} // Áp dụng lớp CSS cho tiêu đề
+                      title={<div className="destination-title">{destination.full_name}</div>}
                     />
                   </div>
                 </Col>

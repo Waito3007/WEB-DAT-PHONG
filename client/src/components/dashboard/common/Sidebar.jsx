@@ -35,7 +35,7 @@ const SIDEBAR_ITEMS = [
 		roles: ["Admin", "HotelManager"], 
 	},
 	{
-		name: "Orders",
+		name: "Đặt phòng",
 		icon: ShoppingCart,
 		color: "#F59E0B",
 		href: "/orders",
@@ -53,7 +53,7 @@ const SIDEBAR_ITEMS = [
 		icon: Settings,
 		color: "#6EE7B7",
 		href: "/settings",
-		roles: ["Admin", "HotelManager"], // Chỉ cho phép Admin
+		roles: ["", ""], 
 	},
 ];
 

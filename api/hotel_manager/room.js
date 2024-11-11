@@ -6,7 +6,6 @@ const Hotel = require('../../models/Hotel');
 const auth = require('../../middleware/auth'); // Middleware xác thực
 const upload = require('../../middleware/upload'); // Middleware upload ảnh (Cloudinary)
 
-
 // Hàm lấy publicId từ URL của Cloudinary
 const getPublicIdFromUrl = (url) => {
   const matches = url.match(/\/v\d+\/(.+)\.(jpg|jpeg|png|gif|webp)/);
@@ -185,12 +184,10 @@ router.put('/:roomId/remove-image', async (req, res) => {
                 const roomDetails = await Room.findById(room._id).select('type price availability');
                 room.type = roomDetails.type;  // Cập nhật loại phòng vào room
               }
-            }
-        
+            }       
             res.json(hotels); // Trả về thông tin các khách sạn với phòng đã được cập nhật
           } catch (error) {
             res.status(500).json({ message: 'Lỗi khi lấy danh sách khách sạn', error });
           }
-        });
-        
+        });        
 module.exports = router;

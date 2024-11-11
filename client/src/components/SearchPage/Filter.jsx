@@ -39,27 +39,7 @@ const Filter = ({ onFilterChange }) => {
         </summary>
 
         <form action="" className="flex border-t border-gray-200 lg:border-t-0">
-          <fieldset className="w-full">
-            <legend className="block w-full bg-gray-50 px-5 py-3 text-xs font-medium">Loại phòng</legend>
-            <div className="space-y-2 px-5 py-6">
-              <div className="flex items-center">
-                <input id="New" type="checkbox" name="type[New]" className="h-5 w-5 rounded border-gray-300" checked={selectedType.New} onChange={handleTypeChange} />
-                <label htmlFor="New" className="ml-3 text-sm font-medium">1 phòng 1 người</label>
-              </div>
-              <div className="flex items-center">
-                <input id="Used" type="checkbox" name="type[Used]" className="h-5 w-5 rounded border-gray-300" checked={selectedType.Used} onChange={handleTypeChange} />
-                <label htmlFor="Used" className="ml-3 text-sm font-medium">1 phòng 2 người</label>
-              </div>
-              <div className="flex items-center">
-                <input id="Branded" type="checkbox" name="type[Branded]" className="h-5 w-5 rounded border-gray-300" checked={selectedType.Branded} onChange={handleTypeChange} />
-                <label htmlFor="Branded" className="ml-3 text-sm font-medium">2 phòng 1 người</label>
-              </div>
-              <div className="flex items-center">
-                <input id="Branded" type="checkbox" name="type[Branded]" className="h-5 w-5 rounded border-gray-300" checked={selectedType.Branded} onChange={handleTypeChange} />
-                <label htmlFor="Branded" className="ml-3 text-sm font-medium">2 phòng 2 người</label>
-              </div>
-            </div>
-          </fieldset>
+         
 
           <fieldset className="w-full">
             <legend className="block w-full bg-gray-50 px-5 py-3 text-xs font-medium">Giá</legend>

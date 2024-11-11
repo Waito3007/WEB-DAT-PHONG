@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from 'antd';
 import { motion } from 'framer-motion';
@@ -7,40 +7,53 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
+  const [timer, setTimer] = useState(0);
+  const [retryInterval, setRetryInterval] = useState(30); // Initial wait time is 30 seconds
   const navigate = useNavigate();
 
+  useEffect(() => {
+    let countdown;
+    if (timer > 0) {
+      countdown = setInterval(() => setTimer((prev) => prev - 1), 1000);
+    } else if (timer === 0 && countdown) {
+      clearInterval(countdown);
+    }
+    return () => clearInterval(countdown);
+  }, [timer]);
+
   const handleForgotPassword = async (e) => {
-    e.preventDefault(); // Ngăn chặn reload trang khi gửi form
+    e.preventDefault();
     setError(null);
     setSuccess(null);
 
     try {
-      // Gửi yêu cầu POST đến server để gửi email đặt lại mật khẩu
       const response = await fetch('/api/profile/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }), // Chuyển email thành JSON
+        body: JSON.stringify({ email }),
       });
 
-      const data = await response.json(); // Nhận dữ liệu trả về từ server
+      const data = await response.json();
       if (response.ok) {
         setSuccess('Đã gửi liên kết đặt lại mật khẩu vào email của bạn.');
+        setTimer(retryInterval); // Start the timer
+        setRetryInterval((prev) => prev + 15); // Increase retry interval by 15 seconds
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
       }
     } catch (err) {
       console.error('Lỗi mạng hoặc server:', err);
-      setError('Có lỗi xảy ra , vui lòng thử lại sau.');
+      setError('Có lỗi xảy ra, vui lòng thử lại sau.');
     }
   };
 
   return (
     <motion.div 
       className="absolute inset-0 flex flex-col justify-center items-center px-4 py-8 md:px-16 md:py-16 bg-gradient-to-r from-gray-100 to-white"
-      initial={{ opacity: 0, y: -50 }} // Hiệu ứng ban đầu
-      animate={{ opacity: 1, y: 0 }} // Hiệu ứng khi xuất hiện
-      exit={{ opacity: 0, y: 50 }} // Hiệu ứng khi rời khỏi
-      transition={{ duration: 0.5 }} // Thời gian cho hiệu ứng
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.5 }}
     >
       <div className="w-full max-w-md flex flex-col justify-start items-start gap-6 p-6 bg-white shadow-md rounded-lg">
         <h2 className="text-black text-4xl font-normal text-center">Quên Mật Khẩu</h2>
@@ -62,8 +75,9 @@ const ForgotPassword = () => {
             <button 
               type="submit" 
               className="w-full bg-black text-white py-2 rounded-md text-lg h-12 hover:bg-gray-800 transition duration-300 ease-in-out"
+              disabled={timer > 0}
             >
-              Tiếp tục
+              {timer > 0 ? `Gửi lại sau ${timer}s` : 'Tiếp tục'}
             </button>
           </div>
         </form>
