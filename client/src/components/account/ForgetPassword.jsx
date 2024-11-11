@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from 'antd';
 import { motion } from 'framer-motion';
@@ -7,19 +7,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
-  const [timer, setTimer] = useState(0);
-  const [retryInterval, setRetryInterval] = useState(30); // Initial wait time is 30 seconds
   const navigate = useNavigate();
-
-  useEffect(() => {
-    let countdown;
-    if (timer > 0) {
-      countdown = setInterval(() => setTimer((prev) => prev - 1), 1000);
-    } else if (timer === 0 && countdown) {
-      clearInterval(countdown);
-    }
-    return () => clearInterval(countdown);
-  }, [timer]);
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
@@ -36,8 +24,6 @@ const ForgotPassword = () => {
       const data = await response.json();
       if (response.ok) {
         setSuccess('Đã gửi liên kết đặt lại mật khẩu vào email của bạn.');
-        setTimer(retryInterval); // Start the timer
-        setRetryInterval((prev) => prev + 15); // Increase retry interval by 15 seconds
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
       }
@@ -55,37 +41,74 @@ const ForgotPassword = () => {
       exit={{ opacity: 0, y: 50 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="w-full max-w-md flex flex-col justify-start items-start gap-6 p-6 bg-white shadow-md rounded-lg">
-        <h2 className="text-black text-4xl font-normal text-center">Quên Mật Khẩu</h2>
-        {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
-        {success && <div className="text-green-500 mb-4 text-center">{success}</div>}
-        <form onSubmit={handleForgotPassword} className="flex flex-col gap-6">
-          <div className="flex flex-col">
-            <label className="text-[#1c1b1f] text-sm">Email</label>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full input-field border border-gray-300 rounded-md focus:outline-none"
-              required
-            />
+      <div className="w-full max-w-5xl flex flex-col md:flex-row items-start gap-6 p-12 bg-white shadow-md rounded-lg">
+        {/* Form Section */}
+        <div className="flex flex-col w-full md:w-1/2 gap-6">
+          <h2 className="text-black text-4xl font-normal text-left">Bạn quên mật khẩu?</h2>
+          <p className="text-left text-gray-700 text-base">
+            Đừng lo lắng, điều này xảy ra với tất cả chúng ta. Nhập email của bạn dưới đây để khôi phục mật khẩu của bạn.
+          </p>
+
+          {error && <div className="text-red-500 mb-4 text-left">{error}</div>}
+          {success && <div className="text-green-500 mb-4 text-left">{success}</div>}
+
+          <form onSubmit={handleForgotPassword} className="flex flex-col gap-6 w-full">
+            <div className="flex flex-col w-full">
+              <label className="text-[#1c1b1f] text-sm font-medium">Email</label>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full h-14 input-field border border-gray-300 rounded-md px-4 focus:outline-none"
+                required
+              />
+            </div>
+
+            <div className="flex items-center justify-center w-full">
+              <button 
+                type="submit" 
+                className="w-full h-12 bg-black text-white py-2 rounded-md text-lg hover:bg-gray-800 transition duration-300 ease-in-out"
+              >
+                Gửi
+              </button>
+            </div>
+          </form>
+
+          <div className="flex justify-center items-center w-full gap-4 mt-4">
+            <div className="flex-grow h-[0.5px] bg-gray-300 opacity-50"></div>
+            <p className="text-sm text-gray-700">Or login with</p>
+            <div className="flex-grow h-[0.5px] bg-gray-300 opacity-50"></div>
           </div>
 
-          <div className="flex items-center justify-center">
-            <button 
-              type="submit" 
-              className="w-full bg-black text-white py-2 rounded-md text-lg h-12 hover:bg-gray-800 transition duration-300 ease-in-out"
-              disabled={timer > 0}
-            >
-              {timer > 0 ? `Gửi lại sau ${timer}s` : 'Tiếp tục'}
-            </button>
+          <div className="grid grid-cols-3 w-full gap-4 mt-4">
+            <div className="w-[145px] h-[56px] px-4 py-2 rounded border border-[#8dd3bb] flex justify-center items-center justify-self-start">
+              <img src="../fb.png" alt="Facebook Icon" className="w-6 h-6" />
+            </div>
+
+            <div className="w-[145px] h-[56px] px-4 py-2 rounded border border-[#8dd3bb] flex justify-center items-center justify-self-center">
+              <img src="../gg.png" alt="Google Icon" className="w-6 h-6" />
+            </div>
+
+            <div className="w-[145px] h-[56px] px-4 py-2 rounded border border-[#8dd3bb] flex justify-center items-center justify-self-end">
+              <img src="../apple.png" alt="Apple Icon" className="w-6 h-6" />
+            </div>
           </div>
-        </form>
-        <div className="flex justify-center">
-          <p className="text-sm text-black">
-            Quay lại trang 
-            <a href="/login" className="text-red-500 ml-1">Đăng nhập</a>
-          </p>
+
+          <div className="flex justify-center w-full mt-4">
+            <p className="text-sm text-black">
+              Quay lại trang 
+              <a href="/login" className="text-red-500 ml-1">Đăng nhập</a>
+            </p>
+          </div>
+        </div>
+
+        {/* Image Section */}
+        <div className="hidden md:flex md:w-1/2 justify-center items-center">
+          <img 
+            className="w-[325px] h-[492px] rounded-[15px]" 
+            src="../bg.png" 
+            alt="Placeholder"
+          />
         </div>
       </div>
     </motion.div>
