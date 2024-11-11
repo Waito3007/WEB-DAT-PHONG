@@ -633,3 +633,198 @@ select:focus {
   align-items: center;
   gap: -10px;
 }
+
+/* styles.css */
+.ant-table {
+  background-color: #f9f9f9; /* Màu nền bảng */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ant-table th {
+  background-color: #f0f0f0; /* Màu nền của các tiêu đề cột */
+  font-weight: 600;
+  color: #333;
+}
+
+.ant-table-tbody > tr:hover {
+  background-color: #e6f7ff; /* Màu nền khi di chuột qua dòng */
+}
+
+.ant-table-tbody > tr.ant-table-row-selected {
+  background-color: #bae7ff; /* Màu nền khi chọn dòng */
+}
+
+.ant-pagination-item {
+  color: #1890ff;
+}
+
+.ant-pagination-item:hover {
+  background-color: #e6f7ff;
+}
+
+.ant-pagination-prev, .ant-pagination-next {
+  color: #1890ff;
+}
+
+/* styles.css */
+.ant-table {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.ant-table th {
+  background: linear-gradient(90deg, rgba(66, 153, 225, 1) 0%, rgba(66, 153, 225, 0.9) 100%);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.ant-table-tbody > tr {
+  transition: background-color 0.3s ease;
+}
+
+.ant-table-tbody > tr:hover {
+  background-color: #f0f9ff;
+}
+
+.ant-table-cell {
+  font-size: 14px;
+  text-align: center;
+  padding: 16px;
+}
+
+.ant-pagination-item {
+  background-color: #edf2f7;
+  border-radius: 8px;
+  color: #3182ce;
+}
+
+.ant-pagination-item:hover {
+  background-color: #bee3f8;
+}
+
+.ant-pagination-prev, .ant-pagination-next {
+  color: #3182ce;
+  font-weight: bold;
+}
+
+.ant-pagination-item-active {
+  background-color: #3182ce;
+  color: #fff;
+}
+
+
+/* Đảm bảo bảng không bị cắt khi trên màn hình nhỏ */
+@media (max-width: 768px) {
+  .ant-table {
+      width: 100%;
+      overflow-x: auto;
+  }
+  .ant-table-thead th, .ant-table-tbody td {
+      white-space: nowrap;
+  }
+}
+
+/* Thêm hiệu ứng động khi chọn trạng thái thanh toán */
+.payment-complete {
+  color: #38a169;
+  font-weight: bold;
+}
+
+.payment-pending {
+  color: #e53e3e;
+  font-weight: bold;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+button:hover {
+  opacity: 0.7;
+}
+
+h2 {
+  font-family: 'Merriweather', serif;  /* Thay phông chữ */
+  font-weight: 700;
+  font-size: 2.5rem;  /* Kích thước chữ lớn hơn */
+  text-align: center; /* Căn giữa */
+  color: #2D3748;     /* Màu chữ tối */
+  margin-bottom: 24px;
+  margin-top: 10px;
+
+  letter-spacing: 2px; /* Tăng khoảng cách giữa các chữ */
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho chữ */
+}
+
+/* Thêm một màu nền đẹp cho phần tiêu đề */
+h2 span {
+  background: linear-gradient(90deg, #000000, #777777);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.custom-button {
+  background-color: #4CAF50;  /* Màu nền nút */
+  color: white;                /* Màu chữ */
+  border: none;                /* Loại bỏ đường viền */
+  padding: 12px 24px;          /* Khoảng cách giữa chữ và viền */
+  font-size: 16px;             /* Kích thước chữ */
+  font-weight: bold;           /* Làm đậm chữ */
+  border-radius: 8px;          /* Bo góc nút */
+  transition: all 0.3s ease;   /* Hiệu ứng chuyển động mượt mà */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Bóng đổ nhẹ */
+  cursor: pointer;            /* Đổi con trỏ thành pointer khi hover */
+}
+
+.custom-button:hover {
+  background-color: #45a049;  /* Màu nền khi hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Bóng đổ khi hover */
+  transform: translateY(-2px);  /* Nâng nút lên một chút khi hover */
+}
+
+.custom-button:active {
+  background-color: #388e3c; /* Màu nền khi nhấn */
+  transform: translateY(2px);  /* Nút hạ xuống khi nhấn */
+}
+
+.custom-button:focus {
+  outline: none; /* Loại bỏ viền focus */
+  box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.5); /* Viền sáng khi focus */
+}
+
+
+
+/* Media Query cho màn hình nhỏ (Điện thoại) */
+@media (max-width: 768px) {
+  /* Đảm bảo các phần tử xếp chồng nhau */
+  .profile-page .container {
+      padding: 0 15px;
+  }
+
+  .profile-page .avatar-container img {
+      width: 90px; /* Thu nhỏ ảnh đại diện */
+      height: 90px;
+  }
+
+  .profile-page .user-info h3 {
+      font-size: 18px; /* Giảm kích thước chữ cho tên */
+  }
+
+  .profile-page .user-info p {
+      font-size: 15px; /* Giảm kích thước chữ cho email */
+  }
+
+  /* Nút chỉnh sửa */
+  .profile-page .edit-button {
+      width: 100%; /* Nút chỉnh sửa chiếm toàn bộ chiều rộng */
+      padding: 10px 0;
+  }
+}

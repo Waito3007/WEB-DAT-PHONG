@@ -195,40 +195,42 @@ const ProfileVip = () => {
             </section>
 
             <section className="relative py-16 bg-gray-100">
-                <div className="container mx-auto px-4">
-                    <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-5 shadow-xl rounded-lg -mt-60">
-                        <div className="flex flex-wrap justify-between items-center px-6 py-4">
-                            <div className="flex items-center">
-                            <div className="relative p-1 bg-white rounded-full shadow-lg transition-all duration-300 hover:shadow-2xl">
-                <img
-                    alt="Avatar"
-                    src={avatarUrl || (user && user.avatar) ? user.avatar : 'https://res.cloudinary.com/dackig67m/image/upload/v1730489645/5db7d294a77fbe0fbfca4eb233afc01b_vt0x30.jpg'}
-                    className="rounded-full h-32 w-32 object-cover align-middle border-none max-w-full"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-                <UploadOutlined onClick={() => setShowCropper(true)} style={{ fontSize: '24px', color: 'white', opacity: 0.8 }} />
-                </div>
-            </div>
-                                <div className="text-left ml-4">
-                                    <h3 className="text-2xl font-semibold leading-normal mb-2 text-black">
-                                        {user ? user.name : 'Tải thông tin...'}
-                                    </h3>
-                                    <p className="text-gray-600">{user ? user.email : 'Đang tải email...'}</p>
-                                </div>
-                            </div>
-
-                            <div className="text-right">
-                                <Button
-                                    className="mr-2"
-                                    type="primary"
-                                    onClick={() => setEditVisible(true)}
-                                >
-                                    Chỉnh sửa hồ sơ
-                                </Button>
-                            </div>
-                        </div>
+            <div className="container mx-auto px-4">
+    <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-5 shadow-xl rounded-lg -mt-60">
+        <div className="flex flex-wrap justify-between items-center px-6 py-4">
+            <div className='flex items-center'>
+            <div className="avatar-container flex items-center">
+                <div className="relative p-1 bg-white rounded-full shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <img
+                        alt="Avatar"
+                        src={avatarUrl || (user && user.avatar) ? user.avatar : 'https://res.cloudinary.com/dackig67m/image/upload/v1730489645/5db7d294a77fbe0fbfca4eb233afc01b_vt0x30.jpg'}
+                        className="rounded-full h-32 w-32 object-cover align-middle border-none max-w-full"
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                        <UploadOutlined onClick={() => setShowCropper(true)} style={{ fontSize: '24px', color: 'white', opacity: 0.8 }} />
                     </div>
                 </div>
+            </div>
+            <div className="user-info text-left ml-4">
+                <h3 className="text-2xl font-semibold leading-normal mb-2 text-black">
+                    {user ? user.name : 'Tải thông tin...'}
+                </h3>
+                <p className="text-gray-600">{user ? user.email : 'Đang tải email...'}</p>
+            </div>
+            </div>
+            <div className="edit-button text-right">
+                <Button
+                    className="custom-button"
+                    type="primary"
+                    onClick={() => setEditVisible(true)}
+                >
+                    Chỉnh sửa hồ sơ
+                </Button>
+            </div>
+        </div>
+    </div>
+</div>
+
             </section>
 
 

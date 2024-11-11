@@ -1,7 +1,6 @@
-// BookingHistory.js
 import React from 'react';
 import { Table } from 'antd';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Calendar, DollarSign } from 'lucide-react';
 
 const BookingHistory = ({
     bookingHistory,
@@ -13,14 +12,13 @@ const BookingHistory = ({
     toggleOrderIdVisibility,
 }) => {
 
-    
-    // Cấu hình các cột của bảng, bao gồm bộ lọc
+    // Cấu hình các cột của bảng
     const columns = [
         {
             title: (
-                <div className="flex items-center space-x-2">
-                    <span>Mã Đặt Phòng</span>
-                    <button onClick={toggleOrderIdVisibility} style={{ border: 'none', background: 'transparent' }}>
+                <div className="flex items-center justify-center space-x-2">
+                    <span className="font-semibold text-gray-700">Mã Đặt Phòng</span>
+                    <button onClick={toggleOrderIdVisibility} className="hover:opacity-75">
                         {isOrderIdVisible ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                 </div>
@@ -41,6 +39,7 @@ const BookingHistory = ({
             filters: Array.from(new Set(bookingHistory.map((booking) => booking.room.hotel.name)))
                 .sort()
                 .map((name) => ({ text: name, value: name })),
+            render: (name) => name,
         },
         {
             title: 'Loại Phòng',
@@ -50,6 +49,7 @@ const BookingHistory = ({
             filters: Array.from(new Set(bookingHistory.map((booking) => booking.room.type)))
                 .sort()
                 .map((type) => ({ text: type, value: type })),
+            render: (type) => type,
         },
         {
             title: 'Ngày Check In',
@@ -74,13 +74,25 @@ const BookingHistory = ({
                 { text: 'Đã thanh toán', value: 'Complete' },
                 { text: 'Chưa thanh toán', value: 'Pending' },
             ],
+            render: (status) => (
+                <span
+                    style={{
+                        color: status === 'Complete' ? '#38a169' : '#e53e3e',
+                        fontWeight: 'bold',
+                    }}
+                >
+                    {status === 'Complete' ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                </span>
+            ),
         },
-    ].filter(Boolean);
+    ];
 
-    
     return (
-         <div className="relative mx-auto px-4">
-                <h2 className="text-2xl font-ROBOTO text-black mb-4">LỊCH SỬ ĐẶT PHÒNG</h2>
+        <div className="relative mx-auto px-4">
+            <h2 className="text-2xl font-ROBOTO text-black mb-4">
+                <span>LỊCH SỬ ĐẶT PHÒNG</span>
+            </h2>
+            <div className="overflow-x-auto">
                 <Table
                     columns={columns}
                     dataSource={bookingHistory}
@@ -91,8 +103,12 @@ const BookingHistory = ({
                         onChange: onPageChange,
                     }}
                     rowKey="id"
+                    rowClassName="ant-table-row-hover"
+                    className="ant-table-bordered"
+                    scroll={{ x: 'max-content' }} // Enable horizontal scroll on smaller screens
                 />
             </div>
+        </div>
     );
 };
 
