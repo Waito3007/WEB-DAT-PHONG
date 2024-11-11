@@ -56,10 +56,10 @@ const OrdersTable = () => {
       transition={{ delay: 0.4 }}
     >
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-100">Booking List</h2>
+        <h2 className="text-xl font-semibold text-gray-100">Danh sách đặt phòng</h2>
         <div className="relative">
           <input
-            type="text"
+            type=""
             placeholder="Search bookings..."
             className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={searchTerm}
@@ -73,14 +73,14 @@ const OrdersTable = () => {
         <table className="min-w-full divide-y divide-gray-700">
           <thead>
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Booking ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Customer</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Hotel</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Room</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Total</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Mã đặt phòng</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Khách đặt</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Khách sạn</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Loại phòng</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Tổng tiền</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Trạng thái</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Ngày đặt</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Hành động</th>
             </tr>
           </thead>
 
@@ -92,7 +92,7 @@ const OrdersTable = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">{order._id}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">{order.orderId}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">
                   {order.user ? order.user.name : "N/A"}
                 </td>

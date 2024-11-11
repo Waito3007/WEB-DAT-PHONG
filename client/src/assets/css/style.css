@@ -114,7 +114,7 @@ select:focus {
 
 .show-places-btn,
 .promo-code-btn {
-  background-color: var(--navbar-bg-color); /* Màu nền nút */
+
   color: white; /* Màu chữ */
   border: none; /* Không đường viền */
   padding: 12px 20px; /* Đệm cho nút */

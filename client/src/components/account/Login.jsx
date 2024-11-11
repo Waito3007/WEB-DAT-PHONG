@@ -22,9 +22,11 @@ const Login = () => {
   
       const data = await response.json();
       if (response.ok) {
-        // Chỉ cần lưu thông tin người dùng, không lưu token
+        //lưu thông tin người dùng,lưu token
+        localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        navigate(-1);
+
+        navigate("/");
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
       }
