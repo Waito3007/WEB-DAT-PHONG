@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function SearchPlaces() {
   const [provinces, setProvinces] = useState([]); // Tất cả các tỉnh thành
@@ -6,6 +7,7 @@ function SearchPlaces() {
   const [inputValue, setInputValue] = useState(""); // Giá trị người dùng nhập
   const [selectedProvince, setSelectedProvince] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false); // Biến điều khiển hiển thị danh sách gợi ý
+  const navigate = useNavigate();
 
   // Hàm fetch dữ liệu tỉnh thành hàng đầu
   const fetchTopProvinces = async () => {
@@ -82,6 +84,14 @@ function SearchPlaces() {
     setInputValue(""); // Đặt lại giá trị ô nhập thành rỗng
     setFilteredProvinces([]); // Xóa danh sách gợi ý
     setSelectedProvince(""); // Đặt lại tỉnh đã chọn
+  };
+
+  const handleSearch = () => {
+    if (inputValue.trim()) {
+      navigate(`/searchpage?query=${encodeURIComponent(inputValue.trim())}`);
+    } else {
+      alert("Vui lòng nhập điểm đến hợp lệ."); // Hiển thị cảnh báo nếu input trống
+    }
   };
 
   return (
@@ -166,7 +176,7 @@ function SearchPlaces() {
 
         {/* Nút tìm kiếm */}
         <div className="button-group">
-          <button className="show-places-btn">Tìm</button>
+          <button className="show-places-btn bg-blue-500" onClick={handleSearch}>Tìm</button>
         </div>
       </div>
     </section>

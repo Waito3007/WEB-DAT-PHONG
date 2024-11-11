@@ -53,7 +53,6 @@ router.post('/upload-avatar', auth, upload.single('avatar'), async (req, res) =>
     res.status(500).json({ msg: 'Lỗi server', error: error.message });
   }
 });
-
 const updateUserAvatar = async (userId, { imageUrl }) => {
   try {
     await User.findByIdAndUpdate(userId, { avatar: imageUrl }, { new: true }); // Chắc chắn rằng bạn cập nhật đúng trường
@@ -61,10 +60,6 @@ const updateUserAvatar = async (userId, { imageUrl }) => {
     throw new Error('Lỗi khi cập nhật avatar');
   }
 };
-
-
-
-
 // Route Lấy thông tin người dùng
 router.get('/me',auth, async (req, res) => {
   try {
@@ -143,16 +138,15 @@ router.patch('/change-password', auth, async (req, res) => {
   }
 });
 
-// API để đăng xuất
 router.post('/logout', (req, res) => {
   res.clearCookie('token'); // Xóa cookie token
   res.json({ msg: 'Đăng xuất thành công' });
 });
+
 router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
 
   try {
-    // Tìm người dùng với email được cung cấp
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ msg: 'Email không tồn tại trong hệ thống' });
@@ -161,7 +155,7 @@ router.post('/forgot-password', async (req, res) => {
     // Tạo token đặt lại mật khẩu
     const resetToken = crypto.randomBytes(32).toString('hex');
     user.resetPasswordToken = resetToken;
-    user.resetPasswordExpires = Date.now() + 3600000; // Token có hiệu lực trong 1 giờ
+    user.resetPasswordExpires = Date.now() + 3600000; // hiệu lực trong 1 giờ
     await user.save();
 
     // Tạo transporter để gửi email
@@ -212,10 +206,10 @@ router.post('/reset', async (req, res) => {
       return res.status(400).json({ msg: 'Liên kết đã hết hạn hoặc không hợp lệ.' });
     }
 
-    // Đặt mật khẩu mới (không mã hóa)
+    // Đặt mật khẩu mới 
     user.password = newPassword;
 
-    // Xóa token đặt lại mật khẩu và thời gian hết hạn sau khi đặt lại thành công
+    // Xóa token reset và thời gian hết hạn sau khi đặt lại thành công
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
 

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UploadOutlined } from '@ant-design/icons';
-import { Drawer, Button, Form, Input, message, Modal, Spin } from 'antd';
+import { Eye, EyeOff } from 'lucide-react'; // Import icon Eye và EyeOff
+import { Drawer, Button, Form, Input, message, Modal, Spin, Pagination, Table } from 'antd';
 import axios from 'axios'; // Import axios
 import AvatarEdit from 'react-avatar-edit'; // Nhập thư viện
 import './Profilevip.css'; // Đảm bảo tạo file CSS và nhập vào
+
 
 const ProfileVip = () => {
     const [user, setUser] = useState(null);
@@ -16,7 +18,14 @@ const ProfileVip = () => {
     const [loading, setLoading] = useState(false); // Trạng thái để theo dõi quá trình tải lên
     const [bookingHistory, setBookingHistory] = useState([]); // State cho lịch sử đặt phòng
     const navigate = useNavigate();
-
+    //phân trang
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(5); // Số dòng hiển thị trên mỗi trang
+     const [showBookingId, setShowBookingId] = useState(true);
+     const [isOrderIdVisible, setIsOrderIdVisible] = useState(true); // Trạng thái hiển thị của cột Mã Đặt Phòng
+    
+    // Toggle function
+    const toggleOrderIdVisibility = () => setIsOrderIdVisible(!isOrderIdVisible);
 
     //lấy dữ liệu
     useEffect(() => {
@@ -40,15 +49,18 @@ const ProfileVip = () => {
                 navigate('/login');
             }
         };
-
+        
         const fetchBookingHistory = async (token) => {
             try {
                 const response = await fetch('/api/booking', {
                     headers: { 'Authorization': `Bearer ${token}` },
                 });
                 const data = await response.json();
+        
                 if (response.ok) {
-                    setBookingHistory(data); // Cập nhật lịch sử đặt phòng
+                    // Sắp xếp `bookingHistory` theo `bookingDate` từ mới nhất đến cũ nhất
+                    const sortedData = data.sort((a, b) => new Date(b.bookingDate) - new Date(a.bookingDate));
+                    setBookingHistory(sortedData); // Cập nhật lịch sử đặt phòng với dữ liệu đã sắp xếp
                 } else {
                     console.error('Không thể lấy lịch sử đặt phòng');
                 }
@@ -56,11 +68,28 @@ const ProfileVip = () => {
                 console.error('Lỗi mạng hoặc server:', err);
             }
         };
+        
 
         fetchProfile();
     }, [navigate]);
 
 
+
+    // Hàm định dạng ngày
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+    };
+
+        // Tính toán chỉ mục dữ liệu cho mỗi trang
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentBookings = bookingHistory.slice(startIndex, endIndex);
+    
+        // Xử lý sự kiện thay đổi trang
+        const onPageChange = (page) => {
+            setCurrentPage(page);
+        };
 
     //chỉnh sửa thông tin cá nhân
     const handleEditSubmit = async (values) => {
@@ -149,6 +178,69 @@ const ProfileVip = () => {
             setLoading(false);
         }
     };
+    
+    // Cấu hình các cột của bảng, bao gồm bộ lọc
+    const columns = [
+        {
+            title: (
+                <div className="flex items-center space-x-2">
+                    <span>Mã Đặt Phòng</span>
+                    <button onClick={toggleOrderIdVisibility} style={{ border: 'none', background: 'transparent' }}>
+                        {isOrderIdVisible ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                </div>
+            ),
+            dataIndex: 'orderId',
+            key: 'orderId',
+            filterMultiple: false,
+            onFilter: (value, record) => record.orderId.includes(value),
+            filters: bookingHistory.map((booking) => ({ text: booking.orderId, value: booking.orderId })),
+            render: (text) => (isOrderIdVisible ? text : '*********'),
+        },
+        {
+            title: 'Tên Khách Sạn',
+            dataIndex: ['room', 'hotel', 'name'],
+            key: 'hotelName',
+            filterMultiple: true,
+            onFilter: (value, record) => record.room.hotel.name.includes(value),
+            filters: Array.from(new Set(bookingHistory.map((booking) => booking.room.hotel.name)))
+                .sort()
+                .map((name) => ({ text: name, value: name })),
+        },
+        {
+            title: 'Loại Phòng',
+            dataIndex: ['room', 'type'],
+            key: 'roomType',
+            onFilter: (value, record) => record.room.type.includes(value),
+            filters: Array.from(new Set(bookingHistory.map((booking) => booking.room.type)))
+                .sort()
+                .map((type) => ({ text: type, value: type })),
+        },
+        {
+            title: 'Ngày Check In',
+            dataIndex: 'checkInDate',
+            key: 'checkInDate',
+            render: (date) => formatDate(date),
+            sorter: (a, b) => new Date(a.checkInDate) - new Date(b.checkInDate),
+        },
+        {
+            title: 'Ngày Check Out',
+            dataIndex: 'checkOutDate',
+            key: 'checkOutDate',
+            render: (date) => formatDate(date),
+            sorter: (a, b) => new Date(a.checkOutDate) - new Date(b.checkOutDate),
+        },
+        {
+            title: 'Tình Trạng Thanh Toán',
+            dataIndex: 'paymentStatus',
+            key: 'paymentStatus',
+            onFilter: (value, record) => record.paymentStatus === value,
+            filters: [
+                { text: 'Đã thanh toán', value: 'Complete' },
+                { text: 'Chưa thanh toán', value: 'Pending' },
+            ],
+        },
+    ].filter(Boolean);
     
 
     return (
@@ -431,36 +523,21 @@ const ProfileVip = () => {
 
               {/* Booking History Section */}
               <section className="py-16">
-                <div className="relative mx-auto px-4">
-                    <h2 className="text-2xl font-ROBOTO text-black mb-4">LỊCH SỬ ĐẶT PHÒNG</h2>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-                            <thead>
-                                <tr className="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
-                                    <th className="py-3 px-6 text-left">Mã Đặt Phòng</th>
-                                    <th className="py-3 px-6 text-left">Tên Khách Sạn</th>
-                                    <th className="py-3 px-6 text-left">Loại Phòng</th>
-                                    <th className="py-3 px-6 text-left">Ngày Check In</th>
-                                    <th className="py-3 px-6 text-left">Ngày Check Out</th>
-                                    <th className="py-3 px-6 text-left">Tình Trạng Thanh Toán</th>
-                                </tr>
-                            </thead>
-                            <tbody className="text-gray-600 text-sm font-light">
-                                {bookingHistory.map((booking) => (
-                                    <tr key={booking.id} className="border-b border-gray-200 hover:bg-gray-100">
-                                        <td className="py-3 px-6 text-left">{booking.orderId}</td>
-                                        <td className="py-3 px-6 text-left">{booking.room.hotel.name}</td>
-                                        <td className="py-3 px-6 text-left">{booking.room.type}</td>
-                                        <td className="py-3 px-6 text-left">{booking.checkInDate}</td>
-                                        <td className="py-3 px-6 text-left">{booking.checkOutDate}</td>
-                                        <td className="py-3 px-6 text-left">{booking.paymentStatus}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+            <div className="relative mx-auto px-4">
+                <h2 className="text-2xl font-ROBOTO text-black mb-4">LỊCH SỬ ĐẶT PHÒNG</h2>
+                <Table
+                    columns={columns}
+                    dataSource={bookingHistory}
+                    pagination={{
+                        current: currentPage,
+                        pageSize: itemsPerPage,
+                        total: bookingHistory.length,
+                        onChange: onPageChange,
+                    }}
+                    rowKey="id"
+                />
+            </div>
+        </section>
 
              {/* Modal cho AvatarEdit */}
             <Modal

@@ -30,7 +30,7 @@ import SearchPage from "./pages/SearchPage";
 import HotelAdd from "./components/hotel_manager/AddHotel";
 import MyHotel from "./components/hotel_manager/MyHotel";
 import HotelDetail from "./components/hotel_manager/HotelDetail"; 
-import AddRoom from "./components/dashboard/products/AddRoom";
+import AddRoom from "./components/dashboard/hotelmanage/AddRoom";
 import HotelRooms from "./components/hotel_manager/HotelRooms"; 
 import RoomDetail from "./components/hotel_manager/RoomDetail";
 import SearchPlaces from "./components/HomePage/SearchPlaces";

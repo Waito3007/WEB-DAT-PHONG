@@ -1,27 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DatePicker, Input } from 'antd';
 
 const { RangePicker } = DatePicker;
 
-const RoomInfo = ({ roomDetails, user, setCheckInDate, setCheckOutDate, setEmail, setPhone }) => {
+const RoomInfo = ({ roomDetails, user, setCheckInDate, setCheckOutDate, setEmail, setPhone, setTotalDays }) => {
   const [localEmail, setLocalEmail] = useState("");
   const [localPhone, setLocalPhone] = useState("");
   const [localDateRange, setLocalDateRange] = useState([null, null]);
 
   if (!roomDetails) return null;
 
-  const handleInputChange = () => {
-    setEmail(localEmail);
-    setPhone(localPhone);
-    if (localDateRange[0] && localDateRange[1]) {
-      setCheckInDate(localDateRange[0].format("YYYY-MM-DD"));
-      setCheckOutDate(localDateRange[1].format("YYYY-MM-DD"));
+  // Hàm tính số ngày giữa ngày nhận và trả phòng
+  const calculateDays = (dates) => {
+    if (dates[0] && dates[1]) {
+      const checkIn = dates[0].toDate(); // Ngày nhận phòng
+      const checkOut = dates[1].toDate(); // Ngày trả phòng
+      const diffTime = Math.abs(checkOut - checkIn); // Sự khác biệt thời gian
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Tính số ngày
+      setTotalDays(diffDays); // Gửi số ngày tới parent component
+      setCheckInDate(checkIn.toISOString().split('T')[0]); // Cập nhật ngày nhận phòng
+      setCheckOutDate(checkOut.toISOString().split('T')[0]); // Cập nhật ngày trả phòng
     }
   };
 
+  // Hàm kiểm tra và vô hiệu hóa ngày trước ngày hiện tại (không dùng moment)
+  const disabledDate = (current) => {
+    // Lấy ngày hiện tại
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Đặt thời gian về đầu ngày (00:00:00)
+
+    // So sánh với ngày hiện tại, không cho phép chọn ngày trước hôm nay
+    return current && current < today;
+  };
+
   return (
-    <div className="room-info bg-white p-4 rounded-lg shadow-md">      
-           
+    <div className="room-info bg-white p-4 rounded-lg shadow-md">
       <p>{roomDetails.description}</p>
       <div className="date-picker mt-4">
         <label className="block mb-2">
@@ -31,8 +44,9 @@ const RoomInfo = ({ roomDetails, user, setCheckInDate, setCheckOutDate, setEmail
             value={localDateRange}
             onChange={(dates) => {
               setLocalDateRange(dates);
-              handleInputChange();
+              calculateDays(dates); // Tính toán lại số ngày khi thay đổi
             }}
+            disabledDate={disabledDate} // Áp dụng hàm disabledDate
           />
         </label>
       </div>
@@ -46,7 +60,7 @@ const RoomInfo = ({ roomDetails, user, setCheckInDate, setCheckOutDate, setEmail
               onChange={(e) => setLocalEmail(e.target.value)} 
               className="w-full p-2 border border-gray-300 rounded-md"
               placeholder="Nhập email"
-              onBlur={handleInputChange}
+              onBlur={() => setEmail(localEmail)} 
             />
           </label>
           <label className="block mb-4">
@@ -57,7 +71,7 @@ const RoomInfo = ({ roomDetails, user, setCheckInDate, setCheckOutDate, setEmail
               onChange={(e) => setLocalPhone(e.target.value)} 
               className="w-full p-2 border border-gray-300 rounded-md"
               placeholder="Nhập số điện thoại"
-              onBlur={handleInputChange}
+              onBlur={() => setPhone(localPhone)} 
             />
           </label>
         </div>
