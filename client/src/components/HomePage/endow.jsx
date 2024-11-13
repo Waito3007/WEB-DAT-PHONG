@@ -4,7 +4,7 @@ import BaoMat from "../../assets/insurance.png";
 import Hotro from "../../assets/customer-service.png";
 
 const Endow = () => {
-  const workInfoData = [
+  const destinations = [
     {
       image: Dambao,
       title: "Đảm bảo giá tốt nhất",
@@ -67,7 +67,7 @@ const Endow = () => {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
