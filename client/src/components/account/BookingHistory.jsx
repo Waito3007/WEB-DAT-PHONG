@@ -88,8 +88,8 @@ const BookingHistory = ({
     ];
 
     return (
-        <div className="booking-history relative mx-auto px-4">
-            <h2 className=" text-2xl font-ROBOTO text-black mb-4">
+        <div className="relative mx-auto px-4">
+            <h2 className="text-2xl font-ROBOTO text-black mb-4">
                 <span>LỊCH SỬ ĐẶT PHÒNG</span>
             </h2>
             <div className="overflow-x-auto">

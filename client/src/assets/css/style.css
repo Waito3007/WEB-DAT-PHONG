@@ -751,21 +751,19 @@ button:hover {
   opacity: 0.7;
 }
 
-booking-history h2 {
+h2 {
   font-family: 'Merriweather', serif;  /* Thay phông chữ */
   font-weight: 700;
-  font-size: 2.5rem;  /* Kích thước chữ lớn hơn */
-  text-align: center; /* Căn giữa */
-  color: #2D3748;     /* Màu chữ tối */
+  font-size: 2.5rem;  
+  text-align: center; 
+  color: #2D3748;     
   margin-bottom: 24px;
   margin-top: 10px;
-
-  letter-spacing: 2px; /* Tăng khoảng cách giữa các chữ */
-  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho chữ */
+  letter-spacing: 2px; 
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
-/* Thêm một màu nền đẹp cho phần tiêu đề */
-h2 span {
+.booking-history-title span {
   background: linear-gradient(90deg, #000000, #777777);
   -webkit-background-clip: text;
   color: transparent;
@@ -826,5 +824,97 @@ h2 span {
   .profile-page .edit-button {
       width: 100%; /* Nút chỉnh sửa chiếm toàn bộ chiều rộng */
       padding: 10px 0;
+  }
+}
+
+
+/* Modal */
+.avatar-modal {
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .avatar-modal {
+    width: 100%;  /* Modal chiếm toàn bộ chiều rộng màn hình */
+    max-width: 100%;  /* Không có giới hạn chiều rộng tối đa */
+  }
+}
+
+/* Avatar Edit container */
+.avatar-edit-container {
+  width: 100%;
+  height: 400px;
+}
+
+/* Thêm một số tùy chỉnh cho các nút */
+.cancel-button,
+.save-button {
+  margin: 0 8px;
+  padding: 8px 16px;
+}
+
+/* Responsive cho nút trên màn hình nhỏ */
+@media (max-width: 768px) {
+  .cancel-button,
+  .save-button {
+    padding: 6px 12px;
+  }
+}
+
+.work-section-wrapper {
+  margin-top: 5rem;
+}
+.work-section-top p {
+  text-align: center;
+  max-width: 600px !important;
+}
+.work-section-top h1 {
+  max-width: 700px !important;
+}
+.work-section-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.work-section-info {
+  width: 290px;
+  min-height: 350px;
+  background-color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 1rem;
+  color: #505050;
+  margin: 1rem 2rem;
+}
+.work-section-info h2 {
+  margin: 1rem 0rem;
+}
+.work-section-bottom {
+  margin-top: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.work-section-info p {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+@media (max-width: 800px){
+  .work-section-wrapper {
+    margin-top: 5rem !important;
+  }
+  .work-section-bottom {
+    margin-top: 1rem !important;
   }
 }
