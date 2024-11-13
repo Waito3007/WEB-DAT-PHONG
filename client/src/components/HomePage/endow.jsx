@@ -1,4 +1,5 @@
 import React from "react";
+import Slider from "react-slick"; // Import react-slick
 import Dambao from "../../assets/checked.png";
 import BaoMat from "../../assets/insurance.png";
 import Hotro from "../../assets/customer-service.png";
@@ -24,7 +25,7 @@ const Endow = () => {
 
   const sliderSettings = {
     dots: true,
-    infinite: false,
+    infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -44,8 +45,9 @@ const Endow = () => {
         <h2 className="text-3xl text-center text-gray-900 mb-8">
           Dịch vụ của chúng tôi
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {workInfoData.map((data) => (
+        {/* Khi kích thước màn hình lớn, sử dụng grid, còn khi thu nhỏ dùng slider */}
+        <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {destinations.map((data) => (
             <div
               className="bg-white shadow-lg rounded-lg overflow-hidden transition-all hover:scale-105 hover:shadow-xl"
               key={data.title}
@@ -66,8 +68,34 @@ const Endow = () => {
             </div>
           ))}
         </div>
+
+        {/* Slider sẽ hiển thị khi màn hình nhỏ hơn 768px */}
+        <div className="lg:hidden">
+          <Slider {...sliderSettings}>
+            {destinations.map((data) => (
+              <div
+                className="bg-white shadow-lg rounded-lg overflow-hidden transition-all hover:scale-105 hover:shadow-xl"
+                key={data.title}
+              >
+                <div className="info-boxes-img-container p-6">
+                  <img
+                    className="w-full h-40 object-contain rounded-lg"
+                    src={data.image}
+                    alt={data.title}
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    {data.title}
+                  </h3>
+                  <p className="text-gray-700">{data.text}</p>
+                </div>
+              </div>
+            ))}
+          </Slider>
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 
