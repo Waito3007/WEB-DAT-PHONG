@@ -1,0 +1,98 @@
+/* Đặt màu nền cho toàn bộ trang */
+body, .favorites-page {
+    background-color: #f3f4f6; /* Màu nền xám nhạt */
+    min-height: 100%; /* Chiều cao tối thiểu là chiều cao màn hình */
+    width: 100%; /* Chiều rộng đầy đủ của màn hình */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Đặt chiều dọc cho các phần tử con */
+    overflow-y: auto; /* Cho phép cuộn theo chiều dọc */
+  }
+  
+  /* Header */
+  .favorites-header {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  /* Nội dung chính */
+  .favorites-main {
+    flex-grow: 1; /* Để phần nội dung chính chiếm hết không gian còn lại */
+    width: 100%; /* Chiều rộng đầy đủ */
+    max-width: 100%; /* Đặt tối đa bằng 100% để full màn hình */
+    margin: 0 auto;
+    padding: 32px 16px;
+   
+    margin-bottom: 20px;
+  
+    
+  }
+  
+  /* Thẻ khách sạn */
+  .hotel-card {
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    padding: 16px;
+    margin-bottom: 24px;
+    width: 100%; /* Chiều rộng đầy đủ */
+  }
+  
+  .hotel-image {
+    width:700px;
+    height:250px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .hotel-info {
+    width: 67%;
+    padding: 0 16px;
+  }
+  
+  .hotel-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .hotel-price {
+    color: hsl(0, 84%, 60%); /* Màu đỏ */
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+  
+  /* Footer */
+  .favorites-footer {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 32px;
+    margin-top: auto; /* Đẩy footer xuống dưới cùng */
+    width: 100%;
+  }
+  .my-line {
+    border: none; /* Xóa border mặc định */
+    height: 2px; /* Chiều cao của đường gạch */
+    background-color: black; /* Màu sắc của đường gạch */
+    width: 100%; /* Chiều rộng của đường gạch */
+    margin: 20px 0; /* Khoảng cách trên và dưới */
+  }
+  .square {
+    display: flex; /* Để thẻ <span> có thể nhận chiều rộng và chiều cao */
+    width: 50px;
+    height: 50px;
+     border: 2px solid #8DD3BB; /* Đường viền */
+    color: #000000;
+    font-size: 20px;
+    text-align: center; /* Căn giữa văn bản */
+    justify-content: center;
+      align-items: center;
+      border-radius: 10px; /* Bo cong các góc */
+  }
+  

@@ -15,7 +15,7 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
   const [isEditRoomDrawerVisible, setIsEditRoomDrawerVisible] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [roomsPerPage] = useState(3);
+  const [roomsPerPage] = useState(10);
 
   const fetchRooms = useCallback(async () => {
     setLoading(true);

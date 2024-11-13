@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UploadOutlined } from '@ant-design/icons';
-import { Eye, EyeOff } from 'lucide-react'; // Import icon Eye và EyeOff
-import { Drawer, Button, Form, Input, message, Modal, Spin, Pagination, Table } from 'antd';
+import { Button, message, Modal } from 'antd';
 import axios from 'axios'; // Import axios
 import AvatarEdit from 'react-avatar-edit'; // Nhập thư viện
+import BookingHistory from './BookingHistory'; // Import BookingHistory component
+import EditProfileDrawer from './EditProfileDrawer'; // Import EditProfileDrawer
+import ChangePasswordDrawer from './ChangePasswordDrawer'; // Import ChangePasswordDrawer
+import LoadingModal from './LoadingModal'; // Import LoadingModal
 import './Profilevip.css'; // Đảm bảo tạo file CSS và nhập vào
 
 
@@ -21,13 +24,12 @@ const ProfileVip = () => {
     //phân trang
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5); // Số dòng hiển thị trên mỗi trang
-     const [showBookingId, setShowBookingId] = useState(true);
      const [isOrderIdVisible, setIsOrderIdVisible] = useState(true); // Trạng thái hiển thị của cột Mã Đặt Phòng
     
     // Toggle function
     const toggleOrderIdVisibility = () => setIsOrderIdVisible(!isOrderIdVisible);
 
-    //lấy dữ liệu
+    //lấy dữ liệu người dùng
     useEffect(() => {
         const fetchProfile = async () => {
             const token = localStorage.getItem('token');
@@ -50,6 +52,7 @@ const ProfileVip = () => {
             }
         };
         
+            //lấy dữ liệu lịch sử đặt phòng
         const fetchBookingHistory = async (token) => {
             try {
                 const response = await fetch('/api/booking', {
@@ -143,7 +146,6 @@ const ProfileVip = () => {
         }
     };
 
-    
 
     //thay đổi ảnh đại diện
     const onCrop = (preview) => {
@@ -178,70 +180,6 @@ const ProfileVip = () => {
             setLoading(false);
         }
     };
-    
-    // Cấu hình các cột của bảng, bao gồm bộ lọc
-    const columns = [
-        {
-            title: (
-                <div className="flex items-center space-x-2">
-                    <span>Mã Đặt Phòng</span>
-                    <button onClick={toggleOrderIdVisibility} style={{ border: 'none', background: 'transparent' }}>
-                        {isOrderIdVisible ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                </div>
-            ),
-            dataIndex: 'orderId',
-            key: 'orderId',
-            filterMultiple: false,
-            onFilter: (value, record) => record.orderId.includes(value),
-            filters: bookingHistory.map((booking) => ({ text: booking.orderId, value: booking.orderId })),
-            render: (text) => (isOrderIdVisible ? text : '*********'),
-        },
-        {
-            title: 'Tên Khách Sạn',
-            dataIndex: ['room', 'hotel', 'name'],
-            key: 'hotelName',
-            filterMultiple: true,
-            onFilter: (value, record) => record.room.hotel.name.includes(value),
-            filters: Array.from(new Set(bookingHistory.map((booking) => booking.room.hotel.name)))
-                .sort()
-                .map((name) => ({ text: name, value: name })),
-        },
-        {
-            title: 'Loại Phòng',
-            dataIndex: ['room', 'type'],
-            key: 'roomType',
-            onFilter: (value, record) => record.room.type.includes(value),
-            filters: Array.from(new Set(bookingHistory.map((booking) => booking.room.type)))
-                .sort()
-                .map((type) => ({ text: type, value: type })),
-        },
-        {
-            title: 'Ngày Check In',
-            dataIndex: 'checkInDate',
-            key: 'checkInDate',
-            render: (date) => formatDate(date),
-            sorter: (a, b) => new Date(a.checkInDate) - new Date(b.checkInDate),
-        },
-        {
-            title: 'Ngày Check Out',
-            dataIndex: 'checkOutDate',
-            key: 'checkOutDate',
-            render: (date) => formatDate(date),
-            sorter: (a, b) => new Date(a.checkOutDate) - new Date(b.checkOutDate),
-        },
-        {
-            title: 'Tình Trạng Thanh Toán',
-            dataIndex: 'paymentStatus',
-            key: 'paymentStatus',
-            onFilter: (value, record) => record.paymentStatus === value,
-            filters: [
-                { text: 'Đã thanh toán', value: 'Complete' },
-                { text: 'Chưa thanh toán', value: 'Pending' },
-            ],
-        },
-    ].filter(Boolean);
-    
 
     return (
         <main className="profile-page">
@@ -257,287 +195,71 @@ const ProfileVip = () => {
             </section>
 
             <section className="relative py-16 bg-gray-100">
-                <div className="container mx-auto px-4">
-                    <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-5 shadow-xl rounded-lg -mt-60">
-                        <div className="flex flex-wrap justify-between items-center px-6 py-4">
-                            <div className="flex items-center">
-                            <div className="relative p-1 bg-white rounded-full shadow-lg transition-all duration-300 hover:shadow-2xl">
-                <img
-                    alt="Avatar"
-                    src={avatarUrl || (user && user.avatar) ? user.avatar : 'https://res.cloudinary.com/dackig67m/image/upload/v1730489645/5db7d294a77fbe0fbfca4eb233afc01b_vt0x30.jpg'}
-                    className="rounded-full h-32 w-32 object-cover align-middle border-none max-w-full"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-                <UploadOutlined onClick={() => setShowCropper(true)} style={{ fontSize: '24px', color: 'white', opacity: 0.8 }} />
-                </div>
-            </div>
-                                <div className="text-left ml-4">
-                                    <h3 className="text-2xl font-semibold leading-normal mb-2 text-black">
-                                        {user ? user.name : 'Tải thông tin...'}
-                                    </h3>
-                                    <p className="text-gray-600">{user ? user.email : 'Đang tải email...'}</p>
-                                </div>
-                            </div>
-
-                            <div className="text-right">
-                                <Button
-                                    className="mr-2"
-                                    type="primary"
-                                    onClick={() => setEditVisible(true)}
-                                >
-                                    Chỉnh sửa hồ sơ
-                                </Button>
-                            </div>
-                        </div>
+            <div className="container mx-auto px-4">
+    <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-5 shadow-xl rounded-lg -mt-60">
+        <div className="flex flex-wrap justify-between items-center px-6 py-4">
+            <div className='flex items-center'>
+            <div className="avatar-container flex items-center">
+                <div className="relative p-1 bg-white rounded-full shadow-lg transition-all duration-300 hover:shadow-2xl">
+                    <img
+                        alt="Avatar"
+                        src={avatarUrl || (user && user.avatar) ? user.avatar : 'https://res.cloudinary.com/dackig67m/image/upload/v1730489645/5db7d294a77fbe0fbfca4eb233afc01b_vt0x30.jpg'}
+                        className="rounded-full h-32 w-32 object-cover align-middle border-none max-w-full"
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                        <UploadOutlined onClick={() => setShowCropper(true)} style={{ fontSize: '24px', color: 'white', opacity: 0.8 }} />
                     </div>
                 </div>
+            </div>
+            <div className="user-info text-left ml-4">
+                <h3 className="text-2xl font-semibold leading-normal mb-2 text-black">
+                    {user ? user.name : 'Tải thông tin...'}
+                </h3>
+                <p className="text-gray-600">{user ? user.email : 'Đang tải email...'}</p>
+            </div>
+            </div>
+            <div className="edit-button text-right">
+                <Button
+                    className="custom-button"
+                    type="primary"
+                    onClick={() => setEditVisible(true)}
+                >
+                    Chỉnh sửa hồ sơ
+                </Button>
+            </div>
+        </div>
+    </div>
+</div>
+
             </section>
 
-             {/* Drawer for editing profile */}
-            <Drawer
-                title="Chỉnh sửa hồ sơ"
-                placement="right"
-                onClose={() => setEditVisible(false)}
+
+            {/* Sử dụng EditProfileDrawer */}
+            <EditProfileDrawer
                 visible={editVisible}
-                bodyStyle={{ padding: '20px', backgroundColor: '#f8f9fa' }} // Nền nhẹ cho nội dung
-                titleStyle={{ fontSize: '1.5rem', textAlign: 'center', color: '#007bff' }} // Màu cho tiêu đề
-                closable={false} // Tắt nút đóng mặc định để chỉ sử dụng nút riêng
-            >
-                <Form
-                    initialValues={{ name: user?.name, email: user?.email, age: user?.age }}
-                    onFinish={handleEditSubmit}
-                >
-                    <Form.Item
-                        label="Tên"
-                        name="name"
-                        rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
-                    >
-                        <Input 
-                            placeholder="Nhập tên của bạn" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        label="Email"
-                        name="email"
-                        rules={[{ required: true, type: 'email', message: 'Vui lòng nhập email hợp lệ!' }]}
-                    >
-                        <Input 
-                            placeholder="Nhập email của bạn" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item label="Tuổi" name="age">
-                        <Input 
-                            type="number" 
-                            placeholder="Nhập tuổi của bạn" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button
-                            type="default"
-                            onClick={() => setChangePasswordVisible(true)}
-                            style={{ width: '100%', borderRadius: '8px', marginBottom: '10px', backgroundColor: '#007bff', color: '#fff', border: 'none', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} // Nút với màu sắc
-                        >
-                            Đổi mật khẩu
-                        </Button>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            style={{ width: '100%', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} // Nút chính
-                        >
-                            Lưu
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Drawer>
-
-            {/* Drawer for changing password */}
-            <Drawer
-                title="Đổi mật khẩu"
-                placement="right"
-                onClose={() => setChangePasswordVisible(false)}
-                visible={changePasswordVisible}
-                bodyStyle={{ padding: '20px', backgroundColor: '#f8f9fa' }}
-                titleStyle={{ fontSize: '1.5rem', textAlign: 'center', color: '#007bff' }}
-                closable={false}
-            >
-                <Form onFinish={handleChangePasswordSubmit}>
-                    <Form.Item
-                        label="Mật khẩu hiện tại"
-                        name="currentPassword"
-                        rules={[{ required: true, message: 'Vui lòng nhập mật khẩu hiện tại!' }]}
-                    >
-                        <Input.Password 
-                            placeholder="Nhập mật khẩu hiện tại" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        label="Mật khẩu mới"
-                        name="newPassword"
-                        rules={[{ required: true, message: 'Vui lòng nhập mật khẩu mới!' }]}
-                    >
-                        <Input.Password 
-                            placeholder="Nhập mật khẩu mới" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        label="Xác nhận mật khẩu mới"
-                        name="confirmPassword"
-                        rules={[{ required: true, message: 'Vui lòng xác nhận mật khẩu mới!' }]}
-                    >
-                        <Input.Password 
-                            placeholder="Xác nhận mật khẩu mới" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            style={{ width: '100%', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }}
-                        >
-                            Đổi mật khẩu
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Drawer>{/* Drawer for editing profile */}
-            <Drawer
-                title="Chỉnh sửa hồ sơ"
-                placement="right"
                 onClose={() => setEditVisible(false)}
-                visible={editVisible}
-                bodyStyle={{ padding: '20px', backgroundColor: '#f8f9fa' }} // Nền nhẹ cho nội dung
-                titleStyle={{ fontSize: '1.5rem', textAlign: 'center', color: '#007bff' }} // Màu cho tiêu đề
-                closable={false} // Tắt nút đóng mặc định để chỉ sử dụng nút riêng
-            >
-                <Form
-                    initialValues={{ name: user?.name, email: user?.email, age: user?.age }}
-                    onFinish={handleEditSubmit}
-                >
-                    <Form.Item
-                        label="Tên"
-                        name="name"
-                        rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
-                    >
-                        <Input 
-                            placeholder="Nhập tên của bạn" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        label="Email"
-                        name="email"
-                        rules={[{ required: true, type: 'email', message: 'Vui lòng nhập email hợp lệ!' }]}
-                    >
-                        <Input 
-                            placeholder="Nhập email của bạn" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item label="Tuổi" name="age">
-                        <Input 
-                            type="number" 
-                            placeholder="Nhập tuổi của bạn" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button
-                            type="default"
-                            onClick={() => setChangePasswordVisible(true)}
-                            style={{ width: '100%', borderRadius: '8px', marginBottom: '10px', backgroundColor: '#007bff', color: '#fff', border: 'none', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} // Nút với màu sắc
-                        >
-                            Đổi mật khẩu
-                        </Button>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            style={{ width: '100%', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} // Nút chính
-                        >
-                            Lưu
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Drawer>
+                user={user}
+                onEditSubmit={handleEditSubmit}
+                onPasswordChange={() => setChangePasswordVisible(true)}
+            />
 
-            {/* Drawer for changing password */}
-            <Drawer
-                title="Đổi mật khẩu"
-                placement="right"
-                onClose={() => setChangePasswordVisible(false)}
+             {/* Sử dụng ChangePasswordDrawer */}
+             <ChangePasswordDrawer
                 visible={changePasswordVisible}
-                bodyStyle={{ padding: '20px', backgroundColor: '#f8f9fa' }}
-                titleStyle={{ fontSize: '1.5rem', textAlign: 'center', color: '#007bff' }}
-                closable={false}
-            >
-                <Form onFinish={handleChangePasswordSubmit}>
-                    <Form.Item
-                        label="Mật khẩu hiện tại"
-                        name="currentPassword"
-                        rules={[{ required: true, message: 'Vui lòng nhập mật khẩu hiện tại!' }]}
-                    >
-                        <Input.Password 
-                            placeholder="Nhập mật khẩu hiện tại" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        label="Mật khẩu mới"
-                        name="newPassword"
-                        rules={[{ required: true, message: 'Vui lòng nhập mật khẩu mới!' }]}
-                    >
-                        <Input.Password 
-                            placeholder="Nhập mật khẩu mới" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        label="Xác nhận mật khẩu mới"
-                        name="confirmPassword"
-                        rules={[{ required: true, message: 'Vui lòng xác nhận mật khẩu mới!' }]}
-                    >
-                        <Input.Password 
-                            placeholder="Xác nhận mật khẩu mới" 
-                            style={{ borderRadius: '8px', border: '1px solid #ced4da', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }} 
-                        />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            style={{ width: '100%', borderRadius: '8px', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }}
-                        >
-                            Đổi mật khẩu
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Drawer>
+                onClose={() => setChangePasswordVisible(false)}
+                onPasswordSubmit={handleChangePasswordSubmit}
+            />
 
-              {/* Booking History Section */}
-              <section className="py-16">
-            <div className="relative mx-auto px-4">
-                <h2 className="text-2xl font-ROBOTO text-black mb-4">LỊCH SỬ ĐẶT PHÒNG</h2>
-                <Table
-                    columns={columns}
-                    dataSource={bookingHistory}
-                    pagination={{
-                        current: currentPage,
-                        pageSize: itemsPerPage,
-                        total: bookingHistory.length,
-                        onChange: onPageChange,
-                    }}
-                    rowKey="id"
-                />
-            </div>
-        </section>
+              {/* BookingHistory component */}
+            <BookingHistory
+                bookingHistory={bookingHistory}
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                onPageChange={onPageChange}
+                formatDate={formatDate}
+                isOrderIdVisible={isOrderIdVisible}
+                toggleOrderIdVisibility={toggleOrderIdVisibility}
+            />
 
              {/* Modal cho AvatarEdit */}
             <Modal
@@ -567,16 +289,8 @@ const ProfileVip = () => {
             </Modal>
 
             {/* Modal for loading */}
-            <Modal
-    visible={loading}
-    footer={null}
-    closable={false}
-    bodyStyle={{ textAlign: 'center' }}
-    style={{ borderRadius: '10px', padding: '20px' }} // Thêm style nếu cần
->
-    <Spin size="large" tip="Đang tải..." />
-    <h3 style={{ marginTop: '20px' }}>Đang tải...</h3>
-</Modal>
+            <LoadingModal loading={loading} />
+
         </main>
     );
 };
@@ -584,3 +298,6 @@ const ProfileVip = () => {
 
 
 export default ProfileVip;
+
+
+

@@ -114,7 +114,7 @@ select:focus {
 
 .show-places-btn,
 .promo-code-btn {
-
+  background-color: var(--navbar-bg-color); /* Màu nền nút */
   color: white; /* Màu chữ */
   border: none; /* Không đường viền */
   padding: 12px 20px; /* Đệm cho nút */
@@ -632,4 +632,290 @@ select:focus {
   flex-direction: column;
   align-items: center;
   gap: -10px;
+}
+
+/* styles.css */
+.ant-table {
+  background-color: #f9f9f9; /* Màu nền bảng */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ant-table th {
+  background-color: #f0f0f0; /* Màu nền của các tiêu đề cột */
+  font-weight: 600;
+  color: #333;
+}
+
+.ant-table-tbody > tr:hover {
+  background-color: #e6f7ff; /* Màu nền khi di chuột qua dòng */
+}
+
+.ant-table-tbody > tr.ant-table-row-selected {
+  background-color: #bae7ff; /* Màu nền khi chọn dòng */
+}
+
+.ant-pagination-item {
+  color: #1890ff;
+}
+
+.ant-pagination-item:hover {
+  background-color: #e6f7ff;
+}
+
+.ant-pagination-prev, .ant-pagination-next {
+  color: #1890ff;
+}
+
+/* styles.css */
+.ant-table {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.ant-table th {
+  background: linear-gradient(90deg, rgba(66, 153, 225, 1) 0%, rgba(66, 153, 225, 0.9) 100%);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.ant-table-tbody > tr {
+  transition: background-color 0.3s ease;
+}
+
+.ant-table-tbody > tr:hover {
+  background-color: #f0f9ff;
+}
+
+.ant-table-cell {
+  font-size: 14px;
+  text-align: center;
+  padding: 16px;
+}
+
+.ant-pagination-item {
+  background-color: #edf2f7;
+  border-radius: 8px;
+  color: #3182ce;
+}
+
+.ant-pagination-item:hover {
+  background-color: #bee3f8;
+}
+
+.ant-pagination-prev, .ant-pagination-next {
+  color: #3182ce;
+  font-weight: bold;
+}
+
+.ant-pagination-item-active {
+  background-color: #3182ce;
+  color: #fff;
+}
+
+
+/* Đảm bảo bảng không bị cắt khi trên màn hình nhỏ */
+@media (max-width: 768px) {
+  .ant-table {
+      width: 100%;
+      overflow-x: auto;
+  }
+  .ant-table-thead th, .ant-table-tbody td {
+      white-space: nowrap;
+  }
+}
+
+/* Thêm hiệu ứng động khi chọn trạng thái thanh toán */
+.payment-complete {
+  color: #38a169;
+  font-weight: bold;
+}
+
+.payment-pending {
+  color: #e53e3e;
+  font-weight: bold;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+button:hover {
+  opacity: 0.7;
+}
+
+/* Styling only for the booking history header */
+.booking-history-title {
+  font-family: 'Lora', serif;  
+  font-weight: 700;
+  font-size: 2.5rem;  
+  text-align: center; 
+  color: #2D3748;     
+  margin-bottom: 24px;
+  margin-top: 10px;
+  letter-spacing: 2px; 
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.booking-history-title span {
+  background: linear-gradient(90deg, #000000, #777777);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.custom-button {
+  background-color: #4CAF50;  /* Màu nền nút */
+  color: white;                /* Màu chữ */
+  border: none;                /* Loại bỏ đường viền */
+  padding: 12px 24px;          /* Khoảng cách giữa chữ và viền */
+  font-size: 16px;             /* Kích thước chữ */
+  font-weight: bold;           /* Làm đậm chữ */
+  border-radius: 8px;          /* Bo góc nút */
+  transition: all 0.3s ease;   /* Hiệu ứng chuyển động mượt mà */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Bóng đổ nhẹ */
+  cursor: pointer;            /* Đổi con trỏ thành pointer khi hover */
+}
+
+.custom-button:hover {
+  background-color: #45a049;  /* Màu nền khi hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Bóng đổ khi hover */
+  transform: translateY(-2px);  /* Nâng nút lên một chút khi hover */
+}
+
+.custom-button:active {
+  background-color: #388e3c; /* Màu nền khi nhấn */
+  transform: translateY(2px);  /* Nút hạ xuống khi nhấn */
+}
+
+.custom-button:focus {
+  outline: none; /* Loại bỏ viền focus */
+  box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.5); /* Viền sáng khi focus */
+}
+
+
+
+/* Media Query cho màn hình nhỏ (Điện thoại) */
+@media (max-width: 768px) {
+  /* Đảm bảo các phần tử xếp chồng nhau */
+  .profile-page .container {
+      padding: 0 15px;
+  }
+
+  .profile-page .avatar-container img {
+      width: 90px; /* Thu nhỏ ảnh đại diện */
+      height: 90px;
+  }
+
+  .profile-page .user-info h3 {
+      font-size: 18px; /* Giảm kích thước chữ cho tên */
+  }
+
+  .profile-page .user-info p {
+      font-size: 15px; /* Giảm kích thước chữ cho email */
+  }
+
+  /* Nút chỉnh sửa */
+  .profile-page .edit-button {
+      width: 100%; /* Nút chỉnh sửa chiếm toàn bộ chiều rộng */
+      padding: 10px 0;
+  }
+}
+
+
+/* Modal */
+.avatar-modal {
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .avatar-modal {
+    width: 100%;  /* Modal chiếm toàn bộ chiều rộng màn hình */
+    max-width: 100%;  /* Không có giới hạn chiều rộng tối đa */
+  }
+}
+
+/* Avatar Edit container */
+.avatar-edit-container {
+  width: 100%;
+  height: 400px;
+}
+
+/* Thêm một số tùy chỉnh cho các nút */
+.cancel-button,
+.save-button {
+  margin: 0 8px;
+  padding: 8px 16px;
+}
+
+/* Responsive cho nút trên màn hình nhỏ */
+@media (max-width: 768px) {
+  .cancel-button,
+  .save-button {
+    padding: 6px 12px;
+  }
+}
+
+.work-section-wrapper {
+  margin-top: 5rem;
+}
+.work-section-top p {
+  text-align: center;
+  max-width: 600px !important;
+}
+.work-section-top h1 {
+  max-width: 700px !important;
+}
+.work-section-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.work-section-info {
+  width: 290px;
+  min-height: 350px;
+  background-color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 1rem;
+  color: #505050;
+  margin: 1rem 2rem;
+}
+.work-section-info h2 {
+  margin: 1rem 0rem;
+}
+.work-section-bottom {
+  margin-top: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.work-section-info p {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+@media (max-width: 800px){
+  .work-section-wrapper {
+    margin-top: 5rem !important;
+  }
+  .work-section-bottom {
+    margin-top: 1rem !important;
+  }
 }

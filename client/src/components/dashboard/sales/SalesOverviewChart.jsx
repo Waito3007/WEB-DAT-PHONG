@@ -28,7 +28,7 @@ const SalesOverviewChart = ({ bookings }) => {
 			if (monthDifference < 0 || monthDifference >= 4) return; // Chỉ giữ lại booking trong 4 tháng gần đây
 
 			const month = monthsInVietnamese[monthIndex];
-			const price = isPaymentCompleted(booking) ? booking.room.price : 0;
+			const price = isPaymentCompleted(booking) ? booking.priceBooking : 0; 
 
 			if (!salesByMonth[month]) {
 				salesByMonth[month] = 0;

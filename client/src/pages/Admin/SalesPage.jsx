@@ -9,14 +9,14 @@ import DailySalesTrend from "../../components/dashboard/sales/DailySalesTrend";
 import axios from 'axios'; 
 
 const SalesPage = () => {
-	const [user, setUser] = useState(null); // State để lưu trữ thông tin người dùng
-	const [bookings, setBookings] = useState([]); // State để lưu trữ dữ liệu bookings
-	const [loading, setLoading] = useState(true); // State để quản lý trạng thái loading
-	const [totalRevenue, setTotalRevenue] = useState("$0"); // State mới cho tổng doanh thu
-	const [totalToday, setTotalToday] = useState("$0"); // State cho tổng doanh thu hôm nay
-	const [totalThisMonth, setTotalThisMonth] = useState("$0"); // State cho tổng doanh thu tháng này
-	const [totalLastMonth, setTotalLastMonth] = useState(0); // State cho tổng doanh thu tháng trước
-	const [growthRate, setGrowthRate] = useState("0%"); // State cho tỷ lệ tăng trưởng
+	const [user, setUser] = useState(null);
+	const [bookings, setBookings] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [totalRevenue, setTotalRevenue] = useState(0);
+	const [totalToday, setTotalToday] = useState(0);
+	const [totalThisMonth, setTotalThisMonth] = useState(0);
+	const [totalLastMonth, setTotalLastMonth] = useState(0);
+	const [growthRate, setGrowthRate] = useState("0%");
 
 	const fetchUser = async () => {
 		try {
@@ -26,7 +26,7 @@ const SalesPage = () => {
 			});
 			if (response.ok) {
 				const userData = await response.json();
-				setUser(userData); // Lưu thông tin người dùng vào state
+				setUser(userData);
 			} else {
 				console.error("Lỗi lấy thông tin người dùng:", response.status);
 			}
@@ -39,78 +39,78 @@ const SalesPage = () => {
 		try {
 			let response;
 			if (user.role === 'Admin') {
-				response = await axios.get('/api/booking/booking/admin'); // Gọi API cho admin
+				response = await axios.get('/api/booking/booking/admin');
 			} else if (user.role === 'HotelManager') {
-				response = await axios.get('/api/booking/booking/manager'); // Gọi API cho manager
+				response = await axios.get('/api/booking/booking/manager');
 			} else {
 				console.error('Vai trò người dùng không được công nhận');
 				return;
 			}
-			setBookings(response.data); // Lưu dữ liệu vào state
+			setBookings(response.data);
 
 			// Tính tổng doanh thu
 			const revenue = response.data.reduce((acc, booking) => {
-				if (booking.paymentStatus !== 'Pending') { // Kiểm tra trạng thái thanh toán
-					return acc + booking.room.price; // Cộng giá phòng vào tổng doanh thu
+				if (booking.paymentStatus !== 'Pending') {
+					return acc + booking.priceBooking;  // Sử dụng priceBooking
 				}
-				return acc; // Trả về giá trị hiện tại nếu thanh toán đang chờ
+				return acc;
 			}, 0);
-			setTotalRevenue(revenue.toLocaleString("vi-VN", { style: "currency", currency: "VND" })); // Cập nhật tổng doanh thu
+			setTotalRevenue(revenue);
 
 			// Tính tổng doanh thu hôm nay
-			const today = new Date().toISOString().split('T')[0]; // Lấy ngày hôm nay dưới định dạng YYYY-MM-DD
+			const today = new Date().toISOString().split('T')[0];
 			const todayRevenue = response.data.reduce((acc, booking) => {
-				const bookingDate = new Date(booking.bookingDate).toISOString().split('T')[0]; // Lấy ngày booking
-				if (bookingDate === today && booking.paymentStatus !== 'Pending') { // Kiểm tra ngày và trạng thái thanh toán
-					return acc + booking.room.price; // Cộng giá phòng vào tổng doanh thu hôm nay
+				const bookingDate = new Date(booking.bookingDate).toISOString().split('T')[0];
+				if (bookingDate === today && booking.paymentStatus !== 'Pending') {
+					return acc + booking.priceBooking;  // Sử dụng priceBooking 
 				}
-				return acc; // Trả về giá trị hiện tại nếu không phải hôm nay hoặc thanh toán đang chờ
+				return acc;
 			}, 0);
-			setTotalToday(todayRevenue.toLocaleString("vi-VN", { style: "currency", currency: "VND" })); // Cập nhật tổng doanh thu hôm nay
+			setTotalToday(todayRevenue);
 
 			// Tính tổng doanh thu tháng này
-			const currentMonth = new Date().getMonth(); // Lấy tháng hiện tại (0-11)
+			const currentMonth = new Date().getMonth();
 			const thisMonthRevenue = response.data.reduce((acc, booking) => {
-				const bookingDate = new Date(booking.bookingDate); // Lấy đối tượng Date từ bookingDate
-				if (bookingDate.getMonth() === currentMonth && booking.paymentStatus !== 'Pending') { // Kiểm tra tháng và trạng thái thanh toán
-					return acc + booking.room.price; // Cộng giá phòng vào tổng doanh thu tháng này
+				const bookingDate = new Date(booking.bookingDate);
+				if (bookingDate.getMonth() === currentMonth && booking.paymentStatus !== 'Pending') {
+					return acc + booking.priceBooking;  // Sử dụng priceBooking
 				}
-				return acc; // Trả về giá trị hiện tại nếu không phải tháng này hoặc thanh toán đang chờ
+				return acc;
 			}, 0);
-			setTotalThisMonth(thisMonthRevenue.toLocaleString("vi-VN", { style: "currency", currency: "VND" })); // Cập nhật tổng doanh thu tháng này
+			setTotalThisMonth(thisMonthRevenue);
 
 			// Tính tổng doanh thu tháng trước
 			const lastMonthRevenue = response.data.reduce((acc, booking) => {
-				const bookingDate = new Date(booking.bookingDate); // Lấy đối tượng Date từ bookingDate
-				if (bookingDate.getMonth() === currentMonth - 1 && booking.paymentStatus !== 'Pending') { // Kiểm tra tháng trước
-					return acc + booking.room.price; // Cộng giá phòng vào tổng doanh thu tháng trước
+				const bookingDate = new Date(booking.bookingDate);
+				if (bookingDate.getMonth() === currentMonth - 1 && booking.paymentStatus !== 'Pending') {
+					return acc + booking.priceBooking;  // Sử dụng priceBooking 
 				}
-				return acc; // Trả về giá trị hiện tại nếu không phải tháng trước hoặc thanh toán đang chờ
+				return acc;
 			}, 0);
-			setTotalLastMonth(lastMonthRevenue); // Lưu doanh thu tháng trước vào state
+			setTotalLastMonth(lastMonthRevenue);
 
 			// Tính tỷ lệ tăng trưởng doanh số
 			if (lastMonthRevenue > 0) {
-				const growth = ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100; // Tính tỷ lệ tăng trưởng
-				setGrowthRate(growth.toFixed(2) + "%"); // Cập nhật tỷ lệ tăng trưởng
+				const growth = ((thisMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100;
+				setGrowthRate(growth.toFixed(2) + "%");
 			} else {
-				setGrowthRate(thisMonthRevenue > 0 ? "100%" : "0%"); // Nếu tháng trước không có doanh thu
+				setGrowthRate(thisMonthRevenue > 0 ? "100%" : "0%");
 			}
 
 		} catch (error) {
 			console.error('Lỗi khi lấy bookings:', error);
 		} finally {
-			setLoading(false); // Đặt trạng thái loading thành false
+			setLoading(false);
 		}
 	};
 
 	useEffect(() => {
-		fetchUser(); // Gọi hàm fetchUser khi component mount
+		fetchUser();
 	}, []);
 
 	useEffect(() => {
 		if (user) {
-			fetchBookings(); // Gọi hàm fetchBookings khi user thay đổi
+			fetchBookings();
 		}
 	}, [user]);
 
@@ -126,17 +126,17 @@ const SalesPage = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1 }}
 				>
-					<StatCard name='Tổng Doanh Thu' icon={DollarSign} value={totalRevenue} color='#6366F1' />
-					<StatCard name='Doanh Thu Hôm Nay' icon={ShoppingCart} value={totalToday} color='#10B981' />
-					<StatCard name='Doanh Thu Tháng Này' icon={TrendingUp} value={totalThisMonth} color='#F59E0B' />
+					<StatCard name='Tổng Doanh Thu' icon={DollarSign} value={totalRevenue.toLocaleString("vi-VN", { style: "currency", currency: "VND" })} color='#6366F1' />
+					<StatCard name='Doanh Thu Hôm Nay' icon={ShoppingCart} value={totalToday.toLocaleString("vi-VN", { style: "currency", currency: "VND" })} color='#10B981' />
+					<StatCard name='Doanh Thu Tháng Này' icon={TrendingUp} value={totalThisMonth.toLocaleString("vi-VN", { style: "currency", currency: "VND" })} color='#F59E0B' />
 					<StatCard name='Tăng trưởng doanh số' icon={CreditCard} value={growthRate} color='#EF4444' />
 				</motion.div>
 
-				<SalesOverviewChart bookings={bookings} /> {/* Truyền bookings vào component */}
+				<SalesOverviewChart bookings={bookings} />
 
 				<div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8'>
-					<SalesByCategoryChart bookings={bookings} /> {/* Truyền bookings vào component */}
-					<DailySalesTrend bookings={bookings} /> {/* Truyền bookings vào component */}
+					<SalesByCategoryChart bookings={bookings} />
+					<DailySalesTrend bookings={bookings} />
 				</div>
 			</main>
 		</div>

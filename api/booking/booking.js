@@ -75,7 +75,7 @@ router.get('/booking/admin', auth, async (req, res) => {
             select: 'name location description stars imagehotel',
           },
         })
-        .select('checkInDate checkOutDate phoneBooking emailBooking paymentStatus orderId bookingDate');
+        .select('checkInDate checkOutDate phoneBooking emailBooking paymentStatus orderId bookingDate priceBooking');
 
       // Kiểm tra nếu không có đặt phòng nào được tìm thấy
       if (!bookings || bookings.length === 0) {
@@ -117,7 +117,7 @@ router.get('/booking/manager', auth, async (req, res) => {
           select: 'name location description stars imagehotel',
         },
       })
-      .select('checkInDate checkOutDate phoneBooking emailBooking paymentStatus orderId bookingDate user'); // Lấy user trong booking
+      .select('checkInDate checkOutDate phoneBooking emailBooking paymentStatus orderId bookingDate user priceBooking'); // Lấy user trong booking
 
     // Kiểm tra nếu không có đặt phòng nào được tìm thấy
     if (!bookings || bookings.length === 0) {
@@ -140,8 +140,52 @@ router.get('/booking/manager', auth, async (req, res) => {
     res.status(500).json({ message: 'Có lỗi xảy ra khi lấy danh sách đặt phòng.' });
   }
 });
+// Cập nhật trạng thái booking
+router.put('/:id/update-status', async (req, res) => {
+  const { status } = req.body;
+  try {
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id,
+      { paymentStatus: status },
+      { new: true }
+    );
+    res.json(booking);
+  } catch (error) {
+    res.status(500).send('Error updating status');
+  }
+});
+// Cập nhật booking theo ID
+router.put('/:id/update', async (req, res) => {
+  const bookingId = req.params.id;
+  const updatedData = req.body;  // Dữ liệu cập nhật
+
+  try {
+    const updatedBooking = await Booking.findByIdAndUpdate(bookingId, updatedData, { new: true });
+    if (!updatedBooking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+    res.status(200).json(updatedBooking);
+  } catch (error) {
+    console.error('Error updating booking:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 
+// Xóa booking theo ID
+router.delete('/:id', async (req, res) => {
+  const bookingId = req.params.id;
 
+  try {
+    const deletedBooking = await Booking.findByIdAndDelete(bookingId);
+    if (!deletedBooking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+    res.status(200).json({ message: 'Booking deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 module.exports = router;
