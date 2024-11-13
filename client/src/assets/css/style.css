@@ -828,3 +828,40 @@ h2 span {
       padding: 10px 0;
   }
 }
+
+
+/* Modal */
+.avatar-modal {
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .avatar-modal {
+    width: 100%;  /* Modal chiếm toàn bộ chiều rộng màn hình */
+    max-width: 100%;  /* Không có giới hạn chiều rộng tối đa */
+  }
+}
+
+/* Avatar Edit container */
+.avatar-edit-container {
+  width: 100%;
+  height: 400px;
+}
+
+/* Thêm một số tùy chỉnh cho các nút */
+.cancel-button,
+.save-button {
+  margin: 0 8px;
+  padding: 8px 16px;
+}
+
+/* Responsive cho nút trên màn hình nhỏ */
+@media (max-width: 768px) {
+  .cancel-button,
+  .save-button {
+    padding: 6px 12px;
+  }
+}
+
