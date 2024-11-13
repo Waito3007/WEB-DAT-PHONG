@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, Edit, Search } from 'lucide-react';
+import { Eye, Pencil,Trash2, Search } from 'lucide-react';
 import axios from 'axios';
 import BookingDetailsModal from './BookingDetailsModal';
 import UpdateStatusModal from './UpdateStatusModal';
@@ -125,6 +125,7 @@ const OrderTable = () => {
           <div className='flex-grow'>
             <h2 className='text-xl font-semibold text-gray-100'>Đặt phòng</h2>
           </div>
+          
           <div className='relative'>
             <input 
               type="search"
@@ -187,6 +188,7 @@ const OrderTable = () => {
                     <Eye size={18} />
                     Chi tiết
                   </button>
+                  <Pencil /><Trash2 />
                 </td>
               </tr>
             ))}
