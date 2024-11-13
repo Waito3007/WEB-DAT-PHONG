@@ -176,7 +176,7 @@ function SearchPlaces() {
 
         {/* Nút tìm kiếm */}
         <div className="button-group">
-          <button className="show-places-btn" onClick={handleSearch}>Tìm</button>
+          <button className="show-places-btn bg-blue-500" onClick={handleSearch}>Tìm</button>
         </div>
       </div>
     </section>

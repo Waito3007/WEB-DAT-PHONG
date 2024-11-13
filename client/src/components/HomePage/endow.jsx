@@ -2,10 +2,17 @@ import React from "react";
 import Dambao from "../../assets/checked.png"; 
 import BaoMat from "../../assets/insurance.png";
 import Hotro from "../../assets/customer-service.png";
+import Dambao from "../../assets/checked.png"; 
+import BaoMat from "../../assets/insurance.png";
+import Hotro from "../../assets/customer-service.png";
 
 const Endow = () => {
   const workInfoData = [
+  const workInfoData = [
     {
+      image: Dambao,
+      title: "Đảm bảo giá tốt nhất",
+      text: "Cam kết cung cấp giá phòng cạnh tranh và ưu đãi độc quyền cho khách hàng khi đặt qua trang web.",
       image: Dambao,
       title: "Đảm bảo giá tốt nhất",
       text: "Cam kết cung cấp giá phòng cạnh tranh và ưu đãi độc quyền cho khách hàng khi đặt qua trang web.",
@@ -42,7 +49,9 @@ const Endow = () => {
             </div>
           ))}
         </div>
+        </div>
       </div>
+    </div>
     </div>
   );
 };
