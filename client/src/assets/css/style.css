@@ -500,6 +500,69 @@ select:focus {
   align-self: flex-start; /* Đưa button sát vào ảnh */
   width: 100%;
 }
+/* Add a media query for small screens */
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+  .hotel-card {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+  }
+
+  .hotel-card img {
+    height: 15rem;
+    width: 15rem;
+  }
+
+  .hotel-list {
+    width: 100%;
+    padding: 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .hotel-details {
+    width: 70%; /* Adjust hotel details to take less width */
+  }
+
+  /* Aligning the rating, price, and button to the left on small screens */
+  .rating-reviews-container {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    width: 100%; /* Ensure elements take full width */
+  }
+
+  .rating-reviews-container span {
+    margin-top: 0.5rem; /* Add space between elements */
+    text-align: left; /* Align text to the left */
+    width: 100%; /* Ensure it takes full width */
+  }
+
+  .lowest-price-container {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    width: 100%; /* Ensure elements take full width */
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .button-container button {
+    width: 100%; /* Ensure the button stretches to the full width */
+  }
+}
+
 /* oderroom*/
 .order-room-container {
   margin-top: 40px;
