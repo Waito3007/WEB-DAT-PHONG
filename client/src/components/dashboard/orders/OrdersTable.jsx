@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, Pencil,Trash2, Search } from 'lucide-react';
+import { Eye, Edit,Trash2, Search } from 'lucide-react';
 import axios from 'axios';
 import BookingDetailsModal from './BookingDetailsModal';
+
 import UpdateStatusModal from './UpdateStatusModal';
+import EditBookingModal from './EditBookingModal';
+import DeleteBookingModal from './DeleteBookingModal';
 const OrderTable = () => {
   const [data, setData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -14,7 +17,8 @@ const OrderTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [bookingsPerPage] = useState(4); // Số lượng booking mỗi trang
   const [filteredBookings, setFilteredBookings] = useState([]);
-
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   useEffect(() => {
     axios.get('/api/booking/booking/manager')
       .then((response) => {
@@ -30,7 +34,7 @@ const OrderTable = () => {
     setSelectedBooking(booking);
     setIsModalVisible(true);
   };
-
+  
   const handleCancel = () => {
     setIsModalVisible(false);
     setSelectedBooking(null);
@@ -79,7 +83,9 @@ const OrderTable = () => {
         console.error('Error updating status:', error);
       });
   };
+  //Handle
 
+  //
   // Handle tìm kiếm người dùng
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
@@ -188,7 +194,12 @@ const OrderTable = () => {
                     <Eye size={18} />
                     Chi tiết
                   </button>
-                  <Pencil /><Trash2 />
+                  <button className='text-yellow-500 hover:text-yellow-700 mr-2'>
+                    <Edit size={18} />
+                  </button>
+                  <button className='text-red-500 hover:text-red-700'>
+                    <Trash2 size={18} />
+                  </button>
                 </td>
               </tr>
             ))}
