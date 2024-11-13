@@ -751,21 +751,20 @@ button:hover {
   opacity: 0.7;
 }
 
-h2 {
-  font-family: 'Merriweather', serif;  /* Thay phông chữ */
+/* Styling only for the booking history header */
+.booking-history-title {
+  font-family: 'Lora', serif;  
   font-weight: 700;
-  font-size: 2.5rem;  /* Kích thước chữ lớn hơn */
-  text-align: center; /* Căn giữa */
-  color: #2D3748;     /* Màu chữ tối */
+  font-size: 2.5rem;  
+  text-align: center; 
+  color: #2D3748;     
   margin-bottom: 24px;
   margin-top: 10px;
-
-  letter-spacing: 2px; /* Tăng khoảng cách giữa các chữ */
-  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho chữ */
+  letter-spacing: 2px; 
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
-/* Thêm một màu nền đẹp cho phần tiêu đề */
-h2 span {
+.booking-history-title span {
   background: linear-gradient(90deg, #000000, #777777);
   -webkit-background-clip: text;
   color: transparent;
