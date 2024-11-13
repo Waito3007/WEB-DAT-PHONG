@@ -17,10 +17,9 @@ const Endow = () => {
     },
     {
       image: Hotro,
-      title: "Dịch vụ hỗ trợ 24/7",
+      title: "Hỗ trợ 24/7",
       text: "Cung cấp hỗ trợ khách hàng qua hotline, email, và chat trực tuyến suốt ngày đêm.",
     },
-    
   ];
 
   return (
@@ -37,7 +36,7 @@ const Endow = () => {
                 <img className="w-full h-40 object-contain rounded-lg" src={data.image} alt={data.title} />
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">{data.title}</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">{data.title}</h3> {/* Căn giữa title */}
                 <p className="text-gray-700">{data.text}</p>
               </div>
             </div>
