@@ -830,7 +830,11 @@ button:hover {
     padding: 10px 0;
   }
 }
-
+.travel-title {
+  color: black; /* Màu sắc của tiêu đề */
+  font-size: 28px; /* Kích thước chữ lớn hơn */
+  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
 /* Modal */
 .avatar-modal {
   width: 90%;

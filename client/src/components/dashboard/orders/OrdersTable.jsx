@@ -6,7 +6,7 @@ import BookingDetailsModal from './BookingDetailsModal';
 
 import UpdateStatusModal from './UpdateStatusModal';
 import EditBookingModal from './EditBookingModal';
-import DeleteBookingModal from './DeleteBookingModal';
+import DeleteBookingModal from './DeleteModal';
 const OrderTable = () => {
   const [data, setData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
