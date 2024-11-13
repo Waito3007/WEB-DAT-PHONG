@@ -3,6 +3,7 @@ const router = express.Router();
 const Booking = require('../../models/Booking');
 const User = require('../../models/User');
 const Hotel = require('../../models/Hotel');
+const Room = require('../../models/Room');
 const auth = require('../../middleware/auth');
 const axios = require('axios');
 router.get('/', auth, async (req, res) => {
@@ -156,21 +157,48 @@ router.put('/:id/update-status', async (req, res) => {
 });
 // Cập nhật booking theo ID
 router.put('/:id/update', async (req, res) => {
-  const bookingId = req.params.id;
-  const updatedData = req.body;  // Dữ liệu cập nhật
+  const { email, name, phoneBooking, checkInDate, checkOutDate, totalPrice } = req.body;
 
   try {
-    const updatedBooking = await Booking.findByIdAndUpdate(bookingId, updatedData, { new: true });
-    if (!updatedBooking) {
+    // Tìm booking theo ID
+    const booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
       return res.status(404).json({ message: 'Booking not found' });
     }
-    res.status(200).json(updatedBooking);
+
+    // Cập nhật thông tin booking
+    booking.emailBooking = email || booking.emailBooking;
+    booking.phoneBooking = phoneBooking || booking.phoneBooking;
+    booking.checkInDate = new Date(checkInDate) || booking.checkInDate;
+    booking.checkOutDate = new Date(checkOutDate) || booking.checkOutDate;
+    booking.priceBooking = totalPrice || booking.priceBooking;
+
+    // Cập nhật thông tin người dùng
+    if (name) {
+      const user = await User.findById(booking.user);
+      if (user) {
+        user.name = name;
+        await user.save();
+      }
+    }
+    // Tính toán lại tổng tiền
+    const room = await Room.findById(booking.room);
+    if (room) {
+      const days = (new Date(checkOutDate) - new Date(checkInDate)) / (1000 * 60 * 60 * 24);
+      booking.priceBooking = days * room.price; // Cập nhật giá booking theo số ngày lưu trú
+    }
+    // Lưu lại booking đã cập nhật
+    await booking.save();
+    // Trả về kết quả sau khi cập nhật
+    res.status(200).json(booking);
   } catch (error) {
     console.error('Error updating booking:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
+module.exports = router;
 
 // Xóa booking theo ID
 router.delete('/:id', async (req, res) => {
