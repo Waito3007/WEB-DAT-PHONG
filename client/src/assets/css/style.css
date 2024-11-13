@@ -114,7 +114,7 @@ select:focus {
 
 .show-places-btn,
 .promo-code-btn {
-
+  background-color: var(--navbar-bg-color); /* Màu nền nút */
   color: white; /* Màu chữ */
   border: none; /* Không đường viền */
   padding: 12px 20px; /* Đệm cho nút */
@@ -751,8 +751,9 @@ button:hover {
   opacity: 0.7;
 }
 
-h2 {
-  font-family: 'Merriweather', serif;  /* Thay phông chữ */
+/* Styling only for the booking history header */
+.booking-history-title {
+  font-family: 'Lora', serif;  
   font-weight: 700;
   font-size: 2.5rem;  
   text-align: center; 
