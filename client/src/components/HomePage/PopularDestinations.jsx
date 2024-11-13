@@ -57,7 +57,9 @@ const PopularDestinations = () => {
 
   return (
     <section className="popular-destinations">
-      <h3 className="section-title">Địa điểm nổi bật</h3>
+      <h3 className="section-title text-2xl md:text-2xl lg:text-3xl font-medium ">
+        Địa điểm nổi bật
+      </h3>
       {isMobile ? (
         <Slider {...sliderSettings}>
           {destinations.map((destination) => (
