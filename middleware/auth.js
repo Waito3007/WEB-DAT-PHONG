@@ -14,8 +14,7 @@ const auth = (req, res, next) => {
     req.userId = decoded.userId; // Lưu userId vào request để sử dụng trong các route khác
     next(); // Cho phép tiếp tục đến route tiếp theo
   } catch (err) {
-    console.error("Token không hợp lệ:", err.message);
-    return res.status(403).json({ msg: 'Token không hợp lệ' });
+    return res.status(403).json({ msg: 'Chưa có Token' });
   }
 };
 
