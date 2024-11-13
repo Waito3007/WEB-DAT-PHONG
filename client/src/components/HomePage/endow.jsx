@@ -1,96 +1,50 @@
 import React from "react";
-import { Card, Col, Row } from "antd"; // Đã xóa Button ở đây
-
-const { Meta } = Card;
+import Dambao from "../../assets/checked.png"; 
+import BaoMat from "../../assets/insurance.png";
+import Hotro from "../../assets/customer-service.png";
 
 const Endow = () => {
-  const destinations = [
+  const workInfoData = [
     {
-      name: "LTN Hotel",
-      description: "170 đánh giá",
-      price: "12.000.000 VNĐ",
-      stars: 5,
-      image: "image.png",
-      rating: "8.5/10",
+      image: Dambao,
+      title: "Đảm bảo giá tốt nhất",
+      text: "Cam kết cung cấp giá phòng cạnh tranh và ưu đãi độc quyền cho khách hàng khi đặt qua trang web.",
     },
     {
-      name: "LTN Hotel",
-      description: "170 đánh giá",
-      price: "12.000.000 VNĐ",
-      stars: 5,
-      image: "image.png",
-      rating: "8.5/10",
+      image: BaoMat,
+      title: "Bảo mật thông tin",
+      text: "Bảo vệ thông tin cá nhân và tài khoản khách hàng với tiêu chuẩn bảo mật quốc tế và mã hóa dữ liệu.",
     },
     {
-      name: "LTN Hotel",
-      description: "170 đánh giá",
-      price: "12.000.000 VNĐ",
-      stars: 5,
-      image: "image.png",
-      rating: "8.5/10",
+      image: Hotro,
+      title: "Dịch vụ hỗ trợ 24/7",
+      text: "Cung cấp hỗ trợ khách hàng qua hotline, email, và chat trực tuyến suốt ngày đêm.",
     },
-    {
-      name: "LTN Hotel",
-      description: "170 đánh giá",
-      price: "12.000.000 VNĐ",
-      stars: 5,
-      image: "image.png",
-      rating: "8.5/10",
-    },
+    
   ];
 
   return (
-    <section className="endow-cards-wrapper">
-      <div className="endow-cards">
-        <h2 className="endow-title">Khách sạn đang được khuyến mãi</h2>
-        <Row gutter={[16, 16]}>
-          {destinations.map((destination, index) => (
-            <Col xs={24} sm={12} md={8} lg={6} key={index}>
-              <Card
-                hoverable
-                style={{ height: "auto" }}
-                cover={
-                  <img
-                    alt={destination.name}
-                    src={destination.image}
-                    style={{
-                      height: "200px",
-                      width: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                }
-              >
-                <Meta
-                  title={destination.name}
-                  description={
-                    <div>
-                      <span className="stars">
-                        {Array.from({ length: destination.stars }, (_, i) => (
-                          <span key={i} className="star">
-                            ⭐
-                          </span>
-                        ))}
-                      </span>
-                      <br />
-                      <span className="rating" style={{ color: "#1877F2" }}>
-                        {destination.rating}
-                      </span>
-                      <span
-                        style={{ color: "gray" }}
-                      >{` (${destination.description})`}</span>
-                    </div>
-                  }
-                />
-                <div className="card-footer">
-                  <span className="price">{destination.price}</span>
-                </div>
-              </Card>
-            </Col>
+    <div className="py-12 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl text-center text-gray-900 mb-8">Dịch vụ của chúng tôi</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {workInfoData.map((data) => (
+            <div
+              className="bg-white shadow-lg rounded-lg overflow-hidden transition-all hover:scale-105 hover:shadow-xl"
+              key={data.title}
+            >
+              <div className="info-boxes-img-container p-6">
+                <img className="w-full h-40 object-contain rounded-lg" src={data.image} alt={data.title} />
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">{data.title}</h3>
+                <p className="text-gray-700">{data.text}</p>
+              </div>
+            </div>
           ))}
-        </Row>
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 
