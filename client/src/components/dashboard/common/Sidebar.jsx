@@ -1,4 +1,4 @@
-import { BarChart2, DollarSign, Menu, Settings, ShoppingBag, ShoppingCart, TrendingUp, Users } from "lucide-react";
+import { BarChart2, DollarSign, Menu, Settings, Hotel, ShoppingCart, TrendingUp, Users } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,21 +7,21 @@ import { Link, useNavigate } from "react-router-dom";
 
 const SIDEBAR_ITEMS = [
 	{
-		name: "Overview",
+		name: "Tổng quan",
 		icon: BarChart2,
 		color: "#6366f1",
 		href: "/overview",
 		roles: ["Admin", "HotelManager"], // Cho phép cả Admin và HotelManager
 	},
 	{
-		name: "Khách sạn trên hệ thống",
-		icon: ShoppingBag,
+		name: "Khách sạn",
+		icon: Hotel,
 		color: "#8B5CF6",
 		href: "/hotelmanager",
 		roles: ["Admin", "HotelManager"],
 	},
 	{
-		name: "Quản lý người dùng",
+		name: "Người dùng",
 		icon: Users,
 		color: "#EC4899",
 		href: "/users",
@@ -42,14 +42,14 @@ const SIDEBAR_ITEMS = [
 		roles: ["Admin", "HotelManager"], 
 	},
 	{
-		name: "Analytics",
+		name: "Thống kê",
 		icon: TrendingUp,
 		color: "#3B82F6",
 		href: "/analytics",
 		roles: ["Admin", "HotelManager"], // Chỉ cho phép Admin
 	},
 	{
-		name: "Settings",
+		name: "Cài đặt",
 		icon: Settings,
 		color: "#6EE7B7",
 		href: "/settings",

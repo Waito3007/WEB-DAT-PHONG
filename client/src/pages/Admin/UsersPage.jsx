@@ -54,7 +54,7 @@ const UsersPage = () => {
 
 	return (
 		<div className='flex-1 overflow-auto relative z-10'>
-			<Header title='Users' />
+			<Header title='Thống Kê Người Dùng' />
 
 			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
 				{/* STATS */}
@@ -65,12 +65,12 @@ const UsersPage = () => {
 					transition={{ duration: 1 }}
 				>
 					<StatCard
-						name='Total Users'
+						name='Số lượng người dùng'
 						icon={UsersIcon}
 						value={userStats.totalUsers.toLocaleString()}
 						color='#6366F1'
 					/>
-					<StatCard name='New Users Today' icon={UserPlus} value={userStats.newUsersToday} color='#10B981' />
+					<StatCard name='Người dùng mới' icon={UserPlus} value={userStats.newUsersToday} color='#10B981' />
 					<StatCard
 						name='Active Users'
 						icon={UserCheck}

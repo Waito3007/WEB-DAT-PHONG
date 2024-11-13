@@ -11,7 +11,7 @@ import AIPoweredInsights from "../../components/dashboard/analytics/AIPoweredIns
 const AnalyticsPage = () => {
 	return (
 		<div className='flex-1 overflow-auto relative z-10 bg-gray-900'>
-			<Header title={"Analytics Dashboard"} />
+			<Header title={"Thống Kê Doanh Thu"} />
 
 			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
 				<OverviewCards />
