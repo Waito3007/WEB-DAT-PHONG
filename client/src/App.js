@@ -18,7 +18,7 @@ import Profile from "./components/account/profilevip";
 import ProfilePage from "./pages/ProfilePage";
 // Admin
 import Sidebar from "./components/dashboard/common/Sidebar";
-import OverviewPage from "./pages/OverviewPage";
+import OverviewPage from "./pages/Admin/OverviewPage";
 import HotelManagerPage from "./pages/Admin/HotelManagerPage";
 import UsersPage from "./pages/Admin/UsersPage";
 import SalesPage from "./pages/Admin/SalesPage";

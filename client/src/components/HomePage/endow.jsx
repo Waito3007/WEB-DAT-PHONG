@@ -9,7 +9,7 @@ const Endow = () => {
     {
       image: Dambao,
       title: "Đảm bảo giá tốt nhất",
-      text: "Cam kết cung cấp giá phòng cạnh tranh và ưu đãi độc quyền cho khách hàng khi đặt qua trang web.",
+      text: "Chúng tôi cam kết cung cấp mức giá phòng cạnh tranh nhất cùng với ưu đãi độc quyền, giúp bạn luôn nhận được giá tốt khi đặt qua website.",
  
     },
     {
@@ -20,7 +20,7 @@ const Endow = () => {
     {
       image: Hotro,
       title: "Hỗ trợ 24/7",
-      text: "Cung cấp hỗ trợ khách hàng qua hotline, email, và chat trực tuyến suốt ngày đêm.",
+      text: "Đội ngũ hỗ trợ sẵn sàng giúp đỡ qua hotline, email và chat trực tuyến mọi lúc.",
     },
   ];
 
@@ -39,7 +39,7 @@ const Endow = () => {
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">{data.title}</h3> {/* Căn giữa title */}
-                <p className="text-gray-700">{data.text}</p>
+                <p className="text-gray-700 text-center">{data.text}</p>
               </div>
             </div>
           ))}
