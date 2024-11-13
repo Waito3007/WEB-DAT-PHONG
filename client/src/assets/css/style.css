@@ -5,13 +5,15 @@ body {
   box-sizing: border-box;
   color: black;
 }
-.homepage, .searchpage,.DetailHotelPage, .DetailRoomPage , .room-info {
+.homepage,
+.searchpage,
+.DetailHotelPage,
+.DetailRoomPage,
+.room-info {
   overflow-x: hidden;
-  
 }
 .homepage {
   width: 100%;
-  
 }
 .searchpage {
   height: auto; /* Hoặc 100vh nếu bạn muốn nó đầy đủ chiều cao */
@@ -61,7 +63,7 @@ body {
   width: 100%;
   margin: 20px auto;
   text-align: left; /* Căn trái cho các thành phần */
-  margin-top:-250px;
+  margin-top: -250px;
 }
 
 .input-group {
@@ -165,62 +167,46 @@ select:focus {
 .popular-destinations {
   padding: 20px;
   max-width: 1200px;
-  margin: 0 auto; /* Căn giữa phần tử chính */
+  margin: 0 auto;
 }
 
 .section-title {
-  color: black; /* Màu sắc của tiêu đề */
-  font-size: 28px; /* Kích thước chữ lớn hơn */
-  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
-  text-align: left; /* Căn lề trái cho tiêu đề */
-}
-
-.ant-row {
-  display: flex;
-  justify-content: center; /* Center the grid */
+  color: black;
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .ant-card {
   border: none;
-  box-shadow: none; /* No shadow */
+  box-shadow: none;
   text-align: left;
 }
 
-/* Wrapper for image to make it square */
 .destination-image-wrapper {
-  width: 100%; /* Ensure the width is 100% of the column */
-  padding-top: 100%; /* This creates a square ratio (1:1) */
+  width: 100%;
+  padding-top: 100%;
   position: relative;
 }
 
-/* Image inside the square wrapper */
 .destination-image {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensures the image fits nicely */
+  object-fit: cover;
   border-radius: 10px;
 }
 
 .destination-content {
-  padding-left: 20px; /* Create space between the image and text */
-}
-.destination-title{
-  white-space: normal; /* Cho phép xuống dòng */
-  overflow: hidden;    /* Ẩn phần thừa nếu có */
-  text-overflow: ellipsis; /* Thêm dấu "..." nếu tiêu đề quá dài */
-
-}
-.ant-card-meta-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: black; /* Text color for destination name */
+  padding-left: 20px;
 }
 
-.ant-card-meta-description {
-  color: grey; /* Text color for description */
+.destination-title {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Footer.css */
@@ -281,108 +267,59 @@ select:focus {
 }
 
 /* TravelCards.css */
-.travel-cards {
-  padding: 20px;
+.travel-cards-wrapper {
+  width: 100%;
+  max-width: 1225px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
-.card-footer {
+.slider-container {
+  display: none;
+}
+
+.grid-container {
   display: flex;
-  justify-content: space-between; /* Để giữ khoảng cách giữa giá và nút */
-  align-items: center;
-  margin-top: 10px; /* Thay đổi khoảng cách */
 }
 
+/* Show slider on smaller screens, hide grid */
+@media (max-width: 768px) {
+  .slider-container {
+    display: block;
+  }
+  .grid-container {
+    display: none;
+  }
+}
+
+/*endow*/
+.endow-cards-wrapper {
+  width: 100%;
+  max-width: 1225px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.slider-container {
+  display: none;
+}
+
+.grid-container {
+  display: flex;
+}
 .price {
   font-weight: bold;
-  color: #ff3d00; /* Đổi màu cho giá */
+  color: #ff3d00;
 }
 
-.book-btn {
-  background-color: #00bfae; /* Màu nền cho nút */
-  color: white; /* Màu chữ cho nút */
-  padding: 8px 16px; /* Thay đổi kích thước nút */
-  border: none; /* Bỏ viền */
-  border-radius: 4px; /* Bo góc cho nút */
-  cursor: pointer; /* Thêm con trỏ tay khi di chuột qua */
-}
-
-.travel-title {
-  color: black; /* Màu sắc của tiêu đề */
-  font-size: 28px; /* Kích thước chữ lớn hơn */
-  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
-}
-
-.travel-cards-wrapper {
-  width: 100%; /* Chiếm toàn bộ chiều rộng */
-  max-width: 1225px; /* Chiều rộng tối đa */
-  margin: 0 auto; /* Căn giữa phần tử */
-  padding: 0 16px; /* Đệm hai bên */
-}
-
-.stars {
-  color: gold; /* Màu cho sao */
-  font-size: 18px; /* Kích thước cho sao */
-}
-
-.star {
-  margin-right: 2px; /* Khoảng cách giữa các sao */
-}
-
-.rating {
-  color: #1877f2; /* Màu sắc cho điểm số */
-  font-weight: bold; /* Để làm nổi bật điểm số */
-}
-.location-title {
-  font-size: 36px; /* Kích thước chữ */
-  color: black; /* Màu chữ */
-  font-weight: bold; /* Độ đậm */
-  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
-}
-/*endow*/
-.endow-cards {
-  padding: 20px;
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between; /* Để giữ khoảng cách giữa giá và nút */
-  align-items: center;
-  margin-top: 10px; /* Thay đổi khoảng cách */
-}
-.book-btn {
-  background-color: #00bfae; /* Màu nền cho nút */
-  color: white; /* Màu chữ cho nút */
-  padding: 8px 16px; /* Thay đổi kích thước nút */
-  border: none; /* Bỏ viền */
-  border-radius: 4px; /* Bo góc cho nút */
-  cursor: pointer; /* Thêm con trỏ tay khi di chuột qua */
-}
-
-.endow-title {
-  color: black; /* Màu sắc của tiêu đề */
-  font-size: 28px; /* Kích thước chữ lớn hơn */
-  margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
-}
-
-.endow-cards-wrapper {
-  width: 100%; /* Chiếm toàn bộ chiều rộng */
-  max-width: 1225px; /* Chiều rộng tối đa */
-  margin: 0 auto; /* Căn giữa phần tử */
-  padding: 0 16px; /* Đệm hai bên */
-}
-
-.stars {
-  color: gold; /* Màu cho sao */
-  font-size: 18px; /* Kích thước cho sao */
-}
-
-.star {
-  margin-right: 2px; /* Khoảng cách giữa các sao */
-}
-
-.rating {
-  color: #1877f2; /* Màu sắc cho điểm số */
-  font-weight: bold; /* Để làm nổi bật điểm số */
+/* Show slider on smaller screens, hide grid */
+@media (max-width: 768px) {
+  .slider-container {
+    display: block;
+  }
+  .grid-container {
+    display: none;
+  }
 }
 
 /* PopularDestinations.css */
@@ -437,7 +374,6 @@ select:focus {
 
 .input-hotel {
   flex-grow: 1;
-  
 }
 
 .input-hotel input,
@@ -529,15 +465,15 @@ select:focus {
   padding: 1rem; /* Padding cho thẻ khách sạn */
   display: flex; /* Chế độ flex */
   background-color: #fff; /* Màu nền */
-  width:800px; /* Đặt chiều rộng toàn bộ */
+  width: 800px; /* Đặt chiều rộng toàn bộ */
   max-width: 900px; /* Chiều rộng tối đa của thẻ khách sạn */
   min-width: 500px;
   margin: 1rem; /* Khoảng cách giữa các khách sạn */
   height: 300px; /* Thêm chiều cao cố định cho thẻ khách sạn */
   align-items: flex-start; /* Căn chỉnh nội dung ở đầu */
 }
-.hotel-details{
-  width:100%;
+.hotel-details {
+  width: 100%;
 }
 .hotel-card img {
   border-radius: 0.5rem; /* rounded-lg */
@@ -663,7 +599,8 @@ select:focus {
   background-color: #e6f7ff;
 }
 
-.ant-pagination-prev, .ant-pagination-next {
+.ant-pagination-prev,
+.ant-pagination-next {
   color: #1890ff;
 }
 
@@ -676,7 +613,11 @@ select:focus {
 }
 
 .ant-table th {
-  background: linear-gradient(90deg, rgba(66, 153, 225, 1) 0%, rgba(66, 153, 225, 0.9) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(66, 153, 225, 1) 0%,
+    rgba(66, 153, 225, 0.9) 100%
+  );
   color: white;
   font-size: 16px;
   font-weight: 600;
@@ -708,7 +649,8 @@ select:focus {
   background-color: #bee3f8;
 }
 
-.ant-pagination-prev, .ant-pagination-next {
+.ant-pagination-prev,
+.ant-pagination-next {
   color: #3182ce;
   font-weight: bold;
 }
@@ -718,15 +660,15 @@ select:focus {
   color: #fff;
 }
 
-
 /* Đảm bảo bảng không bị cắt khi trên màn hình nhỏ */
 @media (max-width: 768px) {
   .ant-table {
-      width: 100%;
-      overflow-x: auto;
+    width: 100%;
+    overflow-x: auto;
   }
-  .ant-table-thead th, .ant-table-tbody td {
-      white-space: nowrap;
+  .ant-table-thead th,
+  .ant-table-tbody td {
+    white-space: nowrap;
   }
 }
 
@@ -753,15 +695,15 @@ button:hover {
 
 /* Styling only for the booking history header */
 .booking-history-title {
-  font-family: 'Lora', serif;  
+  font-family: "Lora", serif;
   font-weight: 700;
-  font-size: 2.5rem;  
-  text-align: center; 
-  color: #2D3748;     
+  font-size: 2.5rem;
+  text-align: center;
+  color: #2d3748;
   margin-bottom: 24px;
   margin-top: 10px;
-  letter-spacing: 2px; 
-  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  letter-spacing: 2px;
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .booking-history-title span {
@@ -771,27 +713,27 @@ button:hover {
 }
 
 .custom-button {
-  background-color: #4CAF50;  /* Màu nền nút */
-  color: white;                /* Màu chữ */
-  border: none;                /* Loại bỏ đường viền */
-  padding: 12px 24px;          /* Khoảng cách giữa chữ và viền */
-  font-size: 16px;             /* Kích thước chữ */
-  font-weight: bold;           /* Làm đậm chữ */
-  border-radius: 8px;          /* Bo góc nút */
-  transition: all 0.3s ease;   /* Hiệu ứng chuyển động mượt mà */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Bóng đổ nhẹ */
-  cursor: pointer;            /* Đổi con trỏ thành pointer khi hover */
+  background-color: #4caf50; /* Màu nền nút */
+  color: white; /* Màu chữ */
+  border: none; /* Loại bỏ đường viền */
+  padding: 12px 24px; /* Khoảng cách giữa chữ và viền */
+  font-size: 16px; /* Kích thước chữ */
+  font-weight: bold; /* Làm đậm chữ */
+  border-radius: 8px; /* Bo góc nút */
+  transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+  cursor: pointer; /* Đổi con trỏ thành pointer khi hover */
 }
 
 .custom-button:hover {
-  background-color: #45a049;  /* Màu nền khi hover */
+  background-color: #45a049; /* Màu nền khi hover */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Bóng đổ khi hover */
-  transform: translateY(-2px);  /* Nâng nút lên một chút khi hover */
+  transform: translateY(-2px); /* Nâng nút lên một chút khi hover */
 }
 
 .custom-button:active {
   background-color: #388e3c; /* Màu nền khi nhấn */
-  transform: translateY(2px);  /* Nút hạ xuống khi nhấn */
+  transform: translateY(2px); /* Nút hạ xuống khi nhấn */
 }
 
 .custom-button:focus {
@@ -799,35 +741,32 @@ button:hover {
   box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.5); /* Viền sáng khi focus */
 }
 
-
-
 /* Media Query cho màn hình nhỏ (Điện thoại) */
 @media (max-width: 768px) {
   /* Đảm bảo các phần tử xếp chồng nhau */
   .profile-page .container {
-      padding: 0 15px;
+    padding: 0 15px;
   }
 
   .profile-page .avatar-container img {
-      width: 90px; /* Thu nhỏ ảnh đại diện */
-      height: 90px;
+    width: 90px; /* Thu nhỏ ảnh đại diện */
+    height: 90px;
   }
 
   .profile-page .user-info h3 {
-      font-size: 18px; /* Giảm kích thước chữ cho tên */
+    font-size: 18px; /* Giảm kích thước chữ cho tên */
   }
 
   .profile-page .user-info p {
-      font-size: 15px; /* Giảm kích thước chữ cho email */
+    font-size: 15px; /* Giảm kích thước chữ cho email */
   }
 
   /* Nút chỉnh sửa */
   .profile-page .edit-button {
-      width: 100%; /* Nút chỉnh sửa chiếm toàn bộ chiều rộng */
-      padding: 10px 0;
+    width: 100%; /* Nút chỉnh sửa chiếm toàn bộ chiều rộng */
+    padding: 10px 0;
   }
 }
-
 
 /* Modal */
 .avatar-modal {
@@ -838,8 +777,8 @@ button:hover {
 
 @media (max-width: 768px) {
   .avatar-modal {
-    width: 100%;  /* Modal chiếm toàn bộ chiều rộng màn hình */
-    max-width: 100%;  /* Không có giới hạn chiều rộng tối đa */
+    width: 100%; /* Modal chiếm toàn bộ chiều rộng màn hình */
+    max-width: 100%; /* Không có giới hạn chiều rộng tối đa */
   }
 }
 
@@ -863,4 +802,3 @@ button:hover {
     padding: 6px 12px;
   }
 }
-
