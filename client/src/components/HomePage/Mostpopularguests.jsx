@@ -50,8 +50,10 @@ const PopularDestinations = () => {
 
   return (
     <section className="travel-cards-wrapper">
-      <div className="travel-cards">
-        <h2 className="travel-title">Có thể bạn thích</h2>
+      <div className="travel-cards text-black mt-5">
+        <h2 className="travel-title text-2xl md:text-2xl lg:text-3xl font-medium">
+          Có thể bạn thích
+        </h2>
         <div className="hotel-list-wrapper">
           {/* Use slider only for smaller screens */}
           <div className="slider-container">

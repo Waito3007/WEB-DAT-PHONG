@@ -52,8 +52,10 @@ const TopHotels = () => {
 
   return (
     <section className="travel-cards-wrapper">
-      <div className="travel-cards">
-        <h2 className="travel-title">Khách sạn hàng đầu</h2>
+      <div className="travel-cards text-black">
+        <h2 className="travel-title text-2xl md:text-2xl lg:text-3xl font-medium">
+          Khách sạn hàng đầu
+        </h2>
         {isMobile ? (
           <Slider {...sliderSettings}>
             {hotels.map((hotel) => (
