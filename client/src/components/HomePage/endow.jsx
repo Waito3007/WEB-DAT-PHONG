@@ -8,17 +8,17 @@ const Endow = () => {
     {
       image: Dambao,
       title: "Đảm bảo giá tốt nhất",
-      text: "Cam kết cung cấp giá phòng cạnh tranh và ưu đãi độc quyền cho khách hàng khi đặt qua trang web.",
+      text: "Cam kết giá phòng cạnh tranh với ưu đãi độc quyền khi đặt qua website.",
     },
     {
       image: BaoMat,
       title: "Bảo mật thông tin",
-      text: "Bảo vệ thông tin cá nhân và tài khoản khách hàng với tiêu chuẩn bảo mật quốc tế và mã hóa dữ liệu.",
+      text: "Thông tin cá nhân và thanh toán được bảo mật an toàn, tuân thủ tiêu chuẩn quốc tế.",
     },
     {
       image: Hotro,
       title: "Dịch vụ hỗ trợ 24/7",
-      text: "Cung cấp hỗ trợ khách hàng qua hotline, email, và chat trực tuyến suốt ngày đêm.",
+      text: "Đội ngũ hỗ trợ sẵn sàng giúp đỡ qua hotline, email và chat trực tuyến mọi lúc.",
     },
     
   ];
@@ -33,12 +33,21 @@ const Endow = () => {
               className="bg-white shadow-lg rounded-lg overflow-hidden transition-all hover:scale-105 hover:shadow-xl"
               key={data.title}
             >
-              <div className="info-boxes-img-container p-6">
-                <img className="w-full h-40 object-contain rounded-lg" src={data.image} alt={data.title} />
+              <div className="info-boxes-img-container p-6"> 
+
+
+
+
+
+
+
+
+                
+                <img className="w-full h-40 object-contain rounded-lg " src={data.image} alt={data.title} />
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">{data.title}</h3>
-                <p className="text-gray-700">{data.text}</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">{data.title}</h3>
+                <p className="text-gray-700 text-center">{data.text}</p>
               </div>
             </div>
           ))}

@@ -13,6 +13,7 @@ const HomePage = require('./api/homepage/soft');// Đường dẫn mới cho roo
 const Detail = require('./api/detail/detail');
 const Checkout = require('./api/checkout/checkout');
 const SearchHotel = require('./api/search/searchhotel');
+const Favorite = require('./api/favorite/favorite');
 const tinhthanhvn = require('./api/tinhthanhvn');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
@@ -39,6 +40,7 @@ app.use('/api/detail', Detail);
 app.use('/api/checkout', Checkout);
 app.use('/api/searchhotel', SearchHotel);
 app.use('/api/tinhthanh', tinhthanhvn);
+app.use('/api/favorite', Favorite);
 app.get('/', (req, res) => {
   res.send('Welcome to Hotel Booking API');
   
