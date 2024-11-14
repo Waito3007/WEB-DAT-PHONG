@@ -176,44 +176,53 @@ router.put("/:id/update-status", async (req, res) => {
     res.status(500).send("Error updating status");
   }
 });
+
 // Cập nhật booking theo ID
 router.put("/:id/update", async (req, res) => {
-  const { email, name, phoneBooking, checkInDate, checkOutDate, totalPrice } =
+  const { email, phoneBooking, checkInDate, checkOutDate, totalPrice } =
     req.body;
 
   try {
     // Tìm booking theo ID
     const booking = await Booking.findById(req.params.id);
-
     if (!booking) {
-      return res.status(404).json({ message: "Booking not found" });
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy thông tin đặt phòng" });
     }
 
     // Cập nhật thông tin booking
     booking.emailBooking = email || booking.emailBooking;
     booking.phoneBooking = phoneBooking || booking.phoneBooking;
-    booking.checkInDate = new Date(checkInDate) || booking.checkInDate;
-    booking.checkOutDate = new Date(checkOutDate) || booking.checkOutDate;
-    booking.priceBooking = totalPrice || booking.priceBooking;
 
-    // Cập nhật thông tin người dùng
-    if (name) {
-      const user = await User.findById(booking.user);
-      if (user) {
-        user.name = name;
-        await user.save();
-      }
+    // Validate và cập nhật ngày check-in, check-out nếu có
+    if (checkInDate && !isNaN(new Date(checkInDate).getTime())) {
+      booking.checkInDate = new Date(checkInDate);
     }
-    // Tính toán lại tổng tiền
+    if (checkOutDate && !isNaN(new Date(checkOutDate).getTime())) {
+      booking.checkOutDate = new Date(checkOutDate);
+    }
+
+    // Lấy room và tính toán lại tổng tiền nếu có thay đổi về ngày lưu trú
     const room = await Room.findById(booking.room);
-    if (room) {
+    if (room && checkInDate && checkOutDate) {
       const days =
         (new Date(checkOutDate) - new Date(checkInDate)) /
         (1000 * 60 * 60 * 24);
-      booking.priceBooking = days * room.price; // Cập nhật giá booking theo số ngày lưu trú
+      if (days > 0) {
+        booking.priceBooking = totalPrice || days * room.price; // Tính tổng tiền dựa trên số ngày lưu trú
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Ngày trả phòng phải trước ngày đặt phòng" });
+      }
+    } else if (totalPrice) {
+      booking.priceBooking = totalPrice; // Nếu totalPrice được truyền vào, sử dụng giá đó
     }
+
     // Lưu lại booking đã cập nhật
     await booking.save();
+
     // Trả về kết quả sau khi cập nhật
     res.status(200).json(booking);
   } catch (error) {
@@ -221,8 +230,6 @@ router.put("/:id/update", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-module.exports = router;
 
 // Xóa booking theo ID
 router.delete("/:id", async (req, res) => {

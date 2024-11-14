@@ -1,0 +1,119 @@
+.drawer-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 16px;
+    background-color: #f4f4f9; /* Nền sáng nhẹ để tạo cảm giác dễ chịu */
+    border-radius: 15px; /* Góc tròn mềm mại */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Bóng nhẹ để không làm quá nổi bật */
+  }
+  
+  .drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000; /* Màu tối trung tính, không quá đậm */
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: #ffffff; /* Chữ trắng để dễ đọc trên nền tối */
+    margin-bottom: 15px;
+    font-family: 'Roboto', sans-serif; /* Font hiện đại nhưng dễ nhìn */
+  }
+  
+  .close-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ffffff; /* Màu trắng cho nút đóng */
+    font-size: 18px;
+    transition: color 0.3s ease;
+  }
+  
+  .close-button:hover {
+    color: #f8f9fa; /* Chuyển sang màu sáng hơn khi hover */
+  }
+  
+  .hotel-item {
+    background-color: #ffffff; /* Nền trắng cho mỗi mục khách sạn */
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 12px; /* Góc tròn nhẹ */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Bóng nhẹ để tạo sự mềm mại */
+    transition: all 0.3s ease-in-out;
+    border-left: 4px solid #007bff; /* Viền xanh nhẹ tạo sự nổi bật */
+  }
+  
+  .hotel-item:hover {
+    background-color: #f8f9fa; /* Màu nền sáng hơn khi hover */
+    transform: scale(1.02); /* Phóng to nhẹ để tạo sự chú ý */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ khi hover */
+  }
+  
+  .hotel-item:hover .hotel-info h6 {
+    color: #007bff; /* Đổi màu tên khách sạn thành xanh khi hover */
+  }
+  
+  .hotel-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px; /* Góc tròn cho ảnh khách sạn */
+    border: 2px solid #f0f0f0; /* Viền nhẹ cho ảnh */
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .hotel-image:hover {
+    transform: scale(1.05); /* Phóng to nhẹ khi hover */
+    border-color: #007bff; /* Đổi viền thành xanh khi hover */
+  }
+  
+  .hotel-info {
+    color: #333; /* Chữ màu đen tối để dễ đọc */
+  }
+  
+  .hotel-info h6 {
+    font-weight: bold;
+    color: #212529; /* Màu tối cho tên khách sạn */
+    font-family: 'Roboto', sans-serif; /* Font dễ đọc */
+    transition: color 0.3s ease;
+  }
+  
+  .location,
+  .rating {
+    color: #6c757d; /* Màu xám nhẹ cho thông tin phụ */
+  }
+  
+  .loading-container,
+  .error-message {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .loading-container .MuiCircularProgress-root {
+    color: #007bff; /* Màu xanh để tạo sự nổi bật */
+  }
+  
+  .error-message {
+    background-color: #f8d7da; /* Màu nền đỏ nhạt để báo lỗi */
+    color: #721c24; /* Màu chữ đỏ tối */
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+  }
+  
+  @media (max-width: 600px) {
+    .drawer-container {
+      padding: 8px;
+    }
+  
+    .hotel-item {
+      margin-bottom: 12px;
+    }
+  
+    .hotel-image {
+      height: 120px;
+    }
+  
+    .hotel-info {
+      margin-left: 8px;
+    }
+  }
+  

@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Heart, Calendar, Hotel, LogOut, Menu } from "lucide-react";
+import FavoriteRoomsDrawer from "../FavoritesPage/FavoritesPage"; // Import your drawer component
 
 const HomeNavbar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Functions to open and close the drawer
+  const handleOpenDrawer = () => {
+    setDrawerOpen(true);
+  };
+  const handleCloseDrawer = () => {
+    setDrawerOpen(false);
+  };
 
   const fetchUser = async () => {
     try {
@@ -19,10 +29,10 @@ const HomeNavbar = () => {
         const userData = await response.json();
         setUser(userData);
       } else {
-        console.error("Lỗi lấy thông tin người dùng:", response.status);
+        console.error("Error fetching user data:", response.status);
       }
     } catch (error) {
-      console.error("Lỗi mạng:", error);
+      console.error("Network error:", error);
     }
   };
 
@@ -62,23 +72,19 @@ const HomeNavbar = () => {
         setMenuOpen(false);
         navigate("/login");
       } else {
-        console.error("Lỗi khi đăng xuất:", response.status);
+        console.error("Logout error:", response.status);
       }
     } catch (error) {
-      console.error("Lỗi khi đăng xuất:", error);
+      console.error("Logout error:", error);
     }
   };
 
   const handleManageHotel = () => {
     const token = localStorage.getItem('token');
     if (token) {
-      // Nếu token tồn tại, chuyển hướng đến trang "/overview"
-      console.log("Token hiện tại:", token);
       navigate("/overview");
     } else {
-      // Nếu không có token, điều hướng về trang đăng nhập hoặc hiển thị thông báo lỗi
-      console.error("Không tìm thấy token, vui lòng đăng nhập.");
-      navigate("./login"); // Hoặc hiển thị thông báo lỗi tùy theo yêu cầu
+      navigate("/login");
     }
   };
 
@@ -101,9 +107,9 @@ const HomeNavbar = () => {
 
       {/* Middle Navigation Links */}
       <div className="navbar-links hidden md:flex space-x-6">
-      <span className="cursor-pointer" onClick={handleHome}>Trang chủ</span>
-      <span className="cursor-pointer" onClick={() => navigate("/searchpage")}>Đặt Phòng</span>
-      <span className="cursor-pointer" onClick={() => navigate("/")}>Liên hệ</span>
+        <span className="cursor-pointer" onClick={handleHome}>Trang chủ</span>
+        <span className="cursor-pointer" onClick={() => navigate("/searchpage")}>Đặt Phòng</span>
+        <span className="cursor-pointer" onClick={() => navigate("/")}>Liên hệ</span>
       </div>
 
       {/* Mobile Menu Icon */}
@@ -112,49 +118,56 @@ const HomeNavbar = () => {
       </div>
 
       {/* User Controls */}
-      <div className="navbar-buttons hidden md:flex relative">
+      <div className="navbar-buttons hidden md:flex items-center relative">
         {user ? (
-          <div className="user-avatar cursor-pointer" onClick={toggleMenu}>
-            <img 
-              src={user.avatar || "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3485.jpg"} 
-              alt="Avatar" 
-              className="w-10 h-10 rounded-full" 
-            />
-            {menuOpen && (
-              <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-md z-50">
-                <ul className="py-2">
-                  <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer" onClick={handleProfile}>
-                    <User className="w-4 h-4 mr-2" /> Hồ sơ cá nhân
-                  </li>
-                  <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
-                    <Heart className="w-4 h-4 mr-2" /> Khách sạn yêu thích
-                  </li>
-                  <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
-                    <Calendar className="w-4 h-4 mr-2" /> Đặt phòng của bạn
-                  </li>
-                  {user.role === "Admin" || user.role === "HotelManager" ? (
-                    <a href="/overview" className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer"onClick={handleProfile}>
-                      <Hotel className="w-4 h-4 mr-2" /> Quản lý khách sạn
-                    </a>
-                  ) : null}
-                  <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
-                    <LogOut className="w-4 h-4 mr-2" /> Đăng xuất
-                  </li>
-                </ul>
-              </div>
-            )}
+          <div className="flex items-center space-x-4">
+            {/* Nút Khách sạn yêu thích */}
+            <div className="favorite-button cursor-pointer" onClick={handleOpenDrawer}>
+              <Heart className="w-6 h-6 text-white hover:text-blue-700" />              
+            </div>
+            <FavoriteRoomsDrawer open={drawerOpen} onClose={handleCloseDrawer} />
+            {/* Avatar người dùng và menu thả xuống */}
+            <div className="user-avatar cursor-pointer" onClick={toggleMenu}>
+              <img 
+                src={user.avatar || "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3485.jpg"} 
+                alt="Avatar" 
+                className="w-10 h-10 rounded-full" 
+              />
+              {menuOpen && (
+                <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-md z-50">
+                  <ul className="py-2">
+                    <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer" onClick={handleProfile}>
+                      <User className="w-4 h-4 mr-2" /> Hồ sơ cá nhân
+                    </li>
+                    <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
+                      <Calendar className="w-4 h-4 mr-2" /> Đặt phòng của bạn
+                    </li>
+                    {user.role === "Admin" || user.role === "HotelManager" ? (
+                      <a href="/overview" className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
+                        <Hotel className="w-4 h-4 mr-2" /> Quản lý khách sạn
+                      </a>
+                    ) : null}
+                    <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
+                      <LogOut className="w-4 h-4 mr-2" /> Đăng xuất
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div className="inline-flex rounded-md shadow-sm" role="group">
-            <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white" onClick={handleLogin}>
+            <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:text-blue-700" onClick={handleLogin}>
               Đăng nhập
             </button>
-            <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white" onClick={handleSignUp}>
+            <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:text-blue-700" onClick={handleSignUp}>
               Đăng ký
-            </button>   
+            </button>
           </div>
         )}
       </div>
+
+
 
       {/* Responsive Dropdown Menu */}
       {isMenuOpen && (
@@ -166,7 +179,7 @@ const HomeNavbar = () => {
             {user ? (
               <>
                 <span className="cursor-pointer" onClick={handleProfile}>Hồ sơ cá nhân</span>
-                <span className="cursor-pointer" onClick={() => navigate("/favorite")}>Khách sạn yêu thích</span>
+                <span className="cursor-pointer" onClick={handleOpenDrawer}>Khách sạn yêu thích</span>
                 <span className="cursor-pointer" onClick={() => navigate("/bookings")}>Đặt phòng của bạn</span>
                 {user.role === "Admin" || user.role === "HotelManager" ? (
                   <span className="cursor-pointer" onClick={handleManageHotel}>Quản lý khách sạn</span>
