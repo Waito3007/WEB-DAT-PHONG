@@ -24,8 +24,10 @@ app.use(cookieParser()); // Đặt cookie-parser trước các route
 app.use(express.json()); // Để phân tích JSON trong request
 // Gọi dotenv
 dotenv.config();
+app.use(cors({
+  origin: 'http://localhost:3000' // Cho phép yêu cầu từ frontend
+}));
 // Middleware
-app.use(express.json());
 // api
 app.use('/api/users', userapi); // Đăng ký route
 app.use('/api/users', loginRoute); // Route cho đăng nhập
@@ -43,9 +45,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to Hotel Booking API');
   
 });
-app.use(cors({
-  origin: 'http://localhost:3000' // Cho phép yêu cầu từ frontend
-}));
+
 // Lắng nghe trên cổng
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

@@ -39,7 +39,7 @@ import ConfirmPayment from "./components/Checkout/confirm-payment";
 import DetailHotelPage from "./pages/DetailHotelPage";
 import DetailRoomPage from "./pages/DetailRoomPage"; 
 import HotelImage from "./components/DetailHotel/HotelImage";
-// import FavoritesPage from "./components/FavoritesPage/FavoritesPage";
+import FavoritesPage from "./components/FavoritesPage/FavoritesPage";
 import CheckoutPage from "./pages/CheckoutPage";
 // import BookingStatusPage from "./pages/BookingStatusPage";
 
@@ -140,7 +140,7 @@ const AppContent = () => {
         <Route path="/success" element={<Success/>} />
         <Route path="/confirmpayment" element={<ConfirmPayment/>} />
         {/* <Route path="/bookingstatus" element={<BookingStatusPage/>} /> */}
-        {/* <Route path="/favorites" element={<FavoritesPage/>} /> // */}
+         <Route path="/favorites" element={<FavoritesPage/>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
