@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Table } from "antd";
-import { Eye, EyeOff, Calendar, DollarSign } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 const BookingHistory = ({
   bookingHistory,
@@ -11,6 +11,17 @@ const BookingHistory = ({
   isOrderIdVisible,
   toggleOrderIdVisibility,
 }) => {
+  const [filterCurrentBookings, setFilterCurrentBookings] = useState(false);
+
+  // Hàm lọc các booking đang còn hiệu lực (chưa check out và chưa hoàn thành)
+  const filteredBookings = filterCurrentBookings
+    ? bookingHistory.filter(
+        (booking) =>
+          new Date(booking.checkOutDate) > new Date() &&
+          booking.paymentStatus !== "Done"
+      )
+    : bookingHistory;
+
   // Cấu hình các cột của bảng
   const columns = [
     {
@@ -102,6 +113,8 @@ const BookingHistory = ({
       filters: [
         { text: "Đã thanh toán", value: "Complete" },
         { text: "Chưa thanh toán", value: "Pending" },
+        { text: "Nhận phòng", value: "CheckIn" },
+        { text: "Hoàn thành", value: "Done" },
       ],
       render: (status) => (
         <span
@@ -120,15 +133,21 @@ const BookingHistory = ({
     <div className="relative mx-auto px-4">
       <h2 className="text-2xl font-ROBOTO text-black mb-4">
         <span>LỊCH SỬ ĐẶT PHÒNG</span>
+        <button
+          onClick={() => setFilterCurrentBookings(!filterCurrentBookings)}
+          className="ml-4 p-2 bg-blue-500 text-white rounded"
+        >
+          {filterCurrentBookings ? "Hiển thị tất cả" : "Phòng đang đặt"}
+        </button>
       </h2>
       <div className="overflow-x-auto">
         <Table
           columns={columns}
-          dataSource={bookingHistory}
+          dataSource={filteredBookings}
           pagination={{
             current: currentPage,
             pageSize: itemsPerPage,
-            total: bookingHistory.length,
+            total: filteredBookings.length,
             onChange: onPageChange,
           }}
           rowKey="id"
