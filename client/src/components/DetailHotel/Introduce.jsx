@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import './Introduce.css'; // Đảm bảo đã nhập tệp CSS của bạn
 
 const Introduce = () => {
   const { hotelId } = useParams(); // Nhận hotelId từ URL
@@ -36,14 +37,14 @@ const Introduce = () => {
   ];
 
   return (
-    <div className="p-4 bg-white mb-5"> {/* Thêm margin bottom cho toàn bộ phần giới thiệu */}
+    <div className="accordion-container">
       {accordionData.map((item, index) => (
-        <div key={index} className="mb-4 border-b border-black"> {/* Thêm border màu đen */}
+        <div key={index} className="accordion-item">
           <button
             onClick={toggleAccordion}
-            className="flex justify-between items-center w-full p-2 text-left bg-white rounded-md focus:outline-none"
+            className={`accordion-button ${isOpen ? 'active' : ''}`}
           >
-            <span className="font-semibold text-lg text-black">{item.question}</span>
+            <span>{item.question}</span>
             <svg
               className={`w-6 h-6 transform transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
               xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +60,7 @@ const Introduce = () => {
             </svg>
           </button>
           {isOpen && (
-            <div className="p-2">
+            <div className="accordion-content">
               {item.answer}
             </div>
           )}
