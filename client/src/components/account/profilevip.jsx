@@ -9,8 +9,8 @@ import EditProfileDrawer from './EditProfileDrawer'; // Import EditProfileDrawer
 import ChangePasswordDrawer from './ChangePasswordDrawer'; // Import ChangePasswordDrawer
 import LoadingModal from './LoadingModal'; // Import LoadingModal
 import './Profilevip.css'; // Đảm bảo tạo file CSS và nhập vào
-
-
+import { CheckCircle, XCircle } from 'lucide-react'; 
+import { Tooltip } from '@mui/material';
 const ProfileVip = () => {
     const [user, setUser] = useState(null);
     const [editVisible, setEditVisible] = useState(false);
@@ -196,52 +196,62 @@ const ProfileVip = () => {
 
             <section className="relative py-16 bg-gray-100">
             <div className="container mx-auto px-4">
-    <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-5 shadow-xl rounded-lg -mt-60">
-        <div className="flex flex-wrap justify-between items-center px-6 py-4">
-            <div className='flex items-center'>
-            <div className="avatar-container flex items-center">
-                <div className="relative p-1 bg-white rounded-full shadow-lg transition-all duration-300 hover:shadow-2xl">
-                    <img
-                        alt="Avatar"
-                        src={avatarUrl || (user && user.avatar) ? user.avatar : 'https://res.cloudinary.com/dackig67m/image/upload/v1730489645/5db7d294a77fbe0fbfca4eb233afc01b_vt0x30.jpg'}
-                        className="rounded-full h-32 w-32 object-cover align-middle border-none max-w-full"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-                        <UploadOutlined onClick={() => setShowCropper(true)} style={{ fontSize: '24px', color: 'white', opacity: 0.8 }} />
-                    </div>
+            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-5 shadow-xl rounded-lg -mt-60">
+            <div className="flex flex-wrap justify-between items-center px-6 py-4">
+    <div className='flex items-center'>
+        <div className="avatar-container flex items-center">
+            <div className="relative p-1 bg-white rounded-full shadow-lg transition-all duration-300 hover:shadow-2xl">
+                <img
+                    alt="Avatar"
+                    src={avatarUrl || user?.avatar || 'https://res.cloudinary.com/dackig67m/image/upload/v1730489645/5db7d294a77fbe0fbfca4eb233afc01b_vt0x30.jpg'}
+                    className="rounded-full h-32 w-32 object-cover align-middle border-none max-w-full"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                    <UploadOutlined onClick={() => setShowCropper(true)} style={{ fontSize: '24px', color: 'white', opacity: 0.8 }} />
                 </div>
             </div>
-            <div className="user-info text-left ml-4">
-                <h3 className="text-2xl font-semibold leading-normal mb-2 text-black">
-                    {user ? user.name : 'Tải thông tin...'}
-                </h3>
-                <p className="text-gray-600">{user ? user.email : 'Đang tải email...'}</p>
-            </div>
-            </div>
-            <div className="edit-button text-right">
-                <Button
-                    className="custom-button"
-                    type="primary"
-                    onClick={() => setEditVisible(true)}
-                >
-                    Chỉnh sửa hồ sơ
-                </Button>
+        </div>
+        <div className="user-info text-left ml-4">
+            <h3 className="text-2xl font-semibold leading-normal mb-2 text-black">
+                {user ? user.name : 'Tải thông tin...'}
+            </h3>
+            <div className="email-status flex items-center">
+                <p className="text-gray-600 mr-2">{user ? user.email : 'Đang tải email...'}</p>
+                
+                {user?.isVerified ? (
+                    <Tooltip title="Đã xác nhận" placement="top">
+                        <CheckCircle className="text-green-500 cursor-pointer" size={18} />
+                    </Tooltip>
+                ) : (
+                    <Tooltip title="Chưa xác nhận" placement="top">
+                        <XCircle className="text-red-500 cursor-pointer" size={18} />
+                    </Tooltip>
+                )}
             </div>
         </div>
     </div>
+    <div className="edit-button text-right">
+        <Button
+            className="custom-button"
+            type="primary"
+            onClick={() => setEditVisible(true)}
+        >
+            Chỉnh sửa hồ sơ
+        </Button>
+    </div>
 </div>
-
+        </div>
+    </div>
             </section>
-
-
             {/* Sử dụng EditProfileDrawer */}
             <EditProfileDrawer
                 visible={editVisible}
                 onClose={() => setEditVisible(false)}
-                user={user}
+                user={user}  // Truyền user vào
                 onEditSubmit={handleEditSubmit}
                 onPasswordChange={() => setChangePasswordVisible(true)}
             />
+
 
              {/* Sử dụng ChangePasswordDrawer */}
              <ChangePasswordDrawer
