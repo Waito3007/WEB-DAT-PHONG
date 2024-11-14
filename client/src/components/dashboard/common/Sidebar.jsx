@@ -39,7 +39,7 @@ const SIDEBAR_ITEMS = [
 		icon: ShoppingCart,
 		color: "#F59E0B",
 		href: "/orders",
-		roles: ["Admin", "HotelManager"], 
+		roles: ["HotelManager"], 
 	},
 	{
 		name: "Analytics",

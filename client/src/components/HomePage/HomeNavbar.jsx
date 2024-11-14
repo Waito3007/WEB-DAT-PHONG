@@ -109,7 +109,10 @@ const HomeNavbar = () => {
       <div className="navbar-links hidden md:flex space-x-6">
         <span className="cursor-pointer" onClick={handleHome}>Trang chủ</span>
         <span className="cursor-pointer" onClick={() => navigate("/searchpage")}>Đặt Phòng</span>
-        <span className="cursor-pointer" onClick={() => navigate("/")}>Liên hệ</span>
+        <a href="https://www.facebook.com/waito.sv">
+        <span className="cursor-pointer">Liên hệ</span>
+        </a>
+        
       </div>
 
       {/* Mobile Menu Icon */}
