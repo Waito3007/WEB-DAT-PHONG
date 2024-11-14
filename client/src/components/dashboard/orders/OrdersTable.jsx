@@ -13,9 +13,12 @@ const OrderTable = () => {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedHotel, setSelectedHotel] = useState(""); // Filter by Hotel
+  const [selectedRoomType, setSelectedRoomType] = useState(""); // Filter by Room Type
+  const [selectedPaymentStatus, setSelectedPaymentStatus] = useState(""); // Filter by Payment Status
   // Phân trang
   const [currentPage, setCurrentPage] = useState(1);
-  const [bookingsPerPage] = useState(4); // Số lượng booking mỗi trang
+  const [bookingsPerPage] = useState(15); // Số lượng booking mỗi trang
   const [filteredBookings, setFilteredBookings] = useState([]);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -71,6 +74,74 @@ const OrderTable = () => {
   const handleDeleteCancel = () => {
     setIsDeleteModalVisible(false);
     setSelectedBooking(null);
+  };
+
+  // Filter unique hotel names
+  const uniqueHotels = Array.from(
+    new Set(data.map((booking) => booking.room.hotel.name))
+  );
+
+  // Filter unique room types
+  const uniqueRoomTypes = Array.from(
+    new Set(data.map((booking) => booking.room.type))
+  );
+
+  // Handle Hotel Filter
+  const handleHotelFilter = (e) => {
+    setSelectedHotel(e.target.value);
+    filterBookings(
+      searchTerm,
+      e.target.value,
+      selectedRoomType,
+      selectedPaymentStatus
+    );
+  };
+
+  // Handle Room Type Filter
+  const handleRoomTypeFilter = (e) => {
+    setSelectedRoomType(e.target.value);
+    filterBookings(
+      searchTerm,
+      selectedHotel,
+      e.target.value,
+      selectedPaymentStatus
+    );
+  };
+
+  // Handle Payment Status Filter
+  const handlePaymentStatusFilter = (e) => {
+    setSelectedPaymentStatus(e.target.value);
+    filterBookings(searchTerm, selectedHotel, selectedRoomType, e.target.value);
+  };
+
+  // Filter Bookings based on search and selected filters
+  const filterBookings = (term, hotel, roomType, paymentStatus) => {
+    const filtered = data.filter((booking) => {
+      const matchesHotel = hotel
+        ? booking.room.hotel.name.toLowerCase().includes(hotel.toLowerCase())
+        : true;
+      const matchesRoomType = roomType
+        ? booking.room.type.toLowerCase().includes(roomType.toLowerCase())
+        : true;
+      const matchesStatus = paymentStatus
+        ? booking.paymentStatus
+            .toLowerCase()
+            .includes(paymentStatus.toLowerCase())
+        : true;
+      const matchesSearch =
+        booking.user.name.toLowerCase().includes(term) ||
+        booking.user.email.toLowerCase().includes(term) ||
+        booking.orderId.toLowerCase().includes(term) ||
+        booking.room.hotel.name.toLowerCase().includes(term) ||
+        booking.room.type.toLowerCase().includes(term) ||
+        new Date(booking.bookingDate).toLocaleDateString().includes(term) ||
+        getPaymentStatusText(booking.paymentStatus)
+          .toLowerCase()
+          .includes(term);
+
+      return matchesHotel && matchesRoomType && matchesStatus && matchesSearch;
+    });
+    setFilteredBookings(filtered);
   };
   const getPaymentStatusText = (status) => {
     switch (status) {
@@ -171,7 +242,9 @@ const OrderTable = () => {
       <div className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8">
         <div className="flex justify-between items-center mb-6">
           <div className="flex-grow">
-            <h2 className="text-xl font-semibold text-gray-100">Đặt phòng</h2>
+            <h2 className="text-xl font-semibold text-gray-100">
+              Quản Lý Đặt Phòng
+            </h2>
           </div>
 
           <div className="relative">
@@ -187,6 +260,45 @@ const OrderTable = () => {
               size={18}
             />
           </div>
+        </div>
+        <div className="flex space-x-4 mb-6">
+          <select
+            value={selectedHotel}
+            onChange={handleHotelFilter}
+            className="text-white bg-gray-700 rounded-lg py-2 px-4"
+          >
+            <option value="">Tất cả khách sạn</option>
+            {uniqueHotels.map((hotelName, index) => (
+              <option key={index} value={hotelName}>
+                {hotelName}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={selectedRoomType}
+            onChange={handleRoomTypeFilter}
+            className="text-white bg-gray-700 rounded-lg py-2 px-4"
+          >
+            <option value="">Tất cả loại phòng</option>
+            {uniqueRoomTypes.map((roomType, index) => (
+              <option key={index} value={roomType}>
+                {roomType}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={selectedPaymentStatus}
+            onChange={handlePaymentStatusFilter}
+            className="text-white bg-gray-700 rounded-lg py-2 px-4"
+          >
+            <option value="">Trạng thái</option>
+            <option value="Complete">Đã thanh toán</option>
+            <option value="Pending">Chưa thanh toán</option>
+            <option value="CheckIn">Đã nhận phòng</option>
+            <option value="Done">Đã hoàn thành</option>
+          </select>
         </div>
         <table className="min-w-full table-auto text-white">
           <thead>
@@ -207,7 +319,7 @@ const OrderTable = () => {
                 Thông tin
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Phone
+                Số điện thoại
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Trạng thái
@@ -230,7 +342,15 @@ const OrderTable = () => {
                   {booking.room.type}
                 </td>
                 <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-300">
-                  {new Date(booking.bookingDate).toLocaleString()}
+                  <span className="text-lg font-semibold text-white tracking-wide">
+                    {new Date(booking.bookingDate).toLocaleDateString()}
+                  </span>
+                  <span className="block text-xs text-gray-400 font-light tracking-wider">
+                    {new Date(booking.bookingDate).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
                 </td>
                 <td className="px-4 py-2 text-slate-400">
                   <div className="text-xs font-semibold">
@@ -254,15 +374,22 @@ const OrderTable = () => {
                       setSelectedBooking(booking);
                       setIsStatusModalVisible(true);
                     }}
-                    className={`whitespace-nowrap text-sm cursor-pointer ${
+                    className={`whitespace-nowrap text-sm cursor-pointer transition-all duration-300 ease-in-out ${
                       booking.paymentStatus === "Complete"
-                        ? "text-green-600"
-                        : "text-red-600 "
+                        ? "text-teal-400 hover:text-teal-500 hover:scale-105 hover:shadow-lg hover:brightness-110"
+                        : booking.paymentStatus === "Pending"
+                        ? "text-yellow-400 hover:text-yellow-500 hover:scale-105 hover:shadow-lg hover:brightness-110"
+                        : booking.paymentStatus === "CheckIn"
+                        ? "text-blue-400 hover:text-blue-500 hover:scale-105 hover:shadow-lg hover:brightness-110"
+                        : booking.paymentStatus === "Done"
+                        ? "text-purple-400 hover:text-purple-500 hover:scale-105 hover:shadow-lg hover:brightness-110"
+                        : "text-gray-500 hover:text-gray-600 hover:scale-105 hover:shadow-lg hover:brightness-110"
                     }`}
                   >
                     {getPaymentStatusText(booking.paymentStatus)}
                   </span>
                 </td>
+
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                   {/* Tooltip cho nút Xem chi tiết */}
                   <button
