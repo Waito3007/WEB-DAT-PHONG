@@ -78,7 +78,7 @@ const HomeNavbar = () => {
     } else {
       // Nếu không có token, điều hướng về trang đăng nhập hoặc hiển thị thông báo lỗi
       console.error("Không tìm thấy token, vui lòng đăng nhập.");
-      navigate("/login"); // Hoặc hiển thị thông báo lỗi tùy theo yêu cầu
+      navigate("./login"); // Hoặc hiển thị thông báo lỗi tùy theo yêu cầu
     }
   };
 
@@ -133,7 +133,7 @@ const HomeNavbar = () => {
                     <Calendar className="w-4 h-4 mr-2" /> Đặt phòng của bạn
                   </li>
                   {user.role === "Admin" || user.role === "HotelManager" ? (
-                    <a href="./overview" className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
+                    <a href="/overview" className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer"onClick={handleProfile}>
                       <Hotel className="w-4 h-4 mr-2" /> Quản lý khách sạn
                     </a>
                   ) : null}
