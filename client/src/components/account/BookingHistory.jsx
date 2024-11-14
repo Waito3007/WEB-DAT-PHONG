@@ -116,16 +116,43 @@ const BookingHistory = ({
         { text: "Nhận phòng", value: "CheckIn" },
         { text: "Hoàn thành", value: "Done" },
       ],
-      render: (status) => (
-        <span
-          style={{
-            color: status === "Complete" ? "#38a169" : "#e53e3e",
-            fontWeight: "bold",
-          }}
-        >
-          {status === "Complete" ? "Đã thanh toán" : "Chưa thanh toán"}
-        </span>
-      ),
+      render: (status) => {
+        let color = "";
+        let text = "";
+
+        switch (status) {
+          case "Complete":
+            color = "#38a169"; // Xanh lá cây cho trạng thái Đã thanh toán
+            text = "Đã thanh toán";
+            break;
+          case "Pending":
+            color = "#e53e3e"; // Đỏ cho trạng thái Chưa thanh toán
+            text = "Chưa thanh toán";
+            break;
+          case "CheckIn":
+            color = "#3182ce"; // Xanh dương cho trạng thái Nhận phòng
+            text = "Nhận phòng";
+            break;
+          case "Done":
+            color = "#805ad5"; // Tím cho trạng thái Hoàn thành
+            text = "Hoàn thành";
+            break;
+          default:
+            color = "#718096"; // Màu xám cho trạng thái không xác định
+            text = "Không xác định";
+        }
+
+        return (
+          <span
+            style={{
+              color: color,
+              fontWeight: "bold",
+            }}
+          >
+            {text}
+          </span>
+        );
+      },
     },
   ];
 
