@@ -1,0 +1,115 @@
+/* Thêm các animation cho Accordion */
+@keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes rotateIcon {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(180deg);
+    }
+  }
+  
+  .accordion-container {
+    padding: 20px;
+    background-color: #ffffff;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .accordion-item {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .accordion-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 16px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    animation: fadeIn 0.5s ease-out; /* Thêm hiệu ứng fade-in cho button */
+  }
+  
+  .accordion-button:hover {
+    background-color: #e1e1e1;
+  }
+  
+  .accordion-button svg {
+    transition: transform 0.3s ease;
+    animation: rotateIcon 0.5s ease-out; /* Thêm animation xoay cho icon */
+  }
+  
+  .accordion-content {
+    padding: 16px;
+    background-color: #fafafa;
+    font-size: 16px;
+    color: #555;
+    border-radius: 8px;
+    margin-top: 10px;
+    animation: fadeIn 0.5s ease-out; /* Thêm hiệu ứng fade-in cho nội dung */
+  }
+  
+  .accordion-button.active svg {
+    transform: rotate(180deg);
+  }
+  
+  .accordion-content p {
+    margin-bottom: 0;
+    font-size: 16px;
+    color: #444;
+  }
+  
+  /* Responsive design for mobile and tablet devices */
+  @media (max-width: 768px) {
+    .accordion-container {
+      padding: 15px;
+    }
+  
+    .accordion-button {
+      font-size: 16px; /* Giảm kích thước font cho màn hình nhỏ */
+      padding: 14px;
+    }
+  
+    .accordion-content {
+      font-size: 14px;
+    }
+  
+    .accordion-item {
+      margin-bottom: 15px; /* Điều chỉnh margin giữa các mục */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .accordion-button {
+      font-size: 14px; /* Giảm thêm kích thước font cho điện thoại nhỏ */
+      padding: 12px;
+    }
+  
+    .accordion-content {
+      font-size: 12px; /* Font size nhỏ hơn cho điện thoại */
+    }
+  
+    .accordion-container {
+      padding: 10px;
+    }
+  }
+  

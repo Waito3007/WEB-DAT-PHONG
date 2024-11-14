@@ -106,7 +106,7 @@ router.get("/booking/admin", auth, async (req, res) => {
       .json({ message: "Có lỗi xảy ra khi lấy danh sách đặt phòng" });
   }
 });
-// API để lấy danh sách đặt phòng theo userId từ token
+// API để lấy danh sách đặt phòng
 router.get("/booking/manager", auth, async (req, res) => {
   try {
     const userId = req.userId;
@@ -246,5 +246,63 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+// API để lấy tổng số đơn, tổng số Pending, tổng số Done và tổng tiền
+router.get("/booking/total", auth, async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    // Tìm các khách sạn mà người dùng sở hữu
+    const hotels = await Hotel.find({ manager: userId }).select("_id rooms");
+
+    if (!hotels || hotels.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy khách sạn nào mà bạn sở hữu." });
+    }
+
+    // Lấy tất cả roomIds từ các khách sạn
+    const roomIds = hotels.flatMap((hotel) => hotel.rooms);
+
+    // Tìm các booking có phòng thuộc các khách sạn mà người dùng sở hữu
+    const bookings = await Booking.find({ room: { $in: roomIds } })
+      .select("paymentStatus priceBooking");
+
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy đặt phòng nào." });
+    }
+
+    // Tính tổng số đơn
+    const totalBookings = bookings.length;
+
+    // Tính tổng số đơn Pending và Done
+    const pendingBookings = bookings.filter(
+      (booking) => booking.paymentStatus === "Pending"
+    ).length;
+
+    const doneBookings = bookings.filter(
+      (booking) => booking.paymentStatus === "Done"
+    ).length;
+
+    // Tính tổng tiền
+    const totalAmount = bookings.reduce((sum, booking) => {
+      return sum + booking.priceBooking;
+    }, 0);
+
+    // Trả về kết quả tổng quan
+    res.json({
+      totalBookings,
+      pendingBookings,
+      doneBookings,
+      totalAmount,
+    });
+  } catch (error) {
+    console.error("Lỗi khi lấy tổng thông tin đặt phòng:", error);
+    res
+      .status(500)
+      .json({ message: "Có lỗi xảy ra khi lấy tổng thông tin đặt phòng." });
+  }
+});
+
 
 module.exports = router;
