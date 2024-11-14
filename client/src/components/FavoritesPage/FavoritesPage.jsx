@@ -8,7 +8,7 @@ export default function FavoritesPage() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); 
-
+//ljigtsaretyguhjn
   useEffect(() => {
     // Lấy dữ liệu khách sạn từ API
     axios.get('http://localhost:5000/api/searchhotel/Search')
