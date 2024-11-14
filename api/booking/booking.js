@@ -106,7 +106,7 @@ router.get("/booking/admin", auth, async (req, res) => {
       .json({ message: "Có lỗi xảy ra khi lấy danh sách đặt phòng" });
   }
 });
-// API để lấy danh sách đặt phòng theo userId từ token
+// API để lấy danh sách đặt phòng
 router.get("/booking/manager", auth, async (req, res) => {
   try {
     const userId = req.userId;
@@ -246,5 +246,7 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
 
 module.exports = router;
