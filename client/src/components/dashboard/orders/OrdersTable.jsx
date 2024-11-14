@@ -31,6 +31,17 @@ const OrderTable = () => {
       });
   }, []);
 
+  const loadBookings = () => {
+    axios
+      .get("/api/booking/booking/manager")
+      .then((response) => {
+        setFilteredBookings(response.data); // Cập nhật lại filteredBookings với dữ liệu mới
+      })
+      .catch((error) => {
+        console.error("Error fetching updated data:", error);
+      });
+  };
+
   const showModal = (booking) => {
     setSelectedBooking(booking);
     setIsModalVisible(true);
@@ -42,6 +53,25 @@ const OrderTable = () => {
     setIsStatusModalVisible(false);
   };
 
+  const showModalEdit = (booking) => {
+    setSelectedBooking(booking);
+    setIsEditModalVisible(true);
+  };
+
+  const handleEditCancel = () => {
+    setIsEditModalVisible(false);
+    setSelectedBooking(null);
+  };
+
+  const showModalDelete = (booking) => {
+    setSelectedBooking(booking);
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalVisible(false);
+    setSelectedBooking(null);
+  };
   const getPaymentStatusText = (status) => {
     switch (status) {
       case "Complete":
@@ -94,8 +124,6 @@ const OrderTable = () => {
         console.error("Error updating status:", error);
       });
   };
-  //Handle
-
   //
   // Handle tìm kiếm người dùng
   const handleSearch = (e) => {
@@ -248,7 +276,10 @@ const OrderTable = () => {
                   </button>
 
                   {/* Tooltip cho nút Sửa */}
-                  <button className="text-yellow-500 hover:text-yellow-700 mr-2 relative group">
+                  <button
+                    onClick={() => showModalEdit(booking)}
+                    className="text-yellow-500 hover:text-yellow-700 mr-2 relative group"
+                  >
                     <Edit size={18} />
                     <span className="tooltip hidden group-hover:block absolute bg-gray-700 text-white text-xs rounded px-2 py-1 bottom-full mb-1">
                       Sửa thông tin
@@ -256,7 +287,10 @@ const OrderTable = () => {
                   </button>
 
                   {/* Tooltip cho nút Xóa */}
-                  <button className="text-red-500 hover:text-red-700 relative group">
+                  <button
+                    onClick={() => showModalDelete(booking)}
+                    className="text-red-500 hover:text-red-700 relative group"
+                  >
                     <Trash2 size={18} />
                     <span className="tooltip hidden group-hover:block absolute bg-gray-700 text-white text-xs rounded px-2 py-1 bottom-full mb-1">
                       Xóa
@@ -302,6 +336,22 @@ const OrderTable = () => {
           onClose={handleCancel}
           onUpdateStatus={handleUpdateStatus}
           getStatusText={getPaymentStatusText}
+        />
+      )}
+
+      <EditBookingModal
+        visible={isEditModalVisible}
+        booking={selectedBooking}
+        onClose={handleEditCancel}
+        onUpdate={loadBookings}
+      />
+
+      {selectedBooking && (
+        <DeleteBookingModal
+          isVisible={isDeleteModalVisible}
+          onCancel={handleDeleteCancel}
+          booking={selectedBooking}
+          onDelete={loadBookings} // Update bookings after deletion
         />
       )}
     </motion.div>
