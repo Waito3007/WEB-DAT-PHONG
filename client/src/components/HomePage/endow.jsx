@@ -33,7 +33,16 @@ const Endow = () => {
               className="bg-white shadow-lg rounded-lg overflow-hidden transition-all hover:scale-105 hover:shadow-xl"
               key={data.title}
             >
-              <div className="info-boxes-img-container p-6">
+              <div className="info-boxes-img-container p-6"> 
+
+
+
+
+
+
+
+
+                
                 <img className="w-full h-40 object-contain rounded-lg " src={data.image} alt={data.title} />
               </div>
               <div className="p-6">
