@@ -2,7 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Favorite = require('../../models/Favorite');
 const Hotel = require('../../models/Hotel');  // Model Hotel
+const Room = require('../../models/Room');  // Model Room
 const auth = require('../../middleware/auth'); // Middleware xác thực
+
 const router = express.Router();
 
 // Thêm khách sạn vào danh sách yêu thích
@@ -52,6 +54,45 @@ router.delete('/:hotelId', auth, async (req, res) => {
     res.status(200).json({ message: 'Hủy yêu thích thành công' });
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error });
+  }
+});
+
+router.get('/', auth, async (req, res) => {
+  try {
+    const userId = req.userId; // Lấy userId từ middleware xác thực
+
+    // Tìm tất cả các yêu thích của người dùng hiện tại
+    const favorites = await Favorite.find({ userId }).populate('hotelId');
+
+    // Xử lý để lấy thông tin khách sạn và giá phòng
+    const favoriteHotels = await Promise.all(
+      favorites.map(async (favorite) => {
+        const hotel = await Hotel.findById(favorite.hotelId).lean();        
+        // Tìm giá phòng thấp nhất và cao nhất của khách sạn
+        const prices = await Room.find({ hotel: hotel._id })
+          .select('price')
+          .lean();
+          
+        const roomPrices = prices.map(room => room.price);
+        const minPrice = Math.min(...roomPrices);
+        const maxPrice = Math.max(...roomPrices);
+
+        return {
+          hotelId: hotel._id,
+          name: hotel.name,
+          location: hotel.location,
+          imagehotel: hotel.imagehotel,
+          stars: hotel.stars,
+          minPrice,
+          maxPrice,
+        };
+      })
+    );
+
+    res.json(favoriteHotels);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Lỗi máy chủ' });
   }
 });
 

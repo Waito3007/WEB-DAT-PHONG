@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Modal, Button, Image } from 'antd';
-
+import './Introduce.css';
 const HotelImage = () => {
   const { hotelId } = useParams();
   const [images, setImages] = useState({ hotelImages: [], roomImages: [] });
