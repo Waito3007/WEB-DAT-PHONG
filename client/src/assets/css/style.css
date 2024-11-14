@@ -925,3 +925,23 @@ button:hover {
     margin-top: 1rem !important;
   }
 }
+
+.check-in {
+  background-color: rgba(34, 197, 94, 0.1); /* Màu nền nhẹ nhàng cho Check-In */
+  border-left: 4px solid #22c55e; /* Đường viền bên trái màu xanh lá cho Check-In */
+  padding-left: 8px; /* Thêm một chút padding cho đẹp */
+  margin-bottom: 4px; /* Khoảng cách giữa Check-In và Check-Out */
+  border-radius: 4px; /* Bo góc nhẹ */
+}
+
+.check-out {
+  background-color: rgba(
+    248,
+    113,
+    113,
+    0.1
+  ); /* Màu nền nhẹ nhàng cho Check-Out */
+  border-left: 4px solid #f87171; /* Đường viền bên trái màu đỏ cho Check-Out */
+  padding-left: 8px;
+  border-radius: 4px;
+}

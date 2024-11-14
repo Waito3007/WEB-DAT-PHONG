@@ -163,14 +163,30 @@ const OrderTable = () => {
         <table className="min-w-full table-auto text-white">
           <thead>
             <tr className="text-left">
-              <th className="px-4 py-2">Khách sạn</th>
-              <th className="px-4 py-2">Loại Phòng</th>
-              <th className="px-4 py-2">Ngày đặt</th>
-              <th className="px-4 py-2">Check-In / Check-Out</th>
-              <th className="px-4 py-2">Thông tin</th>
-              <th className="px-4 py-2">Phone</th>
-              <th className="px-4 py-2">Trạng thái</th>
-              <th className="px-4 py-2">Hành động</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Khách sạn
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Loại Phòng
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Ngày đặt
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Thời gian
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Thông tin
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Phone
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Trạng thái
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Hành động
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -179,20 +195,27 @@ const OrderTable = () => {
                 key={booking._id}
                 className="border-b border-gray-700 hover:bg-gray-800 transition duration-150"
               >
-                <td className="px-4 py-2">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">
                   <strong>{booking.room.hotel.name}</strong>
                 </td>
-                <td className="px-4 py-2 text-slate-400">
+                <td className="px-6 py-4 whitespace-nowrap text-sm  text-slate-400">
                   {booking.room.type}
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-300">
                   {new Date(booking.bookingDate).toLocaleString()}
                 </td>
                 <td className="px-4 py-2 text-slate-400">
-                  <p>{new Date(booking.checkInDate).toLocaleDateString()}</p>
-                  <p>{new Date(booking.checkOutDate).toLocaleDateString()}</p>
+                  <div className="text-xs font-semibold">
+                    <p className="check-in text-gray-300">{`Nhận phòng: ${new Date(
+                      booking.checkInDate
+                    ).toLocaleDateString()}`}</p>
+                    <p className="check-out text-gray-300">{`Trả phòng: ${new Date(
+                      booking.checkOutDate
+                    ).toLocaleDateString()}`}</p>
+                  </div>
                 </td>
-                <td className="px-4 py-2">
+
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">
                   <p>{booking.user.name || "No name"}</p>
                   {/* <p>{booking.user.email || "No email"}</p> */}
                 </td>
@@ -203,7 +226,7 @@ const OrderTable = () => {
                       setSelectedBooking(booking);
                       setIsStatusModalVisible(true);
                     }}
-                    className={` text-sm cursor-pointer ${
+                    className={`whitespace-nowrap text-sm cursor-pointer ${
                       booking.paymentStatus === "Complete"
                         ? "text-green-600"
                         : "text-red-600 "
@@ -212,22 +235,32 @@ const OrderTable = () => {
                     {getPaymentStatusText(booking.paymentStatus)}
                   </span>
                 </td>
-                <td className="">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                  {/* Tooltip cho nút Xem chi tiết */}
                   <button
                     onClick={() => showModal(booking)}
-                    className="text-blue-500 text-left hover:underline flex items-center gap-1 group"
+                    className="text-blue-500 hover:text-blue-700 mr-2 relative group"
                   >
                     <Eye size={18} />
-                    <span className="tooltip hidden group-hover:block absolute bg-gray-700 text-white text-xs rounded px-2 py-1">
+                    <span className="tooltip hidden group-hover:block absolute bg-gray-700 text-white text-xs rounded px-2 py-1 bottom-full mb-1">
                       Xem chi tiết
                     </span>
                   </button>
 
-                  <button className="text-yellow-500 hover:text-yellow-700 mr-2">
+                  {/* Tooltip cho nút Sửa */}
+                  <button className="text-yellow-500 hover:text-yellow-700 mr-2 relative group">
                     <Edit size={18} />
+                    <span className="tooltip hidden group-hover:block absolute bg-gray-700 text-white text-xs rounded px-2 py-1 bottom-full mb-1">
+                      Sửa thông tin
+                    </span>
                   </button>
-                  <button className="text-red-500 hover:text-red-700">
+
+                  {/* Tooltip cho nút Xóa */}
+                  <button className="text-red-500 hover:text-red-700 relative group">
                     <Trash2 size={18} />
+                    <span className="tooltip hidden group-hover:block absolute bg-gray-700 text-white text-xs rounded px-2 py-1 bottom-full mb-1">
+                      Xóa
+                    </span>
                   </button>
                 </td>
               </tr>
