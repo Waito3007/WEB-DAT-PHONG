@@ -82,7 +82,7 @@ const BookingHistory = ({
     {
       title: (
         <div className="flex items-center justify-center space-x-2">
-          <span className="font-semibold text-gray-700">Ngày Check In</span>
+          <span className="font-semibold text-gray-700">Ngày Nhận Phòng</span>
         </div>
       ),
       dataIndex: "checkInDate",
@@ -93,7 +93,7 @@ const BookingHistory = ({
     {
       title: (
         <div className="flex items-center justify-center space-x-2">
-          <span className="font-semibold text-gray-700">Ngày Check Out</span>
+          <span className="font-semibold text-gray-700">Ngày Trả Phòng</span>
         </div>
       ),
       dataIndex: "checkOutDate",
@@ -158,15 +158,17 @@ const BookingHistory = ({
 
   return (
     <div className="relative mx-auto px-4">
-      <h2 className="text-2xl font-ROBOTO text-black mb-4">
+      <h2 className="text-2xl font-ROBOTO text-black mb-2">
         <span>LỊCH SỬ ĐẶT PHÒNG</span>
+      </h2>
+      <div className="mb-4">
         <button
           onClick={() => setFilterCurrentBookings(!filterCurrentBookings)}
-          className="ml-4 p-2 bg-blue-500 text-white rounded"
+          className="px-4 py-2 text-white bg-gray-800 rounded-md hover:bg-brown-700 focus:outline-none focus:ring-2 focus:ring-brown-500 transition-all duration-200"
         >
           {filterCurrentBookings ? "Hiển thị tất cả" : "Phòng đang đặt"}
         </button>
-      </h2>
+      </div>
       <div className="overflow-x-auto">
         <Table
           columns={columns}
