@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Heart, Calendar, Hotel, LogOut, Menu } from "lucide-react";
 import FavoriteRoomsDrawer from "../FavoritesPage/FavoritesPage"; // Import your drawer component
-
+import BookingCard from "../BookingStatus/BookingCard";
 const HomeNavbar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-
+  const [drawerbookingOpen, setDrawerbookingOpen] = useState(false);
   // Functions to open and close the drawer
   const handleOpenDrawer = () => {
     setDrawerOpen(true);
@@ -17,7 +17,13 @@ const HomeNavbar = () => {
   const handleCloseDrawer = () => {
     setDrawerOpen(false);
   };
-
+  //
+  const handleOpenBookingDrawer = () => {
+    setDrawerbookingOpen(true);
+  };
+  const handleCloseBookingDrawer = () => {
+    setDrawerbookingOpen(false);
+  };
   const fetchUser = async () => {
     try {
       const response = await fetch('/api/profile/me', {
@@ -109,7 +115,10 @@ const HomeNavbar = () => {
       <div className="navbar-links hidden md:flex space-x-6">
         <span className="cursor-pointer" onClick={handleHome}>Trang chủ</span>
         <span className="cursor-pointer" onClick={() => navigate("/searchpage")}>Đặt Phòng</span>
-        <span className="cursor-pointer" onClick={() => navigate("/")}>Liên hệ</span>
+        <a href="https://www.facebook.com/waito.sv">
+        <span className="cursor-pointer">Liên hệ</span>
+        </a>
+        
       </div>
 
       {/* Mobile Menu Icon */}
@@ -119,53 +128,56 @@ const HomeNavbar = () => {
 
       {/* User Controls */}
       <div className="navbar-buttons hidden md:flex items-center relative">
-        {user ? (
-          <div className="flex items-center space-x-4">
-            {/* Nút Khách sạn yêu thích */}
-            <div className="favorite-button cursor-pointer" onClick={handleOpenDrawer}>
-              <Heart className="w-6 h-6 text-white hover:text-blue-700" />              
-            </div>
-            <FavoriteRoomsDrawer open={drawerOpen} onClose={handleCloseDrawer} />
-            {/* Avatar người dùng và menu thả xuống */}
-            <div className="user-avatar cursor-pointer" onClick={toggleMenu}>
-              <img 
-                src={user.avatar || "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3485.jpg"} 
-                alt="Avatar" 
-                className="w-10 h-10 rounded-full" 
-              />
-              {menuOpen && (
-                <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-md z-50">
-                  <ul className="py-2">
-                    <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer" onClick={handleProfile}>
-                      <User className="w-4 h-4 mr-2" /> Hồ sơ cá nhân
-                    </li>
-                    <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
-                      <Calendar className="w-4 h-4 mr-2" /> Đặt phòng của bạn
-                    </li>
-                    {user.role === "Admin" || user.role === "HotelManager" ? (
-                      <a href="/overview" className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
-                        <Hotel className="w-4 h-4 mr-2" /> Quản lý khách sạn
-                      </a>
-                    ) : null}
-                    <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
-                      <LogOut className="w-4 h-4 mr-2" /> Đăng xuất
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
+      {user ? (
+        <div className="flex items-center space-x-4">
+          {/* Nút Đặt phòng của bạn nằm bên trái Heart */}
+          <div className="calendar-button cursor-pointer"onClick={handleOpenBookingDrawer}>
+            <Calendar className="w-6 h-6 text-white hover:text-blue-700" />
           </div>
-        ) : (
-          <div className="inline-flex rounded-md shadow-sm" role="group">
-            <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:text-blue-700" onClick={handleLogin}>
-              Đăng nhập
-            </button>
-            <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:text-blue-700" onClick={handleSignUp}>
-              Đăng ký
-            </button>
+          <BookingCard open={drawerbookingOpen} onClose={handleCloseBookingDrawer} />
+          {/* Nút Khách sạn yêu thích */}
+          <div className="favorite-button cursor-pointer" onClick={handleOpenDrawer}>
+            <Heart className="w-6 h-6 text-white hover:text-blue-700" />
           </div>
-        )}
-      </div>
+          <FavoriteRoomsDrawer open={drawerOpen} onClose={handleCloseDrawer} />
+
+          {/* Avatar người dùng và menu thả xuống */}
+          <div className="user-avatar cursor-pointer" onClick={toggleMenu}>
+            <img 
+              src={user.avatar || "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3485.jpg"} 
+              alt="Avatar" 
+              className="w-10 h-10 rounded-full" 
+            />
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-md z-50">
+                <ul className="py-2">
+                  <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer" onClick={handleProfile}>
+                    <User className="w-4 h-4 mr-2" /> Hồ sơ cá nhân
+                  </li>
+                  {user.role === "Admin" || user.role === "HotelManager" ? (
+                    <a href="/overview" className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer">
+                      <Hotel className="w-4 h-4 mr-2" /> Quản lý khách sạn
+                    </a>
+                  ) : null}
+                  <li className="flex items-center px-4 py-2 text-black hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
+                    <LogOut className="w-4 h-4 mr-2" /> Đăng xuất
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="inline-flex rounded-md shadow-sm" role="group">
+          <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:text-blue-700" onClick={handleLogin}>
+            Đăng nhập
+          </button>
+          <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:text-blue-700" onClick={handleSignUp}>
+            Đăng ký
+          </button>
+        </div>
+      )}
+    </div>
 
 
 

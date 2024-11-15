@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Edit, Trash2, PlusCircle, Eye } from 'lucide-react';
-import { Modal, Input, Button, message, Form,Rate } from 'antd';
+import { Modal, Input, Button, message, Form,Rate, notification } from 'antd';
 import RoomListDrawer from './RoomListDrawer'; // Import component
 import EditHotelModal from './EditHotelModal';
 import AddHotelModal from './AddHotelModal'; // Import AddHotelModal
@@ -14,7 +14,7 @@ const MyHotelTable = () => {
   const [loading, setLoading] = useState(false); 
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [hotelsPerPage] = useState(5);
+  const [hotelsPerPage] = useState(15);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentHotel, setCurrentHotel] = useState(null);
   const [fileList, setFileList] = useState([]);
@@ -22,14 +22,13 @@ const MyHotelTable = () => {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [password, setPassword] = useState('');
-  const [addHotelForm] = Form.useForm(); // Form instance for Add Hotel
   const [selectedHotelRooms, setSelectedHotelRooms] = useState([]);
   const [isModalRoomVisible, setIsModalRoomVisible] = useState(false);
 
 
 
 
-
+//load dữ liệu
   const fetchHotels = useCallback(async () => {
     try {
       const response = await axios.get('/api/hotel/myhotels', { withCredentials: true });
@@ -44,7 +43,7 @@ const MyHotelTable = () => {
   }, [fetchHotels]);
   
 
-
+//hiển thị modal
   const showModal = (hotel) => {
     setCurrentHotel(hotel);
     setFileList(hotel.imagehotel.map(url => ({ uid: url, url })));
@@ -68,29 +67,37 @@ const MyHotelTable = () => {
   };
 
   
-
+//xem modal xóa khách sạn
   const showDeleteModal = (hotel) => {
     setCurrentHotel(hotel);
     setIsDeleteModalVisible(true);
   };
 
+
+  //sự kiện xóa khách sạn
   const handleDeleteConfirm = async () => {
     try {
       await axios.delete(`/api/hotel/${currentHotel._id}`, {
         withCredentials: true,
         data: { password },
       });
-      message.success('Xóa khách sạn thành công');
-      setHotels(hotels.filter(hotel => hotel._id !== currentHotel._id));
+      notification.success({
+        message: "Xóa Khách Sạn Thành Công.",
+        description: "Khách sạn đã được xóa khỏi danh sách.",
+      });
+        setHotels(hotels.filter(hotel => hotel._id !== currentHotel._id));
       fetchHotels();
     } catch (error) {
-      message.error(error.response?.data.message || 'Không thể xóa khách sạn vì lí do xác thực');
-    } finally {
+      notification.error({
+        message: "Xóa Khách Sạn Thất Bại.",
+        description: "Vui lòng thử lại sau.",
+      });    } finally {
       setIsDeleteModalVisible(false);
       setPassword('');
     }
   };
 
+  //tìm kiếm
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
@@ -105,7 +112,7 @@ const MyHotelTable = () => {
     setIsModalRoomVisible(true);
 };
 
-
+// Đóng danh sách phòng
   const handleCloseModal = () => {
     setIsModalRoomVisible(false);
     setSelectedHotelRooms([]);
@@ -134,28 +141,45 @@ const MyHotelTable = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <div className='flex justify-between items-center mb-6'>
-        <h2 className='text-xl font-semibold text-gray-100'>Danh Sách Khách Sạn</h2>
-        <div className='flex space-x-2'>
-          <div className='relative'>
-            <input
-              type='search'
-              className='bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-12 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
-              onChange={handleSearch}
-              value={searchTerm}
-              autoComplete='off' // Ngăn chặn tự động điền
-              placeholder="Tìm kiếm khách sạn..."
-            />
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-2.5 text-gray-400"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-          </div>
-          <button
-          className="text-green-500 hover:text-green-700"
-          onClick={() => setIsAddModalVisible(true)}
-        >
-          <PlusCircle size={24} />
-        </button>
-        </div>
-      </div>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
+  <h2 className="text-lg sm:text-xl font-semibold text-gray-100 text-center sm:text-left">
+    Danh Sách Khách Sạn
+  </h2>
+  <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-4 sm:space-y-0 items-center">
+    <div className="relative w-full sm:w-auto">
+      <input
+        type="search"
+        className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-12 pr-4 py-2 w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
+        onChange={handleSearch}
+        value={searchTerm}
+        autoComplete="off"
+        placeholder="Tìm kiếm khách sạn..."
+      />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="lucide lucide-search absolute left-3 top-2.5 text-gray-400"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </svg>
+    </div>
+    <button
+      className="text-green-500 hover:text-green-700 flex items-center justify-center"
+      onClick={() => setIsAddModalVisible(true)}
+    >
+      <PlusCircle size={24} />
+    </button>
+  </div>
+</div>
+
 
       <div className='overflow-x-auto'>
         <table className='min-w-full divide-y divide-gray-700'>
@@ -184,8 +208,8 @@ const MyHotelTable = () => {
                
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
                 <button onClick={() => handleViewRooms(hotel._id)} className='text-blue-500 hover:text-blue-700 mr-2'>
-    <Eye size={18} />
-</button>
+                <Eye size={18} />
+                </button>
 
                   <button onClick={() => showModal(hotel)} className='text-yellow-500 hover:text-yellow-700 mr-2'>
                     <Edit size={18} />

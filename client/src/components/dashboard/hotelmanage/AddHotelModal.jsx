@@ -1,7 +1,7 @@
 // src/components/AddHotelModal.jsx
 
 import React, { useState } from 'react';
-import { Modal, Input, Button, message, Form, Rate, Upload } from 'antd';
+import { Modal, Input, Button, notification, Form, Rate, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
@@ -37,13 +37,18 @@ const AddHotelModal = ({ visible, onCancel, onAddHotel }) => {
       });
 
       if (response.status === 201) {
-        message.success('Thêm khách sạn thành công!');
+        notification.success({
+          message: "Thêm Khách Sạn Thành Công.",
+          description: "Vui lòng thêm phòng cho khách sạn.",
+        });        
         onAddHotel(); // Gọi callback để refresh danh sách khách sạn
         onCancel(); // Đóng modal
       }
     } catch (error) {
-      const errorMsg = error.response?.data?.msg || 'Đã xảy ra lỗi khi thêm khách sạn';
-      message.error(errorMsg);
+      notification.error({
+        message: "Thêm Khách Sạn Thất Bại.",
+        description: "Vui lòng thử lại sau.",
+      });
     } finally {
       setLoading(false);
     }

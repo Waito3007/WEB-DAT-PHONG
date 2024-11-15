@@ -206,7 +206,8 @@ const provincesData = {
           "full_name": "Thành phố Cần Thơ",
           "full_name_en": "Can Tho City",
           "latitude": "10.0364634",
-          "longitude": "105.7875821"
+          "longitude": "105.7875821",
+          "image":"https://statics.vinpearl.com/can-tho-ve-dem-3_1632058245.png"
         },
         {
           "id": "04",

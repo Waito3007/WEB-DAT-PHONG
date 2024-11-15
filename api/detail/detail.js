@@ -4,7 +4,7 @@ const router = express.Router();
 const Hotel = require('../../models/Hotel');
 const Rate = require('../../models/Rate');
 const Room = require('../../models/Room'); // Import mô hình Room
-
+const auth = require("../../middleware/auth");
 // GET hotel details by ID
 router.get('/:hotelId', async (req, res) => {
   try {
@@ -104,4 +104,57 @@ router.get('/:hotelId/ratings', async (req, res) => {
     res.status(500).json({ message: 'Có lỗi xảy ra khi lấy đánh giá' });
   }
 });
+
+// Đánh giá khách sạn
+router.post('/rate', auth, async (req, res) => {
+  const { hotel, rating, comment } = req.body;
+  const userId = req.userId;
+
+  try {
+    // Kiểm tra xem người dùng đã đánh giá khách sạn này chưa
+    const existingRate = await Rate.findOne({ hotel, user: userId });
+    if (existingRate) {
+      return res.status(400).json({ message: 'Bạn đã đánh giá khách sạn này rồi!' });
+    }
+
+    // Tạo đánh giá mới
+    const newRate = new Rate({
+      hotel,
+      user: userId,
+      rating,
+      comment,
+    });
+
+    await newRate.save();
+    res.status(201).json({ message: 'Đánh giá thành công!', rate: newRate });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Có lỗi xảy ra!' });
+  }
+});
+
+// Lấy đánh giá
+router.get('/rate/:hotelId', auth, async (req, res) => {
+  const { hotelId } = req.params;
+
+  // Kiểm tra nếu khách sạn có tồn tại
+  const hotel = await Hotel.findById(hotelId);
+  if (!hotel) {
+    return res.status(404).json({ msg: 'Khách sạn không tồn tại' });
+  }
+
+  try {
+    // Lấy đánh giá của người dùng cho khách sạn này
+    const rate = await Rate.findOne({ hotel: hotelId, user: req.userId });
+    if (!rate) {
+      return res.status(404).json({ msg: 'Bạn chưa đánh giá khách sạn này' });
+    }
+
+    return res.status(200).json({ rate });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: 'Lỗi server' });
+  }
+});
+
 module.exports = router;

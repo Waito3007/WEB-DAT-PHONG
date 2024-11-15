@@ -1,0 +1,37 @@
+/* Drawer Styling */
+.MuiDrawer-paper {
+    width: 400px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.drawer-header h6 {
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
+/* TextField Styling */
+.MuiTextField-root {
+    margin-bottom: 16px;
+    border-radius: 8px;
+}
+
+/* Button Styling */
+.MuiButton-root {
+    border-radius: 8px;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.MuiButton-root:hover {
+    background-color: #0056b3;
+}

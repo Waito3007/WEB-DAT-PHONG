@@ -24,6 +24,7 @@ router.get('/Search', async (req, res) => {
         }
       }
     ]);
+
     const hotelsWithRoomDetails = await Promise.all(
       allHotels.map(async hotel => {
         const rooms = await Room.find({ hotel: hotel._id }).sort({ price: 1 });
@@ -33,11 +34,15 @@ router.get('/Search', async (req, res) => {
           amenities: room.amenities,
           description: room.description
         }));
-        const lowestRoomPrice = rooms.length > 0 ? rooms[0].price : null;
 
-        return { ...hotel, lowestRoomPrice, rooms: roomDetails };
+        // Tính giá thấp nhất và giá cao nhất
+        const lowestRoomPrice = rooms.length > 0 ? rooms[0].price : null;
+        const highestRoomPrice = rooms.length > 0 ? rooms[rooms.length - 1].price : null;
+
+        return { ...hotel, lowestRoomPrice, highestRoomPrice, rooms: roomDetails };
       })
     );
+
     if (hotelsWithRoomDetails.length === 0) {
       return res.status(404).json({ msg: 'Không có khách sạn nào' });
     }
@@ -48,6 +53,7 @@ router.get('/Search', async (req, res) => {
     res.status(500).json({ msg: 'Lỗi server' });
   }
 });
+
 
 
 
