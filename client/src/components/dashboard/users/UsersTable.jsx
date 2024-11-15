@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { Modal, notification } from 'antd';
+import { Search, Edit, Trash2, X, Save, Mail, User, Users } from "lucide-react";
 
 const UsersTable = () => {
 	const [searchTerm, setSearchTerm] = useState("");
@@ -22,11 +23,9 @@ const UsersTable = () => {
 			console.error('Lỗi:', error);
 		}
 	};
-
 	useEffect(() => {
 		fetchUsers();
 	}, []);
-
 	const handleSearch = (e) => {
 		const term = e.target.value.toLowerCase();
 		setSearchTerm(term);
@@ -43,20 +42,48 @@ const UsersTable = () => {
 
 	const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-	const handleDelete = async (userId) => {
-		const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa người dùng này?");
-		if (confirmDelete) {
+	const handleDelete = (userId) => {
+		// Sử dụng Modal xác nhận xóa
+		Modal.confirm({
+		  title: 'Bạn có chắc chắn muốn xóa người dùng này?',
+		  content: 'Hành động này không thể hoàn tác.',
+		  okText: 'Xóa',
+		  okType: 'danger',
+		  cancelText: 'Hủy',
+		  onOk: async () => {
 			try {
-				const response = await fetch(`/api/usertable/${userId}`, {
-					method: 'DELETE',
-				});
-				if (!response.ok) throw new Error('Lỗi khi xóa người dùng');
-				fetchUsers();
+			  // Thực hiện yêu cầu xóa
+			  const response = await fetch(`/api/usertable/${userId}`, {
+				method: 'DELETE',
+			  });
+	  
+			  if (!response.ok) throw new Error('Lỗi khi xóa người dùng');
+			  
+			  // Fetch lại danh sách người dùng
+			  fetchUsers();
+	  
+			  // Hiển thị thông báo thành công
+			  notification.success({
+				message: 'Thành công',
+				description: 'Người dùng đã được xóa thành công.',
+				placement: 'topRight',
+			  });
 			} catch (error) {
-				console.error('Lỗi:', error);
+			  // Hiển thị thông báo lỗi
+			  notification.error({
+				message: 'Lỗi',
+				description: 'Đã xảy ra lỗi khi xóa người dùng. Vui lòng thử lại!',
+				placement: 'topRight',
+			  });
+			  console.error('Lỗi:', error);
 			}
-		}
-	};
+		  },
+		  onCancel: () => {
+			// Xử lý khi người dùng hủy bỏ
+			console.log('Hủy bỏ xóa');
+		  }
+		});
+	  };
 
 	const handleEdit = (user) => {
 		setSelectedUser(user);
@@ -107,59 +134,62 @@ const UsersTable = () => {
 			</div>
 
 			<div className='overflow-x-auto'>
-				<table className='min-w-full divide-y divide-gray-700'>
-					<thead>
-						<tr>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Tên</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Email</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Vai trò</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Trạng thái</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Thao tác</th>
-						</tr>
-					</thead>
+  <table className='min-w-full divide-y divide-gray-700'>
+    <thead>
+      <tr>
+        <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Tên</th>
+        <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Email</th>
+        <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Vai trò</th>
+        <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Trạng thái</th>
+        <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>Hành Động</th>
+      </tr>
+    </thead>
 
-					<tbody className='divide-y divide-gray-700'>
-						{currentUsers.map((user) => (
-							<motion.tr
-								key={user._id}
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								transition={{ duration: 0.3 }}
-							>
-								<td className='px-6 py-4 whitespace-nowrap'>
-									<div className='flex items-center'>
-										<div className='flex-shrink-0 h-10 w-10'>
-											<div className='h-10 w-10 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 flex items-center justify-center text-white font-semibold'>
-												{user.name.charAt(0)}
-											</div>
-										</div>
-										<div className='ml-4'>
-											<div className='text-sm font-medium text-gray-100'>{user.name}</div>
-										</div>
-									</div>
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap'>
-									<div className='text-sm text-gray-300'>{user.email}</div>
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap'>
-									<span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-800 text-blue-100'>
-										{user.role}
-									</span>
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap'>
-									<span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isVerified ? "bg-green-800 text-green-100" : "bg-red-800 text-red-100"}`}>
-										{user.isVerified ? "Active" : "Inactive"}
-									</span>
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-white'>
-									<button className='text-indigo-400 hover:text-indigo-300 mr-2' onClick={() => handleEdit(user)}>Sửa</button>
-									<button className='text-red-400 hover:text-red-300' onClick={() => handleDelete(user._id)}>Xóa</button>
-								</td>
-							</motion.tr>
-						))}
-					</tbody>
-				</table>
-			</div>
+    <tbody className='divide-y divide-gray-700'>
+      {currentUsers.map((user) => (
+        <motion.tr
+          key={user._id}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <td className='px-6 py-4 whitespace-nowrap'>
+            <div className='flex items-center'>
+              <div className='flex-shrink-0 h-10 w-10'>
+                <img
+                  src={user.avatar || 'https://res.cloudinary.com/dackig67m/image/upload/v1730489645/5db7d294a77fbe0fbfca4eb233afc01b_vt0x30.jpg'}  // Link ảnh từ đối tượng người dùng
+                  alt={user.name}  // Thêm alt cho ảnh
+                  className='h-10 w-10 rounded-full'  // Đảm bảo ảnh có hình tròn
+                />
+              </div>
+              <div className='ml-4'>
+                <div className='text-sm font-medium text-gray-100'>{user.name}</div>
+              </div>
+            </div>
+          </td>
+          <td className='px-6 py-4 whitespace-nowrap'>
+            <div className='text-sm text-gray-300'>{user.email}</div>
+          </td>
+          <td className='px-6 py-4 whitespace-nowrap'>
+            <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-800 text-blue-100'>
+              {user.role}
+            </span>
+          </td>
+          <td className='px-6 py-4 whitespace-nowrap'>
+            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isVerified ? "bg-green-800 text-green-100" : "bg-red-800 text-red-100"}`}>
+              {user.isVerified ? "Active" : "Inactive"}
+            </span>
+          </td>
+          <td className='px-6 py-4 whitespace-nowrap text-sm text-white'>
+            <button className='text-indigo-400 hover:text-indigo-300 mr-2' onClick={() => handleEdit(user)}><Edit size={18} /></button>
+            <button className='text-red-400 hover:text-red-300' onClick={() => handleDelete(user._id)}><Trash2 size={18} /></button>
+          </td>
+        </motion.tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
 
 			{/* Phân trang */}
 			<div className='flex justify-center mt-4'>
@@ -175,39 +205,67 @@ const UsersTable = () => {
 			</div>
 
 			{/* Form chỉnh sửa */}
-			{selectedUser && (
-				<div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-					<div className='mt-4 p-4 bg-gray-700 rounded-lg w-1/3'>
-						<h2 className='text-lg font-semibold text-gray-100'>Chỉnh sửa người dùng</h2>
-						<input 
-							value={editForm.name} 
-							onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} 
-							className='bg-gray-600 text-white p-2 rounded mt-2 w-full' 
-							placeholder='Tên' 
-						/>
-						<input 
-							type='email' 
-							value={editForm.email} 
-							onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} 
-							className='bg-gray-600 text-white p-2 rounded mt-2 w-full' 
-							placeholder='Email' 
-						/>
-						<select 
-							value={editForm.role} 
-							onChange={(e) => setEditForm({ ...editForm, role: e.target.value })} 
-							className='bg-gray-600 text-white p-2 rounded mt-2 w-full'
-						>
-							<option value='Customer'>Customer</option>
-							<option value='HotelManager'>Hotel Manager</option>
-							<option value='Admin'>Admin</option>
-						</select>
-						<div className='flex justify-end mt-4'>
-							<button onClick={handleUpdate} className='bg-blue-600 text-white p-2 rounded'>Cập nhật</button>
-							<button onClick={() => setSelectedUser(null)} className='ml-2 bg-gray-500 text-white p-2 rounded'>Hủy</button>
-						</div>
-					</div>
-				</div>
-			)}
+{selectedUser && (
+  <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+    <div className='p-6 bg-gray-800 rounded-lg shadow-xl w-1/3 transform scale-110 transition-all duration-500'>
+      <h2 className='text-2xl font-Roboto text-gray-100 flex items-center'>
+        <Edit className='mr-3 text-indigo-300' size={24} /> Chỉnh sửa người dùng
+      </h2>
+      {/* Tên */}
+      <div className='flex items-center mt-4'>
+        <User className='text-gray-200' size={20} />
+        <input 
+          value={editForm.name} 
+          onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} 
+          className='bg-gray-800 text-white p-3 rounded-lg ml-3 w-full placeholder-gray-300 focus:ring-2 focus:ring-indigo-400 transition duration-200 ease-in-out shadow-md hover:shadow-lg'
+          placeholder='Tên' 
+        />
+      </div>
+
+      {/* Email */}
+      <div className='flex items-center mt-4'>
+        <Mail className='text-gray-200' size={20} />
+        <input 
+          type='email' 
+          value={editForm.email} 
+          onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} 
+          className='bg-gray-800 text-white p-3 rounded-lg ml-3 w-full placeholder-gray-300 focus:ring-2 focus:ring-indigo-400 transition duration-200 ease-in-out shadow-md hover:shadow-lg'
+          placeholder='Email' 
+        />
+      </div>
+
+      {/* Vai trò */}
+      <div className='flex items-center mt-4'>
+        <Users className='text-gray-200' size={20} />
+        <select 
+          value={editForm.role} 
+          onChange={(e) => setEditForm({ ...editForm, role: e.target.value })} 
+          className='bg-gray-800 text-white p-3 rounded-lg ml-3 w-full placeholder-gray-300 focus:ring-2 focus:ring-indigo-400 transition duration-200 ease-in-out shadow-md hover:shadow-lg'
+        >
+          <option value='Customer'>Customer</option>
+          <option value='HotelManager'>Hotel Manager</option>
+          <option value='Admin'>Admin</option>
+        </select>
+      </div>
+
+      {/* Các nút Cập nhật và Hủy */}
+      <div className='flex justify-end mt-6 space-x-4'>
+        <button 
+          onClick={handleUpdate} 
+          className='flex items-center bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-500 transition duration-300 transform hover:scale-105 shadow-md hover:shadow-lg'
+        >
+          <Save className='mr-2' size={20} /> Cập nhật
+        </button>
+        <button 
+          onClick={() => setSelectedUser(null)} 
+          className='flex items-center bg-gray-600 text-white p-3 rounded-lg hover:bg-gray-500 transition duration-300 transform hover:scale-105 shadow-md hover:shadow-lg'
+        >
+          <X className='mr-2' size={20} /> Hủy
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 		</motion.div>
 	);
 };
