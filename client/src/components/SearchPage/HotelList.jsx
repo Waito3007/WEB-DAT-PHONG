@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import HotelItem from "./HotelItem";
 
 const HotelList = ({ hotels = [] }) => {
-  const [visibleHotels, setVisibleHotels] = useState(6); // Hiển thị 6 khách sạn ban đầu
+  const [visibleHotels, setVisibleHotels] = useState(2); // Hiển thị khách sạn ban đầu
 
   // Hàm xử lý khi người dùng cuộn trang
   const handleScroll = () => {
     const bottom = Math.ceil(window.innerHeight + document.documentElement.scrollTop) === document.documentElement.offsetHeight;
     if (bottom && visibleHotels < hotels.length) {
       // Nếu người dùng cuộn đến đáy trang và còn khách sạn chưa được tải
-      setVisibleHotels((prevVisibleHotels) => prevVisibleHotels + 6); // Tải thêm 6 khách sạn
+      setVisibleHotels((prevVisibleHotels) => prevVisibleHotels + 3); // Tải thêm khách sạn
     }
   };
 
