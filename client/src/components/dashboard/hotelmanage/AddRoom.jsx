@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Form, Button, message, InputNumber, Switch, Upload, Select } from 'antd';
+import { Form, Button, notification, InputNumber, Switch, Upload, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 const { Option } = Select; // Khai báo biến Option để sử dụng trong Select
@@ -36,11 +36,15 @@ const AddRoom = ({ hotelId, onClose }) => {
         withCredentials: true,
       });
 
-      message.success(response.data.msg || 'Phòng đã được thêm thành công');
-      onClose(); // Đóng modal sau khi thêm thành công
+      notification.success({
+        message: "Thêm Phòng Thành Công."
+      });       
+       onClose(); // Đóng modal sau khi thêm thành công
     } catch (error) {
-      console.error('Lỗi khi thêm phòng:', error.response?.data);
-      message.error(error.response?.data.msg || 'Đã xảy ra lỗi khi thêm phòng');
+      notification.error({
+        message: "Thêm Phòng Thất Bại.",
+        description: "Vui lòng thử lại sau.",
+      });
     } finally {
       setLoading(false); // Kết thúc loading
     }

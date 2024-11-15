@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Drawer, Button, Form, Input, Checkbox, Upload, message, Select, Spin } from 'antd';
+import { Drawer, Button, Form, Input, Checkbox, Upload, message, Select, Spin, notification } from 'antd';
 import axios from 'axios';
 
 const { Option } = Select; // Khai báo biến Option để sử dụng trong Select
@@ -36,8 +36,10 @@ const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
       setRemovedImages([]);
     } catch (error) {
       console.error('Error fetching room data:', error);
-      message.error('Lỗi khi tải dữ liệu phòng.');
-    }
+      notification.error({
+        message: "Lỗi khi tải thông tin phòng.",
+        description: "Vui lòng thử lại sau.",
+      });    }
   }, [roomId, form]); // Đảm bảo rằng hàm fetchRoomData chỉ thay đổi khi roomId hoặc form thay đổi.
 
   useEffect(() => {
@@ -69,12 +71,17 @@ const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
         withCredentials: true,
       });
 
-      message.success('Cập nhật phòng thành công!');
+      notification.success({
+        message: "Cập Nhật Thông Tin Phòng Thành Công.",
+        description: "Thông tin cập nhật đã được lưu.",
+      });       
       fetchRooms();
       onClose(); // Đóng drawer sau khi cập nhật thành công
     } catch (error) {
-      message.error('Đã xảy ra lỗi khi cập nhật phòng');
-    } finally {
+      notification.error({
+        message: "Cập Nhật Thông Tin Phòng Thất Bại.",
+        description: "Vui lòng thử lại sau.",
+      });    } finally {
       setIsUpdating(false);
     }
   };
