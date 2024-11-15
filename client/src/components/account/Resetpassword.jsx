@@ -97,7 +97,7 @@ const ResetPassword = () => {
           <img
             src="../bg.png"
             alt="Reset Password"
-            className="rounded-lg shadow-md"
+            className="rounded-lg shadow-md hidden md:block" // Ẩn hình ảnh trên màn hình nhỏ
             style={{ width: '315px', height: '480px' }} // Điều chỉnh kích thước tại đây
           />  
         </div>
