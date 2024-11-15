@@ -147,20 +147,39 @@ const HotelTable = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <div className='flex justify-between items-center mb-6'>
-        <h2 className='text-xl font-semibold text-gray-100'>Danh Sách Khách Sạn</h2>
-        <div className='relative'>
-            <input
-              type='search'
-              className='bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-12 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
-              onChange={handleSearch}
-              value={searchTerm}
-              autoComplete='off' // Ngăn chặn tự động điền
-              placeholder="Tìm kiếm khách sạn..."
-            />
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-2.5 text-gray-400"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-          </div>
-      </div>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
+  <h2 className="text-lg sm:text-xl font-semibold text-gray-100 text-center sm:text-left">
+    Danh Sách Khách Sạn
+  </h2>
+  <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-4 sm:space-y-0 items-center">
+    <div className="relative w-full sm:w-auto">
+      <input
+        type="search"
+        className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-12 pr-4 py-2 w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
+        onChange={handleSearch}
+        value={searchTerm}
+        autoComplete="off"
+        placeholder="Tìm kiếm khách sạn..."
+      />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="lucide lucide-search absolute left-3 top-2.5 text-gray-400"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </svg>
+    </div>
+  </div>
+</div>
+
 
       <div className='overflow-x-auto'>
         <table className='min-w-full divide-y divide-gray-700'>
