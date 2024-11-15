@@ -32,7 +32,7 @@ const BookingCard = ({ open, onClose }) => {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       const filteredRooms = response.data.filter(
-        (booking) => booking.paymentStatus === 'Complete'
+        (booking) => booking.paymentStatus === 'Done'
       );
       setRoomsData(filteredRooms);
     } catch (err) {
@@ -76,7 +76,7 @@ const BookingCard = ({ open, onClose }) => {
           <div className="drawer-container animate__animated animate__fadeInRight">
             <div className="drawer-header">
               <Typography variant="h5" component="h2" style={{ fontWeight: 700 }}>
-                Khách sạn bạn đã đặt
+                Lịch sử bạn đã đặt
               </Typography>
               <button onClick={onClose} className="close-button">
                 <HiX size={24} />

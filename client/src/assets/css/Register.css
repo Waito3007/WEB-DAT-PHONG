@@ -21,3 +21,15 @@
 label {
     color: #1c1b1f; /* Màu chữ cho nhãn */
 }
+/* Đảm bảo hình ảnh hiển thị trên các màn hình lớn hơn */
+@media (max-width: 768px) {
+  /* Ẩn hình ảnh khi màn hình nhỏ hơn 768px */
+  .register-image {
+    display: none;
+  }
+
+  /* Tăng kích thước của form để chiếm toàn bộ màn hình */
+  .register-form {
+    width: 100%;
+  }
+}
