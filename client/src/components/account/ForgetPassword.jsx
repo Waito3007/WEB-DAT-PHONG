@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Input, Spin } from 'antd'; // Import Spin component from Ant Design
+import { Input, Spin, notification } from 'antd'; // Import Spin component from Ant Design
 import { motion } from 'framer-motion';
 
 const ForgotPassword = () => {
@@ -52,15 +52,21 @@ const ForgotPassword = () => {
 
       const data = await response.json();
       if (response.ok) {
-        setSuccess('Đã gửi liên kết đặt lại mật khẩu vào email của bạn.');
+        notification.success({
+          message: "Thành Công.",
+          description: "Đã gửi liên kết đặt lại mật khẩu vào email của bạn.",
+        });
         setIsCooldown(true); // Start cooldown after successful request
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
       }
     } catch (err) {
       console.error('Lỗi mạng hoặc server:', err);
-      setError('Có lỗi xảy ra, vui lòng thử lại sau.');
-    } finally {
+      notification.error({
+        message: "Thất Bại.",
+        description: "Vui lòng thử lại sau.",
+      });
+        } finally {
       setIsLoading(false); // Stop loading
     }
   };

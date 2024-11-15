@@ -178,7 +178,8 @@ const provincesData = {
           "full_name": "Tỉnh Bình Thuận",
           "full_name_en": "Binh Thuan Province",
           "latitude": "11.1041572",
-          "longitude": "108.1832931"
+          "longitude": "108.1832931",
+          "image":"https://res.cloudinary.com/dackig67m/image/upload/v1731699132/20210412103311-28e8_ayeu3q.jpg"
         },
         {
           "id": "52",

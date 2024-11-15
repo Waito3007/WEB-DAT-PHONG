@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Input, Button } from 'antd';
+import { Input, Button, notification } from 'antd';
 import { motion } from 'framer-motion';
 
 const ResetPassword = () => {
@@ -29,10 +29,16 @@ const ResetPassword = () => {
 
       const data = await response.json();
       if (response.ok) {
-        setSuccess('Mật khẩu đã được cập nhật thành công!');
+        notification.success({
+          message: "Thành Công.",
+          description: "Mật khẩu đã được cập nhật thành công!",
+        });
         setTimeout(() => navigate('/login'), 600);
       } else {
-        setError(data.msg || 'Có lỗi xảy ra, vui lòng thử lại.');
+        notification.error({
+          message: "Thất Bại.",
+          description: "Cập nhật mật khẩu thất bại, vui lòng thử lại sau!",
+        });
       }
     } catch (err) {
       console.error('Lỗi mạng hoặc server:', err);
