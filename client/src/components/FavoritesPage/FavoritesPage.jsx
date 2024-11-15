@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Drawer, List, ListItem, ListItemText, CircularProgress, Grid, Typography } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, Grid, Typography, Pagination } from '@mui/material';
 import { HiX } from 'react-icons/hi'; 
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -11,13 +11,16 @@ const FavoriteRoomsDrawer = ({ open, onClose }) => {
   const [roomsData, setRoomsData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // Lưu trạng thái trang hiện tại
+  const roomsPerPage = 4; // Số phòng mỗi trang
+
   const navigate = useNavigate(); // Khởi tạo useNavigate
 
   useEffect(() => {
     if (open) {
       fetchFavoriteRooms();
     }
-  }, [open]);
+  }, [open, currentPage]);
 
   const fetchFavoriteRooms = async () => {
     setLoading(true);
@@ -39,6 +42,16 @@ const FavoriteRoomsDrawer = ({ open, onClose }) => {
     navigate(`/detailhotel/${hotelId}`);
   };
 
+  // Xử lý phân trang
+  const indexOfLastRoom = currentPage * roomsPerPage;
+  const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
+  const currentRooms = roomsData.slice(indexOfFirstRoom, indexOfLastRoom);
+
+  // Thay đổi trang
+  const paginate = (event, pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <motion.div
       initial={{ x: '100%' }}
@@ -57,11 +70,6 @@ const FavoriteRoomsDrawer = ({ open, onClose }) => {
             </button>
           </div>
 
-          {loading && (
-            <div className="loading-container">
-              <CircularProgress />
-            </div>
-          )}
           {error && (
             <div className="error-message">
               <Typography variant="body1">{error}</Typography>
@@ -69,12 +77,12 @@ const FavoriteRoomsDrawer = ({ open, onClose }) => {
           )}
 
           <List>
-            {roomsData.length === 0 ? (
+            {currentRooms.length === 0 ? (
               <ListItem>
                 <ListItemText primary="Bạn chưa có khách sạn yêu thích nào." />
               </ListItem>
             ) : (
-              roomsData.map((hotel) => (
+              currentRooms.map((hotel) => (
                 <div key={hotel.hotelId} className="hotel-item animate__animated animate__fadeInUp" onClick={() => handleRoomClick(hotel.hotelId)}>
                   <Grid container spacing={2} alignItems="center">
                     {/* Hình ảnh khách sạn */}
@@ -103,6 +111,18 @@ const FavoriteRoomsDrawer = ({ open, onClose }) => {
               ))
             )}
           </List>
+
+          {/* Phân trang */}
+          {roomsData.length > roomsPerPage && (
+            <div className="pagination-container">
+              <Pagination
+                count={Math.ceil(roomsData.length / roomsPerPage)}
+                page={currentPage}
+                onChange={paginate}
+                color="primary"
+              />
+            </div>
+          )}
         </div>
       </Drawer>
     </motion.div>
