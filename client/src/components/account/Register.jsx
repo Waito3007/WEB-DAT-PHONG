@@ -1,28 +1,48 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Input } from 'antd';
+import { Input, Checkbox } from 'antd';
 import { motion } from 'framer-motion';
+import '../../assets/css/Register.css';
 
-const Login = () => {
+const Register = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setError(null);
+
+    if (password !== confirmPassword) {
+      setError('Mật khẩu và mật khẩu nhập lại không khớp');
+      return;
+    }
+
+    if (!agreeTerms) {
+      setError('Bạn cần đồng ý với các điều khoản và chính sách quyền riêng tư');
+      return;
+    }
+
+    const registrationDate = new Date().toISOString();
+    const name = `${firstName} ${lastName}`;
+
     try {
-      const response = await fetch('/api/users/login', {
+      const response = await fetch('/api/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password, registrationDate }),
       });
+
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        navigate("/");
+        navigate('/login');
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
       }
@@ -33,72 +53,108 @@ const Login = () => {
   };
 
   return (
-    <motion.div
-      className="absolute inset-0 flex flex-col md:flex-row justify-center items-start px-4 py-8 md:px-16 md:py-16"
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 50 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* Phần tấm hình */}
-      <div 
-        className="hidden sm:block w-1/4 h-fit relative mb-8 md:mb-0 shadow-lg rounded-lg overflow-hidden"
+    <div className="absolute inset-0 flex flex-col md:flex-row justify-center items-start px-4 py-8 md:px-16 md:py-16 bg-gradient-to-r from-gray-100 to-white">
+      <motion.div
+        className="flex flex-col md:flex-row max-w-3xl gap-6 bg-white p-6 rounded-lg shadow-md"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        <img
-          className="w-full h-auto rounded-lg"
-          src="https://res.cloudinary.com/dackig67m/image/upload/v1728844619/image_2024-10-14_013655362_w9eudg.png"
-          alt="Login"
-        />
-      </div>
-
-      {/* Phần form đăng nhập */}
-      <div className="w-fit md:w-fit flex flex-col justify-start items-start gap-6 ml-11 p-6 shadow-md rounded-lg bg-white">
-        <h2 className="text-black text-4xl font-normal text-center md:text-left">
-          Đăng Nhập <br /> Tài Khoản Của Bạn
-        </h2>
-        {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
-        <form onSubmit={handleLogin} className="flex flex-col gap-6">
-          <div className="flex flex-col">
-            <label className="text-[#1c1b1f] text-sm">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full input-field px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
-              style={{ color: 'black' }}
-              required
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-[#1c1b1f] text-sm">Mật khẩu</label>
-            <Input.Password
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full input-field h-12 border border-gray-300 rounded-md focus:outline-none"
-              required
-            />
-            <a href="/ForgetPassword" className="text-red-500 text-sm text-right mt-1">
-              Quên mật khẩu?
-            </a>
-          </div>
-          <div className="flex items-center justify-center">
-            <button
-              type="submit"
-              className="w-full bg-black text-white py-2 rounded-md text-lg h-12 hover:bg-gray-800 transition duration-300 ease-in-out"
-            >
-              Đăng Nhập
-            </button>
-          </div>
-        </form>
-        <div className="flex justify-center">
-          <p className="text-sm text-black">
-            Bạn chưa có tài khoản? 
-            <a href="/register" className="text-red-500 ml-1">Đăng ký</a>
-          </p>
+        {/* Hình ảnh - ẩn dưới 430px */}
+        <div 
+          className="hidden sm:block w-[350px] relative mr-8"
+        >
+          <img
+            className="w-full h-auto rounded-lg shadow-md"
+            src="https://res.cloudinary.com/dackig67m/image/upload/v1728840647/register_srtwnf.png"
+            alt="Register"
+          />
         </div>
-      </div>
-    </motion.div>
+
+        {/* Form đăng ký */}
+        <div className="flex flex-col w-full md:w-[400px] justify-start items-start gap-6">
+          <h2 className="text-black text-4xl font-normal text-center md:text-left">
+            Tạo tài khoản của bạn
+          </h2>
+          {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
+          <form onSubmit={handleRegister} className="flex flex-col gap-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex flex-col w-full">
+                <label className="text-[#1c1b1f] text-sm">Họ</label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="w-full px-4 input-field border rounded-md focus:outline-none"
+                  required
+                />
+              </div>
+              <div className="flex flex-col w-full">
+                <label className="text-[#1c1b1f] text-sm">Tên</label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="w-full px-4 input-field border rounded-md focus:outline-none"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-[#1c1b1f] text-sm">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 input-field border rounded-md focus:outline-none"
+                required
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-[#1c1b1f] text-sm">Mật khẩu</label>
+              <Input.Password
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full input-field border rounded-md focus:outline-none"
+                required
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-[#1c1b1f] text-sm">Nhập lại mật khẩu</label>
+              <Input.Password
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full input-field border rounded-md focus:outline-none"
+                required
+              />
+            </div>
+
+            <div className="flex items-center">
+              <Checkbox
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
+              />
+              <span className="ml-2 text-sm" style={{ color: 'black' }}>
+                Tôi đồng ý với tất cả các Điều khoản và Chính sách quyền riêng tư
+              </span>
+            </div>
+
+            <div className="flex items-center justify-center">
+              <button
+                type="submit"
+                className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition duration-300 ease-in-out"
+              >
+                Đăng Ký
+              </button>
+            </div>
+          </form>
+        </div>
+      </motion.div>
+    </div>
   );
 };
 
-export default Login;
+export default Register;
