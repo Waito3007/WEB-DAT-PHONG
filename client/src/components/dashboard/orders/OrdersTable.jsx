@@ -45,6 +45,14 @@ const OrderTable = () => {
       });
   };
 
+  const handleResetFilters = () => {
+    setSelectedHotel("");
+    setSelectedRoomType("");
+    setSelectedPaymentStatus("");
+    setSearchTerm("");
+    loadBookings(); // Gọi hàm loadBookings sau khi làm mới bộ lọc
+  };
+
   const showModal = (booking) => {
     setSelectedBooking(booking);
     setIsModalVisible(true);
@@ -158,21 +166,43 @@ const OrderTable = () => {
     }
   };
 
+  // Xác định vị trí đầu và cuối của phần tử trên trang hiện tại
   const indexOfLastBooking = currentPage * bookingsPerPage;
   const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
-  const currentBookings = filteredBookings.slice(
-    indexOfFirstBooking,
-    indexOfLastBooking
-  );
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // Lấy danh sách các bookings trên trang hiện tại, hoặc mảng trống nếu không có bookings
+  const currentBookings =
+    filteredBookings && filteredBookings.length > 0
+      ? filteredBookings.slice(indexOfFirstBooking, indexOfLastBooking)
+      : [];
 
+  // Hàm phân trang, kiểm tra nếu trang mới không có dữ liệu thì quay lại trang trước đó
+  const paginate = (pageNumber) => {
+    const totalPages = Math.ceil(filteredBookings.length / bookingsPerPage);
+
+    // Giới hạn số trang hợp lệ
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+
+      // Tính lại bookings trên trang mới
+      const newIndexOfLastBooking = pageNumber * bookingsPerPage;
+      const newIndexOfFirstBooking = newIndexOfLastBooking - bookingsPerPage;
+      const newCurrentBookings = filteredBookings.slice(
+        newIndexOfFirstBooking,
+        newIndexOfLastBooking
+      );
+
+      // Nếu trang mới không có dữ liệu, quay lại trang trước đó
+      if (newCurrentBookings.length === 0 && pageNumber > 1) {
+        setCurrentPage(pageNumber - 1);
+      }
+    }
+  };
+
+  // Tạo danh sách các số trang
   const pageNumbers = [];
-  for (
-    let i = 1;
-    i <= Math.ceil(filteredBookings.length / bookingsPerPage);
-    i++
-  ) {
+  const totalPages = Math.ceil(filteredBookings.length / bookingsPerPage);
+  for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
 
@@ -299,6 +329,13 @@ const OrderTable = () => {
             <option value="CheckIn">Đã nhận phòng</option>
             <option value="Done">Đã hoàn thành</option>
           </select>
+
+          <button
+            onClick={handleResetFilters}
+            className="ml-4 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-150"
+          >
+            Làm mới
+          </button>
         </div>
         <table className="min-w-full table-auto text-white">
           <thead>
