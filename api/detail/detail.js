@@ -106,41 +106,30 @@ router.get('/:hotelId/ratings', async (req, res) => {
 });
 
 // Đánh giá khách sạn
-router.post('/rating/:hotelId', auth, async (req, res) => {
-  const { rating, comment } = req.body;
-  const { hotelId } = req.params; // Lấy hotelId từ URL
-
-  // Kiểm tra nếu khách sạn có tồn tại
-  const hotel = await Hotel.findById(hotelId);
-  if (!hotel) {
-    return res.status(404).json({ msg: 'Khách sạn không tồn tại' });
-  }
-
-  // Kiểm tra đánh giá hợp lệ (1-10)
-  if (rating < 1 || rating > 10) {
-    return res.status(400).json({ msg: 'Điểm đánh giá phải nằm trong khoảng từ 1 đến 10' });
-  }
+router.post('/rate', auth, async (req, res) => {
+  const { hotel, rating, comment } = req.body;
+  const userId = req.userId;
 
   try {
-    // Kiểm tra nếu người dùng đã đánh giá khách sạn này chưa
-    const existingRate = await Rate.findOne({ hotel: hotelId, user: req.userId });
+    // Kiểm tra xem người dùng đã đánh giá khách sạn này chưa
+    const existingRate = await Rate.findOne({ hotel, user: userId });
     if (existingRate) {
-      return res.status(400).json({ msg: 'Bạn đã đánh giá khách sạn này rồi' });
+      return res.status(400).json({ message: 'Bạn đã đánh giá khách sạn này rồi!' });
     }
 
-    // Tạo mới đánh giá
-    const rate = new Rate({
-      hotel: hotelId,
-      user: req.userId,
+    // Tạo đánh giá mới
+    const newRate = new Rate({
+      hotel,
+      user: userId,
       rating,
-      comment
+      comment,
     });
 
-    await rate.save();
-    return res.status(201).json({ msg: 'Đánh giá thành công', rate });
+    await newRate.save();
+    res.status(201).json({ message: 'Đánh giá thành công!', rate: newRate });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ msg: 'Lỗi server' });
+    res.status(500).json({ message: 'Có lỗi xảy ra!' });
   }
 });
 
