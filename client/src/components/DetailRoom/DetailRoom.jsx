@@ -51,7 +51,7 @@ const DetailRoom = () => {
     // Điều hướng sang trang thanh toán và truyền ID phòng
     navigate(`checkout/${roomId}`);
   };
-
+  
   if (loading) return <div>Đang tải thông tin phòng...</div>;
   if (error) return <div>{error}</div>;
 
