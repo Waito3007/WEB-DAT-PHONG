@@ -4,7 +4,7 @@ const router = express.Router();
 const Hotel = require('../../models/Hotel');
 const Rate = require('../../models/Rate');
 const Room = require('../../models/Room'); // Import mô hình Room
-
+const auth = require("../../middleware/auth");
 // GET hotel details by ID
 router.get('/:hotelId', async (req, res) => {
   try {
@@ -104,4 +104,68 @@ router.get('/:hotelId/ratings', async (req, res) => {
     res.status(500).json({ message: 'Có lỗi xảy ra khi lấy đánh giá' });
   }
 });
+
+// Đánh giá khách sạn
+router.post('/rating/:hotelId', auth, async (req, res) => {
+  const { rating, comment } = req.body;
+  const { hotelId } = req.params; // Lấy hotelId từ URL
+
+  // Kiểm tra nếu khách sạn có tồn tại
+  const hotel = await Hotel.findById(hotelId);
+  if (!hotel) {
+    return res.status(404).json({ msg: 'Khách sạn không tồn tại' });
+  }
+
+  // Kiểm tra đánh giá hợp lệ (1-10)
+  if (rating < 1 || rating > 10) {
+    return res.status(400).json({ msg: 'Điểm đánh giá phải nằm trong khoảng từ 1 đến 10' });
+  }
+
+  try {
+    // Kiểm tra nếu người dùng đã đánh giá khách sạn này chưa
+    const existingRate = await Rate.findOne({ hotel: hotelId, user: req.userId });
+    if (existingRate) {
+      return res.status(400).json({ msg: 'Bạn đã đánh giá khách sạn này rồi' });
+    }
+
+    // Tạo mới đánh giá
+    const rate = new Rate({
+      hotel: hotelId,
+      user: req.userId,
+      rating,
+      comment
+    });
+
+    await rate.save();
+    return res.status(201).json({ msg: 'Đánh giá thành công', rate });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: 'Lỗi server' });
+  }
+});
+
+// Lấy đánh giá
+router.get('/rate/:hotelId', auth, async (req, res) => {
+  const { hotelId } = req.params;
+
+  // Kiểm tra nếu khách sạn có tồn tại
+  const hotel = await Hotel.findById(hotelId);
+  if (!hotel) {
+    return res.status(404).json({ msg: 'Khách sạn không tồn tại' });
+  }
+
+  try {
+    // Lấy đánh giá của người dùng cho khách sạn này
+    const rate = await Rate.findOne({ hotel: hotelId, user: req.userId });
+    if (!rate) {
+      return res.status(404).json({ msg: 'Bạn chưa đánh giá khách sạn này' });
+    }
+
+    return res.status(200).json({ rate });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: 'Lỗi server' });
+  }
+});
+
 module.exports = router;

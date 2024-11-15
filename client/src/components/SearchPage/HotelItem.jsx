@@ -38,10 +38,11 @@ const HotelItem = ({ hotel }) => {
           </span>
         </div>
 
-        <div className="lowest-price-container flex justify-end mt-2">
-          <span className="lowest-price font-bold text-xl price">
-            {hotel.lowestRoomPrice
-              ? `${hotel.lowestRoomPrice.toLocaleString("vi-VN")} VND`
+        {/* Hiển thị giá thấp nhất và cao nhất */}
+        <div className="price-range-container flex justify-end mt-2">
+          <span className="price font-bold text-xl">
+            {hotel.lowestRoomPrice && hotel.highestRoomPrice
+              ? `${hotel.lowestRoomPrice.toLocaleString("vi-VN")} VND - ${hotel.highestRoomPrice.toLocaleString("vi-VN")} VND`
               : "Đang cập nhật"}
           </span>
         </div>
