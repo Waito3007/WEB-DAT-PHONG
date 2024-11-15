@@ -1,6 +1,6 @@
 // EditHotelModal.jsx
 import { useState, useEffect } from 'react';
-import { Modal, Form, Input, Upload, Button, Rate, message } from 'antd';
+import { Modal, Form, Input, Upload, Button, Rate, notification } from 'antd';
 import axios from 'axios';
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -34,7 +34,9 @@ const EditHotelModal = ({ hotel, isVisible, onClose, onUpdate }) => {
       try {
         await axios.put(`/api/hotel/${hotel._id}/remove-image`, { imageUrl: file.url }, { withCredentials: true });
       } catch (error) {
-        message.error('Đã xảy ra lỗi khi xóa hình ảnh');
+        notification.error({
+          message: "Xóa ảnh thất bại.",
+        });
       }
     }
   };
@@ -62,12 +64,18 @@ const EditHotelModal = ({ hotel, isVisible, onClose, onUpdate }) => {
           withCredentials: true,
         });
   
-        message.success('Khách sạn đã được cập nhật thành công');
+        notification.success({
+          message: "Chỉnh Sửa Khách Sạn Thành Công.",
+          description: "Thông tin chỉnh sửa đã được lưu.",
+        });
         onUpdate();  // Notify the parent component to refresh the list
         onClose();  // Close the modal
       } catch (error) {
-        message.error('Đã xảy ra lỗi khi cập nhật khách sạn');
-      } finally {
+        notification.error({
+          message: "Chỉnh Sửa Khách Sạn Thất Bại.",
+          description: "Vui lòng thử lại sau.",
+        });
+         } finally {
         setLoading(false);  // Stop loading after the request is completed
       }
     };

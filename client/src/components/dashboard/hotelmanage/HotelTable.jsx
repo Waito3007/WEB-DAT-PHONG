@@ -1,21 +1,20 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Edit, Search, Trash2 } from 'lucide-react';
-import { Modal, Input, Button, message, Upload, Form } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Edit, Trash2 } from 'lucide-react';
+import { Modal, Input, Button, message, Form, notification } from 'antd';
+import EditHotelModal from './EditHotelModal';
+
 
 const HotelTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [hotelsPerPage] = useState(5);
+  const [hotelsPerPage] = useState(15);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
   const [currentHotel, setCurrentHotel] = useState(null);
   const [fileList, setFileList] = useState([]);
   const [password, setPassword] = useState('');
-  const [removedImages, setRemovedImages] = useState([]);
   const [form] = Form.useForm();
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [setIsAdmin] = useState(false); // Kiểm tra người dùng có phải admin không
@@ -37,6 +36,20 @@ const HotelTable = () => {
 
     fetchUserInfo();
   }, []);
+
+
+  const fetchHotels = useCallback(async () => {
+    try {
+      const response = await axios.get('/api/hotel', { withCredentials: true });
+      setHotels(response.data);
+    } catch (error) {
+      console.error('Lỗi khi lấy danh sách khách sạn:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchHotels();
+  }, [fetchHotels]);
 
   // Lấy danh sách khách sạn từ API
   const fetchHotel = useCallback(async () => {
@@ -64,42 +77,13 @@ const HotelTable = () => {
     setIsModalVisible(true);
   };
 
-  
-  
-
-  // Cập nhật khách sạn
-  const handleSave = async (values) => {
-    setIsUpdating(true);
-    try {
-      const formData = new FormData();
-      formData.append('name', values.name);
-      formData.append('location', values.location);
-      formData.append('description', values.description);
-      fileList.forEach((file) => {
-        formData.append('imagehotel', file);
-      });
-      formData.append('removedImages', JSON.stringify(removedImages));
-
-      await axios.put(`/api/hotel/${currentHotel._id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
-      });
-
-      message.success('Khách sạn đã được cập nhật thành công');
-      setIsModalVisible(false);
-      fetchHotel(); // Cập nhật danh sách khách sạn
-    } catch (error) {
-      message.error('Đã xảy ra lỗi khi cập nhật khách sạn');
-    } finally {
-      setIsUpdating(false);
-    }
+  //cập nhật khách sạn
+  const handleUpdateHotel = () => {
+    fetchHotels();  // Refresh the hotel list after updating
   };
+  
 
-  const handleImageChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList.map(file => file.originFileObj || file));
-  };
+  
 
   // Hiển thị modal để xóa khách sạn
   const showDeleteModal = (hotel) => {
@@ -115,33 +99,22 @@ const HotelTable = () => {
         withCredentials: true,
         data: { password }, // Gửi mật khẩu vào body
       });
-      message.success('Xóa khách sạn thành công');
+      notification.success({
+        message: "Xóa Khách Sạn Thành Công.",
+        description: "Khách sạn đã được xóa khỏi danh sách.",
+      });      
       setHotels(hotels.filter(hotel => hotel._id !== currentHotel._id));
     } catch (error) {
       console.error('Lỗi khi xóa khách sạn:', error.response?.data);
-      message.error(error.response?.data.message || 'Không thể xóa khách sạn vì lí do xác thực');
-    } finally {
+      notification.error({
+        message: "Xóa Khách Sạn Thất Bại.",
+        description: "Vui lòng thử lại sau.",
+      });
+      } finally {
       setIsDeleteModalVisible(false); // Ẩn modal
       setPassword(''); // Reset mật khẩu
     }
   };
-  
-
-  // Xóa hình ảnh trong khi chỉnh sửa
-  const handleRemoveImage = async (file) => {
-    if (file.uid) {
-      setFileList(prev => prev.filter(item => item.uid !== file.uid));
-      setRemovedImages(prev => [...prev, file.url]);
-
-      try {
-        await axios.put(`/api/hotel/${currentHotel._id}/remove-image`, { imageUrl: file.url }, { withCredentials: true });
-      } catch (error) {
-        message.error('Đã xảy ra lỗi khi xóa hình ảnh');
-      }
-    }
-  };
-  
-  
 
   // Xử lý khi người dùng nhập tìm kiếm
   const handleSearch = (e) => {
@@ -241,67 +214,36 @@ const HotelTable = () => {
         </ul>
       </div>
 
-      {/* Modal chỉnh sửa khách sạn */}
+      {/* Modal for Edit Hotel */}
+      <EditHotelModal
+          hotel={currentHotel}
+          isVisible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+          onUpdate={handleUpdateHotel}
+        />
+
+      {/* Delete Confirmation Modal */}
       <Modal
-        title='Chỉnh sửa khách sạn'
-        visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
+        title="Xác nhận xóa"
+        visible={isDeleteModalVisible}
+        onCancel={() => setIsDeleteModalVisible(false)}
         footer={null}
-        className='modal-update'
       >
-        <Form form={form} onFinish={handleSave}>
-          <Form.Item name='name' label='Tên khách sạn' rules={[{ required: true, message: 'Vui lòng nhập tên khách sạn' }]}>
-            <Input placeholder='Tên khách sạn' />
-          </Form.Item>
-
-          <Form.Item name='location' label='Vị trí' rules={[{ required: true, message: 'Vui lòng nhập vị trí' }]}>
-            <Input placeholder='Vị trí' />
-          </Form.Item>
-
-          <Form.Item name='description' label='Mô tả'>
-            <Input.TextArea placeholder='Mô tả khách sạn' />
-          </Form.Item>
-
-          <Form.Item label='Hình ảnh'>
-            <Upload
-              listType='picture-card'
-              fileList={fileList}
-              onChange={handleImageChange}
-              onRemove={handleRemoveImage}
-              beforeUpload={() => false} // Ngăn không cho upload ngay lập tức
-            >
-              {fileList.length < 5 && (
-                <div>
-                  <UploadOutlined />
-                  <div style={{ marginTop: 8 }}>Tải lên</div>
-                </div>
-              )}
-            </Upload>
-          </Form.Item>
-
-          <Form.Item>
-            <Button type='primary' htmlType='submit' loading={isUpdating}>
-              Lưu thay đổi
-            </Button>
-          </Form.Item>
-        </Form>
+        <p>Bạn có chắc chắn muốn xóa khách sạn này không?</p>
+        <Input.Password
+          placeholder="Nhập mật khẩu để xác nhận"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <div className="flex justify-end mt-4">
+          <Button type="primary" onClick={handleDeleteConfirm}>
+            Xóa
+          </Button>
+          <Button onClick={() => setIsDeleteModalVisible(false)} className="ml-2">
+            Hủy
+          </Button>
+        </div>
       </Modal>
-
-      {/* Modal xóa khách sạn */}
-      <Modal
-  title="Xóa Khách Sạn"
-  visible={isDeleteModalVisible}
-  onOk={handleDeleteConfirm}
-  onCancel={() => setIsDeleteModalVisible(false)}
->
-  <p>Bạn có chắc chắn muốn xóa khách sạn này không?</p>
-  <Input
-    type="password"
-    placeholder="Nhập mật khẩu để xác nhận"
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-  />
-</Modal>
 
 
     </motion.div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'; 
-import { Modal, Drawer, Button, List, Image, Input, message, Spin, Typography, Pagination } from 'antd';
+import { Modal, Drawer, Button, List, Image, Input, message, Spin, Typography, Pagination, notification } from 'antd';
 import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'; 
 import axios from 'axios';
 import AddRoom from './AddRoom'; // Nhập AddRoom
@@ -79,11 +79,16 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
    const handleDeleteRoom = async (roomId) => {
     try {
       await axios.delete(`/api/room/${roomId}`, { withCredentials: true });
-      message.success('Phòng đã được xóa thành công');
-      fetchRooms(); 
+      notification.success({
+        message: "Xóa Phòng Thành Công.",
+        description: "Phòng đã được xóa khỏi danh sách.",
+      });
+            fetchRooms(); 
     } catch (error) {
-      message.error('Đã xảy ra lỗi khi xóa phòng');
-    }
+      notification.error({
+        message: "Xóa Phòng Thất Bại.",
+        description: "Vui lòng thử lại sau.",
+      });    }
   };
 
   
