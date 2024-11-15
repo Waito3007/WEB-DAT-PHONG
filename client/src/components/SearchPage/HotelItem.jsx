@@ -34,12 +34,13 @@ const HotelItem = ({ hotel }) => {
         <div className="rating-reviews-container flex justify-between items-center mt-2">
           <Rate disabled defaultValue={hotel.averageRating || 0} allowHalf />
           <span className="text-black font-bold ml-auto">
-            {hotel.averageRating ? `${hotel.averageRating} Điểm` : "N/A"}
+            {hotel.averageRating ? `${hotel.averageRating} Điểm` : "Chưa có đánh giá"}
           </span>
         </div>
 
-        <div className="lowest-price-container flex justify-end mt-2">
-          <span className="lowest-price font-bold text-xl price">
+        {/* Hiển thị giá thấp nhất và cao nhất */}
+        <div className="price-range-container flex justify-end mt-2">
+          <span className="price font-bold text-xl">
             {hotel.lowestRoomPrice
               ? `${hotel.lowestRoomPrice.toLocaleString("vi-VN")} VND`
               : "Đang cập nhật"}

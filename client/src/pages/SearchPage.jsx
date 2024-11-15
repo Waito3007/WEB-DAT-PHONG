@@ -15,7 +15,7 @@ function SearchPage() {
       <SearchHotel setFilteredHotels={setFilteredHotels} setHotels={setHotels} hotels={hotels}/>
       <div className="flex mx-7">
         <div className="basis-5/12 sticky top-0">
-          <Filter/>
+        <Filter setFilteredHotels={setFilteredHotels} hotels={hotels} />
         </div>
         <HotelList hotels={filteredHotels} />      
       </div>
