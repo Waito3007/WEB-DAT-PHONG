@@ -5,7 +5,7 @@ const roomSchema = new mongoose.Schema({
   type: { 
     type: String, 
     required: true, 
-    enum: ['1 phòng 1 người', '1 phòng 2 người', '2 phòng 2 người', '2 phòng 4 người'] // Giới hạn các loại phòng
+    enum: ['Phòng thường 1 giường lớn', 'Phòng thường 2 giường nhỏ', 'Phòng vip 1 giường lớn', 'Phòng vip 2 giường nhỏ'] // Giới hạn các loại phòng
   },
   price: { type: Number, required: true },
   availability: { type: Boolean, default: true },

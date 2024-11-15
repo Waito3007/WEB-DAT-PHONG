@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Edit, Trash2, PlusCircle, Eye } from 'lucide-react';
-import { Modal, Input, Button, message, Form,Rate, notification } from 'antd';
+import { Modal, Input, Button, Form,Rate, notification } from 'antd';
 import RoomListDrawer from './RoomListDrawer'; // Import component
 import EditHotelModal from './EditHotelModal';
 import AddHotelModal from './AddHotelModal'; // Import AddHotelModal
@@ -11,7 +12,6 @@ import AddHotelModal from './AddHotelModal'; // Import AddHotelModal
 
 const MyHotelTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(false); 
   const [hotels, setHotels] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hotelsPerPage] = useState(15);

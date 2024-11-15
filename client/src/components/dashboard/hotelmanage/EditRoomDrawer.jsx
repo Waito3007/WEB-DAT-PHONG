@@ -120,10 +120,10 @@ const EditRoomDrawer = ({ visible, onClose, roomId, fetchRooms }) => {
         <Form form={form} onFinish={handleSave}>
           <Form.Item label="Loại Phòng" name="type" required>
             <Select placeholder="Chọn loại phòng" required>
-              <Option value="1 phòng 1 người">1 phòng 1 người</Option>
-              <Option value="1 phòng 2 người">1 phòng 2 người</Option>
-              <Option value="2 phòng 2 người">2 phòng 2 người</Option>
-              <Option value="2 phòng 4 người">2 phòng 4 người</Option>
+            <Option value="Phòng thường 1 giường lớn">Phòng thường 1 giường lớn</Option>
+            <Option value="Phòng thường 2 giường nhỏ">Phòng thường 2 giường nhỏ</Option>
+            <Option value="Phòng vip 1 giường lớn">Phòng vip 1 giường lớn</Option>
+            <Option value="Phòng vip 2 giường nhỏ">Phòng vip 2 giường nhỏ</Option>
             </Select>
           </Form.Item>
           <Form.Item
