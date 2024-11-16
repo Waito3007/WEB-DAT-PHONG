@@ -29,4 +29,24 @@ BookingSchema.post("findOneAndUpdate", async function (doc, next) {
   next();
 });
 
+BookingSchema.pre("save", async function (next) {
+  const overlappingBookings = await mongoose.model("Booking").find({
+    room: this.room,
+    $or: [
+      { checkInDate: { $lt: this.checkOutDate, $gte: this.checkInDate } },
+      { checkOutDate: { $gt: this.checkInDate, $lte: this.checkOutDate } },
+      {
+        checkInDate: { $lte: this.checkInDate },
+        checkOutDate: { $gte: this.checkOutDate },
+      },
+    ],
+  });
+
+  if (overlappingBookings.length > 0) {
+    throw new Error("This room is already booked for the selected dates.");
+  }
+
+  next();
+});
+
 module.exports = mongoose.model("Booking", BookingSchema);
