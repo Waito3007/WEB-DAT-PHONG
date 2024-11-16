@@ -179,7 +179,7 @@ const provincesData = {
           "full_name_en": "Binh Thuan Province",
           "latitude": "11.1041572",
           "longitude": "108.1832931",
-          "image":"https://res.cloudinary.com/dackig67m/image/upload/v1731699132/20210412103311-28e8_ayeu3q.jpg"
+          "image":"https://cdn3.ivivu.com/2024/09/du-lich-binh-thuan-ivivu-5.jpg"
         },
         {
           "id": "52",

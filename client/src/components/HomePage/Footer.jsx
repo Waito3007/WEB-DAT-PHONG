@@ -118,7 +118,7 @@ const Footer = () => {
                   </li>
                   <li>
                     <a href="#" className="hover:underline">
-                      Điều khoản
+                      Terms & Conditions
                     </a>
                   </li>
                 </ul>

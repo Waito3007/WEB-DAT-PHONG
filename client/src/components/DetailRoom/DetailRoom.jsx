@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom"; // Sử dụng useNavigate
-import { Modal, notification } from 'antd'; // Thư viện Ant Design modal và message
+import { Modal, message } from 'antd'; // Thư viện Ant Design modal và message
 
 const DetailRoom = () => {
   const { hotelId } = useParams();
@@ -36,7 +36,17 @@ const DetailRoom = () => {
     setIsModalVisible(false); // Đóng modal
   };
 
-  const handleBookRoom = (roomId) => {
+  const handleBookRoom = (roomId, remainingRooms) => {
+
+    // Kiểm tra số phòng còn lại
+    if (remainingRooms <= 0) {
+      // Hiển thị thông báo nếu không còn phòng
+      notification.info({
+        message: "Đã hết phòng.",
+        description: "Vui lòng chọn phòng khác.",
+      });
+      return; // Dừng hàm nếu không còn phòng
+    }
 
     // Điều hướng sang trang thanh toán và truyền ID phòng
     navigate(`checkout/${roomId}`);
@@ -81,6 +91,7 @@ const DetailRoom = () => {
              Chọn
              </button>
             </div>
+
             </div>
           ))}
         </div>
