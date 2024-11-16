@@ -84,7 +84,7 @@ const Footer = () => {
               {/* Follow Us */}
               <div>
                 <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                  Follow us
+                  Theo dõi chúng tôi
                 </h2>
                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                   <li className="mb-4">
@@ -108,17 +108,17 @@ const Footer = () => {
               {/* Legal */}
               <div>
                 <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-                  Legal
+                  Chính Sách
                 </h2>
                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                   <li className="mb-4">
                     <a href="#" className="hover:underline">
-                      Privacy Policy
+                    Chính sách bảo mật
                     </a>
                   </li>
                   <li>
                     <a href="#" className="hover:underline">
-                      Terms & Conditions
+                      Điều khoản
                     </a>
                   </li>
                 </ul>
