@@ -326,15 +326,18 @@ router.post("/booking/check-availability", async (req, res) => {
 
   return res.status(200).json({ available: true });
 });
-
+// dat phong
 router.get("/booking/room-availability/:roomId", async (req, res) => {
   const { roomId } = req.params;
 
   try {
-    // Lấy danh sách các lần đặt phòng của phòng cụ thể
-    const bookings = await Booking.find({ room: roomId });
+    // Lấy danh sách các lần đặt phòng của phòng cụ thể, loại bỏ booking có paymentStatus là 'Done'
+    const bookings = await Booking.find({
+      room: roomId,
+      paymentStatus: { $ne: "Done" }, // Loại bỏ những booking đã hoàn tất
+    });
 
-    // Trích xuất các ngày đã được đặt
+    // Trích xuất các ngày đã được đặt từ booking chưa hoàn tất
     const bookedDates = bookings.flatMap((booking) => {
       const dates = [];
       let currentDate = new Date(booking.checkInDate);
@@ -352,5 +355,6 @@ router.get("/booking/room-availability/:roomId", async (req, res) => {
     res.status(500).json({ message: "Lỗi khi lấy thông tin phòng", error });
   }
 });
+
 
 module.exports = router;
