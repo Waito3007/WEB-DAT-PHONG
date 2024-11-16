@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom"; // Sử dụng useNavigate
-import { Modal, message } from 'antd'; // Thư viện Ant Design modal và message
+import { Modal, notification } from 'antd'; // Thư viện Ant Design modal và message
 
 const DetailRoom = () => {
   const { hotelId } = useParams();
