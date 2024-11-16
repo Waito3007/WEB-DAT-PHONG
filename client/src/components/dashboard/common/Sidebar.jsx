@@ -46,7 +46,7 @@ const SIDEBAR_ITEMS = [
 		icon: TrendingUp,
 		color: "#3B82F6",
 		href: "/analytics",
-		roles: ["Admin", "HotelManager"], // Chỉ cho phép Admin
+		roles: ["", ""], 
 	},
 	{
 		name: "Settings",

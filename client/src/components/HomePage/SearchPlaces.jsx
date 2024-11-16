@@ -166,10 +166,10 @@ function SearchPlaces() {
           <div className="input-item">
             <label htmlFor="room-select">Phòng</label>
             <select id="room-select" className="border rounded px-4 py-2">
-              <option value="1-room-2-guests">1 phòng, 1 người</option>
-              <option value="2-room-2-guests">1 phòng, 2 người</option>
-              <option value="2-room-2-guests">2 phòng, 2 người</option>
-              <option value="2-room-2-guests">2 phòng, 4 người</option>
+              <option value="1-room-2-guests">Phòng thường 1 giường lớn</option>
+              <option value="2-room-2-guests">Phòng thường 2 giường nhỏ</option>
+              <option value="2-room-2-guests">Phòng vip 1 giường lớn</option>
+              <option value="2-room-2-guests">Phòng vip 2 giường nhỏ</option>
             </select>
           </div>
         </div>

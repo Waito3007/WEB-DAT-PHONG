@@ -304,5 +304,51 @@ router.get("/booking/total", auth, async (req, res) => {
   }
 });
 
+router.post("/booking/check-availability", async (req, res) => {
+  const { roomId, checkInDate, checkOutDate } = req.body;
 
+  const overlappingBookings = await Booking.find({
+    room: roomId,
+    $or: [
+      { checkInDate: { $lt: checkOutDate, $gte: checkInDate } },
+      { checkOutDate: { $gt: checkInDate, $lte: checkOutDate } },
+      {
+        checkInDate: { $lte: checkInDate },
+        checkOutDate: { $gte: checkOutDate },
+      },
+    ],
+  });
+
+  if (overlappingBookings.length > 0) {
+    return res.status(200).json({ available: false });
+  }
+
+  return res.status(200).json({ available: true });
+});
+
+router.get("/room-availability/:roomId", async (req, res) => {
+  const { roomId } = req.params;
+
+  try {
+    // Lấy danh sách các lần đặt phòng của phòng cụ thể
+    const bookings = await Booking.find({ room: roomId });
+
+    // Trích xuất các ngày đã được đặt
+    const bookedDates = bookings.flatMap((booking) => {
+      const dates = [];
+      let currentDate = new Date(booking.checkInDate);
+      const endDate = new Date(booking.checkOutDate);
+
+      while (currentDate <= endDate) {
+        dates.push(new Date(currentDate).toISOString().split("T")[0]); // Lưu ở dạng YYYY-MM-DD
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      return dates;
+    });
+
+    res.status(200).json({ bookedDates });
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi khi lấy thông tin phòng", error });
+  }
+});
 module.exports = router;
