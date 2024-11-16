@@ -161,8 +161,6 @@ router.post("/confirm", async (req, res) => {
 
   try {
     const savedBooking = await newBooking.save();
-
-    // Giảm remainingRooms của phòng khi booking được lưu thành công
     await room.save();
     res
       .status(201)
@@ -202,14 +200,8 @@ router.post("/confirmpaid", async (req, res) => {
 
   try {
     const savedBooking = await newBooking.save();
-
-    // Giảm số lượng phòng còn lại sau khi đặt thành công
     const room = await Room.findById(roomId);
-    if (room && room.remainingRooms > 0) {
-      room.remainingRooms -= 1;
-      await room.save();
-    }
-
+    await room.save();
     res
       .status(201)
       .json({ message: "Đặt phòng thành công", bookingId: savedBooking._id });
