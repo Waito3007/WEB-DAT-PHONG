@@ -1,44 +1,54 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Form, Button, notification, InputNumber, Switch, Upload, Select } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import React, { useState } from "react";
+import axios from "axios";
+import {
+  Form,
+  Button,
+  notification,
+  InputNumber,
+  Switch,
+  Upload,
+  Select,
+} from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 
 const { Option } = Select; // Khai báo biến Option để sử dụng trong Select
 
 const AddRoom = ({ hotelId, onClose }) => {
-  const [type, setType] = useState('');
+  const [type, setType] = useState("");
   const [price, setPrice] = useState(0);
   const [availability, setAvailability] = useState(true);
   const [images, setImages] = useState([]); // Đổi thành images cho nhất quán
-  const [remainingRooms, setRemainingRooms] = useState(0); // Số phòng còn trống
   const [loading, setLoading] = useState(false); // Trạng thái loading
 
   const handleAddRoom = async () => {
     setLoading(true); // Bắt đầu loading
     const formData = new FormData();
-    formData.append('type', type);
-    formData.append('price', price);
-    formData.append('availability', availability);
-    formData.append('remainingRooms', remainingRooms); // Thêm số phòng còn trống
+    formData.append("type", type);
+    formData.append("price", price);
+    formData.append("availability", availability);
 
     // Thêm từng ảnh vào formData với tên trường 'imageroom'
     images.forEach((file) => {
-      formData.append('imageroom', file);
+      formData.append("imageroom", file);
     });
 
     try {
-      const response = await axios.post(`/api/room/${hotelId}/add-room`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `/api/room/${hotelId}/add-room`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
 
       notification.success({
-        message: "Thêm Phòng Thành Công."
-      });       
-       onClose(); // Đóng modal sau khi thêm thành công
+        message: "Thêm Phòng Thành Công.",
+      });
+      onClose(); // Đóng modal sau khi thêm thành công
     } catch (error) {
       notification.error({
         message: "Thêm Phòng Thất Bại.",
@@ -50,7 +60,7 @@ const AddRoom = ({ hotelId, onClose }) => {
   };
 
   const handleFileChange = ({ fileList }) => {
-    setImages(fileList.map(file => file.originFileObj)); // Lưu ảnh dưới dạng file gốc
+    setImages(fileList.map((file) => file.originFileObj)); // Lưu ảnh dưới dạng file gốc
   };
 
   return (
@@ -64,10 +74,18 @@ const AddRoom = ({ hotelId, onClose }) => {
             placeholder="Chọn loại phòng"
             required
           >
-            <Option value="Phòng thường 1 giường lớn">Phòng thường 1 giường lớn</Option>
-            <Option value="Phòng thường 2 giường nhỏ">Phòng thường 2 giường nhỏ</Option>
-            <Option value="Phòng vip 1 giường lớn">Phòng vip 1 giường lớn</Option>
-            <Option value="Phòng vip 2 giường nhỏ">Phòng vip 2 giường nhỏ</Option>
+            <Option value="Phòng thường 1 giường lớn">
+              Phòng thường 1 giường lớn
+            </Option>
+            <Option value="Phòng thường 2 giường nhỏ">
+              Phòng thường 2 giường nhỏ
+            </Option>
+            <Option value="Phòng vip 1 giường lớn">
+              Phòng vip 1 giường lớn
+            </Option>
+            <Option value="Phòng vip 2 giường nhỏ">
+              Phòng vip 2 giường nhỏ
+            </Option>
           </Select>
         </Form.Item>
         <Form.Item label="Giá Phòng" required>
@@ -88,16 +106,6 @@ const AddRoom = ({ hotelId, onClose }) => {
             unCheckedChildren="Hết phòng"
           />
         </Form.Item>
-        <Form.Item label="Số Phòng Còn Trống" required>
-          <InputNumber
-            min={0}
-            value={remainingRooms}
-            onChange={(value) => setRemainingRooms(value)}
-            className="w-full"
-            placeholder="Nhập số phòng còn trống"
-            required
-          />
-        </Form.Item>
         <Form.Item label="Ảnh Phòng">
           <Upload
             listType="picture"
@@ -108,7 +116,7 @@ const AddRoom = ({ hotelId, onClose }) => {
           </Upload>
         </Form.Item>
         <Button type="primary" htmlType="submit" loading={loading}>
-          {loading ? 'Đang thêm phòng...' : 'Thêm Phòng'}
+          {loading ? "Đang thêm phòng..." : "Thêm Phòng"}
         </Button>
       </Form>
     </div>

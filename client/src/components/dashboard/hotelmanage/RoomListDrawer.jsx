@@ -1,16 +1,32 @@
-import React, { useState, useEffect, useCallback } from 'react'; 
-import { Modal, Drawer, Button, List, Image, Input, Spin, Typography, Pagination, notification } from 'antd';
-import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'; 
-import axios from 'axios';
-import AddRoom from './AddRoom'; // Nhập AddRoom
-import EditRoomDrawer from './EditRoomDrawer';
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  Modal,
+  Drawer,
+  Button,
+  List,
+  Image,
+  Input,
+  Spin,
+  Typography,
+  Pagination,
+  notification,
+} from "antd";
+import {
+  SearchOutlined,
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import axios from "axios";
+import AddRoom from "./AddRoom"; // Nhập AddRoom
+import EditRoomDrawer from "./EditRoomDrawer";
 
 const { Text } = Typography;
 
 const RoomListDrawer = ({ hotelId, visible, onClose }) => {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [isAddRoomModalVisible, setIsAddRoomModalVisible] = useState(false);
   const [isEditRoomDrawerVisible, setIsEditRoomDrawerVisible] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
@@ -22,12 +38,12 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
     try {
       const response = await axios.get(`/api/room/${hotelId}/rooms`);
       if (response.data.length === 0) {
-        setRooms([]); 
+        setRooms([]);
       } else {
-        setRooms(response.data); 
+        setRooms(response.data);
       }
     } catch (error) {
-      console.error('Error fetching rooms:', error);
+      console.error("Error fetching rooms:", error);
     } finally {
       setLoading(false);
     }
@@ -39,14 +55,13 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
     }
   }, [hotelId, visible, fetchRooms]);
 
-  const filteredRooms = rooms.filter(room =>
+  const filteredRooms = rooms.filter((room) =>
     room.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const indexOfLastRoom = currentPage * roomsPerPage;
   const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
   const currentRooms = filteredRooms.slice(indexOfFirstRoom, indexOfLastRoom);
-
 
   //thêm phòng
   const handleAddRoom = () => {
@@ -55,7 +70,7 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
 
   const handleAddRoomModalClose = () => {
     setIsAddRoomModalVisible(false);
-    fetchRooms(); 
+    fetchRooms();
   };
 
   //chỉnh sửa phòng
@@ -64,34 +79,34 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
     setIsEditRoomDrawerVisible(true);
   };
 
-   // Hàm xác nhận xóa phòng
-   const confirmDeleteRoom = (roomId) => {
+  // Hàm xác nhận xóa phòng
+  const confirmDeleteRoom = (roomId) => {
     Modal.confirm({
-      title: 'Xác nhận xóa',
-      content: 'Bạn có chắc chắn muốn xóa phòng này?',
-      okText: 'Có',
-      okType: 'danger',
-      cancelText: 'Không',
+      title: "Xác nhận xóa",
+      content: "Bạn có chắc chắn muốn xóa phòng này?",
+      okText: "Có",
+      okType: "danger",
+      cancelText: "Không",
       onOk: () => handleDeleteRoom(roomId), // Gọi hàm xóa phòng nếu người dùng xác nhận
     });
   };
-   // Hàm xóa phòng
-   const handleDeleteRoom = async (roomId) => {
+  // Hàm xóa phòng
+  const handleDeleteRoom = async (roomId) => {
     try {
       await axios.delete(`/api/room/${roomId}`, { withCredentials: true });
       notification.success({
         message: "Xóa Phòng Thành Công.",
         description: "Phòng đã được xóa khỏi danh sách.",
       });
-            fetchRooms(); 
+      fetchRooms();
     } catch (error) {
       notification.error({
         message: "Xóa Phòng Thất Bại.",
         description: "Vui lòng thử lại sau.",
-      });    }
+      });
+    }
   };
 
-  
   return (
     <Drawer
       title="Danh sách phòng"
@@ -103,18 +118,24 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
         <Spin tip="Đang tải danh sách phòng..." />
       ) : (
         <>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "16px",
+            }}
+          >
             <Input
               placeholder="Tìm kiếm phòng..."
               prefix={<SearchOutlined />}
               value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              style={{ borderRadius: '8px', flex: 1, marginRight: '8px' }}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ borderRadius: "8px", flex: 1, marginRight: "8px" }}
             />
-            <Button 
-              type="primary" 
-              icon={<PlusOutlined />} 
-              onClick={handleAddRoom} 
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={handleAddRoom}
             />
           </div>
           {rooms.length === 0 ? (
@@ -124,31 +145,32 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
               <List
                 itemLayout="horizontal"
                 dataSource={currentRooms}
-                renderItem={room => (
+                renderItem={(room) => (
                   <List.Item
                     actions={[
-                  <Button 
-                type="primary" 
-                icon={<EditOutlined />} 
-                onClick={() => handleEditRoom(room._id)} // Mở drawer chỉnh sửa phòng
-              />,                      
-              <Button 
-                      type="primary" 
-                      danger 
-                      icon={<DeleteOutlined />} 
-                      onClick={() => confirmDeleteRoom(room._id)} // Gọi hàm xác nhận xóa
-                    />,                    ]}
+                      <Button
+                        type="primary"
+                        icon={<EditOutlined />}
+                        onClick={() => handleEditRoom(room._id)} // Mở drawer chỉnh sửa phòng
+                      />,
+                      <Button
+                        type="primary"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => confirmDeleteRoom(room._id)} // Gọi hàm xác nhận xóa
+                      />,
+                    ]}
                     style={{
-                      border: '1px solid #e0e0e0',
-                      borderRadius: '8px',
-                      marginBottom: '12px',
-                      padding: '10px',
-                      background: '#f9f9f9',
+                      border: "1px solid #e0e0e0",
+                      borderRadius: "8px",
+                      marginBottom: "12px",
+                      padding: "10px",
+                      background: "#f9f9f9",
                     }}
                   >
                     <List.Item.Meta
                       title={room.type}
-                      description={`Giá: ${room.price} VND - Số phòng trống: ${room.remainingRooms}`}
+                      description={`Giá: ${room.price} VND`}
                     />
                     {room.imageroom.length > 0 && (
                       <Image
@@ -156,7 +178,7 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
                         height={100} // Đặt chiều cao để tạo hình vuông
                         src={room.imageroom[0]}
                         alt="Room"
-                        style={{ borderRadius: '8px', objectFit: 'cover' }}
+                        style={{ borderRadius: "8px", objectFit: "cover" }}
                       />
                     )}
                   </List.Item>
@@ -166,8 +188,8 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
                 current={currentPage}
                 pageSize={roomsPerPage}
                 total={filteredRooms.length}
-                onChange={page => setCurrentPage(page)}
-                style={{ textAlign: 'center', marginTop: '16px' }}
+                onChange={(page) => setCurrentPage(page)}
+                style={{ textAlign: "center", marginTop: "16px" }}
               />
             </>
           )}
@@ -181,19 +203,17 @@ const RoomListDrawer = ({ hotelId, visible, onClose }) => {
         width={520}
       >
         <AddRoom hotelId={hotelId} onClose={handleAddRoomModalClose} />
-
-        
       </Drawer>
       {/* Drawer chỉnh sửa thông tin phòng */}
-      <EditRoomDrawer 
-      visible={isEditRoomDrawerVisible} 
-      onClose={() => {
-      setIsEditRoomDrawerVisible(false);
-      setSelectedRoomId(null);  // Xóa roomId sau khi đóng drawer
-      }}
-      roomId={selectedRoomId}    // Truyền roomId vào EditRoomDrawer
-      fetchRooms={fetchRooms} 
-/>
+      <EditRoomDrawer
+        visible={isEditRoomDrawerVisible}
+        onClose={() => {
+          setIsEditRoomDrawerVisible(false);
+          setSelectedRoomId(null); // Xóa roomId sau khi đóng drawer
+        }}
+        roomId={selectedRoomId} // Truyền roomId vào EditRoomDrawer
+        fetchRooms={fetchRooms}
+      />
     </Drawer>
   );
 };
