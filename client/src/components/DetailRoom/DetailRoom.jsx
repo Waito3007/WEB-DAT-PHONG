@@ -37,12 +37,17 @@ const DetailRoom = () => {
   };
 
   const handleBookRoom = (roomId, remainingRooms) => {
+
     // Kiểm tra số phòng còn lại
     if (remainingRooms <= 0) {
       // Hiển thị thông báo nếu không còn phòng
-      message.warning('Phòng đã hết, vui lòng chọn loại phòng khác.');
+      notification.info({
+        message: "Đã hết phòng.",
+        description: "Vui lòng chọn phòng khác.",
+      });
       return; // Dừng hàm nếu không còn phòng
     }
+
     // Điều hướng sang trang thanh toán và truyền ID phòng
     navigate(`checkout/${roomId}`);
   };
@@ -72,9 +77,7 @@ const DetailRoom = () => {
 
               {/* Thông tin phòng */}
               <div className="flex-1 flex flex-col mb-4 sm:mb-0">
-                <div className="text-lg font-bold">Loại phòng: {room.type}</div>
-                <div>Tình trạng: <span className={`text-${room.remainingRooms > 0 ? 'green-500' : 'red-500'}`}>{room.remainingRooms > 0 ? 'Có sẵn' : 'Hết phòng'}</span></div>
-                <div>Số phòng còn trống: {room.remainingRooms}</div>
+                <div className="text-lg font-bold">{room.type}</div>
               </div>
 
               {/* Giá và nút chọn */}
@@ -83,7 +86,7 @@ const DetailRoom = () => {
               <button 
               type="button" 
               className="bg-black text-white px-4 py-2 rounded mt-2 hover:bg-gray-800 transition"
-              onClick={() => handleBookRoom(room._id, room.remainingRooms)}
+              onClick={() => handleBookRoom(room._id)}
               >
              Chọn
              </button>

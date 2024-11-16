@@ -29,4 +29,5 @@ BookingSchema.post("findOneAndUpdate", async function (doc, next) {
   next();
 });
 
+
 module.exports = mongoose.model("Booking", BookingSchema);

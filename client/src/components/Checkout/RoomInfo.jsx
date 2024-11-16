@@ -1,37 +1,98 @@
-import React, { useState, useEffect } from 'react';
-import { DatePicker, Input } from 'antd';
+import React, { useState, useEffect } from "react";
+import { DatePicker, Input, Tooltip } from "antd";
+import axios from "axios";
 
 const { RangePicker } = DatePicker;
 
-const RoomInfo = ({ roomDetails, user, setCheckInDate, setCheckOutDate, setEmail, setPhone, setTotalDays }) => {
+const RoomInfo = ({
+  roomDetails,
+  user,
+  setCheckInDate,
+  setCheckOutDate,
+  setEmail,
+  setPhone,
+  setTotalDays,
+}) => {
   const [localEmail, setLocalEmail] = useState("");
   const [localPhone, setLocalPhone] = useState("");
   const [localDateRange, setLocalDateRange] = useState([null, null]);
+  const [bookedDates, setBookedDates] = useState([]); // Danh sách các ngày đã đặt
 
-  if (!roomDetails) return null;
+  useEffect(() => {
+    if (roomDetails) {
+      const fetchBookedDates = async () => {
+        try {
+          const response = await axios.get(
+            `/api/booking/booking/room-availability/${roomDetails._id}`
+          );
+          const formattedDates =
+            response.data.bookedDates?.map((date) => date.split("T")[0]) || [];
+          setBookedDates(formattedDates);
+        } catch (error) {
+          console.error("Lỗi khi lấy danh sách ngày đã đặt:", error);
+        }
+      };
 
-  // Hàm tính số ngày giữa ngày nhận và trả phòng
+      fetchBookedDates();
+    }
+  }, [roomDetails]);
+
   const calculateDays = (dates) => {
-    if (dates[0] && dates[1]) {
-      const checkIn = dates[0].toDate(); // Ngày nhận phòng
-      const checkOut = dates[1].toDate(); // Ngày trả phòng
-      const diffTime = Math.abs(checkOut - checkIn); // Sự khác biệt thời gian
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Tính số ngày
-      setTotalDays(diffDays); // Gửi số ngày tới parent component
-      setCheckInDate(checkIn.toISOString().split('T')[0]); // Cập nhật ngày nhận phòng
-      setCheckOutDate(checkOut.toISOString().split('T')[0]); // Cập nhật ngày trả phòng
+    if (dates && dates[0] && dates[1]) {
+      const checkIn = dates[0].toDate();
+      const checkOut = dates[1].toDate();
+      const diffTime = Math.abs(checkOut - checkIn);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      setTotalDays(diffDays);
+      setCheckInDate(checkIn.toISOString().split("T")[0]);
+      setCheckOutDate(checkOut.toISOString().split("T")[0]);
     }
   };
 
-  // Hàm kiểm tra và vô hiệu hóa ngày trước ngày hiện tại (không dùng moment)
+  // Kiểm tra ngày đã qua hoặc đã đặt
   const disabledDate = (current) => {
-    // Lấy ngày hiện tại
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Đặt thời gian về đầu ngày (00:00:00)
-
-    // So sánh với ngày hiện tại, không cho phép chọn ngày trước hôm nay
-    return current && current < today;
+    today.setHours(0, 0, 0, 0);
+    const formattedDate = current?.format("YYYY-MM-DD");
+    return current && (current < today || bookedDates.includes(formattedDate));
   };
+
+  const dateRender = (current) => {
+    const formattedDate = current.format("YYYY-MM-DD");
+    const isBooked = bookedDates.includes(formattedDate);
+
+    // Nếu ngày đã đặt, không cần hiển thị biểu tượng, chỉ cho phép chọn các ngày chưa đặt
+    return (
+      <Tooltip title={isBooked ? "Đã đặt - Không thể chọn" : "Còn trống"}>
+        <div
+          className={`ant-picker-cell-inner flex items-center justify-center rounded-md ${
+            isBooked
+              ? "bg-red-500 text-white cursor-not-allowed" // Ngày đã đặt
+              : current.isBefore(new Date(), "day")
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed" // Ngày đã qua không thể chọn
+              : "bg-green-100 text-green-800 hover:bg-green-200" // Ngày có thể chọn
+          }`}
+          style={{
+            border: isBooked
+              ? "2px solid #ff4d4f"
+              : current.isBefore(new Date(), "day")
+              ? "2px solid #d9d9d9"
+              : "2px solid #52c41a",
+            transition: "background 0.3s ease, transform 0.3s ease",
+          }}
+        >
+          {current.date()}
+          {!isBooked && !current.isBefore(new Date(), "day") && (
+            <span className="ml-1 text-xs">✔</span> // Chỉ biểu tượng cho ngày có thể chọn
+          )}
+        </div>
+      </Tooltip>
+    );
+  };
+
+  if (!roomDetails) {
+    return <p>Đang tải thông tin phòng...</p>;
+  }
 
   return (
     <div className="room-info bg-white p-4 rounded-lg shadow-md">
@@ -39,14 +100,15 @@ const RoomInfo = ({ roomDetails, user, setCheckInDate, setCheckOutDate, setEmail
       <div className="date-picker mt-4">
         <label className="block mb-2">
           Ngày nhận phòng và trả phòng:
-          <RangePicker 
+          <RangePicker
             className="w-full text-lg border-2 border-gray-300 rounded-lg p-2"
             value={localDateRange}
             onChange={(dates) => {
               setLocalDateRange(dates);
-              calculateDays(dates); // Tính toán lại số ngày khi thay đổi
+              calculateDays(dates);
             }}
-            disabledDate={disabledDate} // Áp dụng hàm disabledDate
+            disabledDate={disabledDate}
+            dateRender={dateRender}
           />
         </label>
       </div>
@@ -54,24 +116,24 @@ const RoomInfo = ({ roomDetails, user, setCheckInDate, setCheckOutDate, setEmail
         <div className="user-info-input mb-4">
           <label className="block mb-2">
             Email:
-            <Input 
-              type="email" 
-              value={localEmail} 
-              onChange={(e) => setLocalEmail(e.target.value)} 
+            <Input
+              type="email"
+              value={localEmail}
+              onChange={(e) => setLocalEmail(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-md"
               placeholder="Nhập email"
-              onBlur={() => setEmail(localEmail)} 
+              onBlur={() => setEmail(localEmail)}
             />
           </label>
           <label className="block mb-4">
             Số điện thoại:
-            <Input 
-              type="tel" 
-              value={localPhone} 
-              onChange={(e) => setLocalPhone(e.target.value)} 
+            <Input
+              type="tel"
+              value={localPhone}
+              onChange={(e) => setLocalPhone(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-md"
               placeholder="Nhập số điện thoại"
-              onBlur={() => setPhone(localPhone)} 
+              onBlur={() => setPhone(localPhone)}
             />
           </label>
         </div>

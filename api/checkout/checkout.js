@@ -163,11 +163,7 @@ router.post("/confirm", async (req, res) => {
     const savedBooking = await newBooking.save();
 
     // Giảm remainingRooms của phòng khi booking được lưu thành công
-    const room = await Room.findById(roomId);
-    if (room && room.remainingRooms > 0) {
-      room.remainingRooms -= 1;
-      await room.save();
-    }
+    await room.save();
     res
       .status(201)
       .json({ message: "Đặt phòng thành công", bookingId: savedBooking._id });
@@ -214,10 +210,14 @@ router.post("/confirmpaid", async (req, res) => {
       await room.save();
     }
 
-    res.status(201).json({ message: "Đặt phòng thành công", bookingId: savedBooking._id });
+    res
+      .status(201)
+      .json({ message: "Đặt phòng thành công", bookingId: savedBooking._id });
   } catch (error) {
     console.error("Lỗi khi lưu booking:", error);
-    res.status(500).json({ message: "Có lỗi xảy ra khi lưu thông tin đặt phòng" });
+    res
+      .status(500)
+      .json({ message: "Có lỗi xảy ra khi lưu thông tin đặt phòng" });
   }
 });
 
