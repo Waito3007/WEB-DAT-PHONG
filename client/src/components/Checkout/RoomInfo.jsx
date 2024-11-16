@@ -19,14 +19,12 @@ const RoomInfo = ({
   const [bookedDates, setBookedDates] = useState([]); // Danh sách các ngày đã đặt
 
   useEffect(() => {
-    // Kiểm tra roomDetails tồn tại trước khi gọi API
     if (roomDetails) {
       const fetchBookedDates = async () => {
         try {
           const response = await axios.get(
             `/api/booking/booking/room-availability/${roomDetails._id}`
           );
-          // Chuẩn hóa dữ liệu trả về (nếu cần)
           const formattedDates =
             response.data.bookedDates?.map((date) => date.split("T")[0]) || [];
           setBookedDates(formattedDates);
@@ -51,6 +49,7 @@ const RoomInfo = ({
     }
   };
 
+  // Kiểm tra ngày đã qua hoặc đã đặt
   const disabledDate = (current) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -62,14 +61,30 @@ const RoomInfo = ({
     const formattedDate = current.format("YYYY-MM-DD");
     const isBooked = bookedDates.includes(formattedDate);
 
+    // Nếu ngày đã đặt, không cần hiển thị biểu tượng, chỉ cho phép chọn các ngày chưa đặt
     return (
-      <Tooltip title={isBooked ? "Đã đặt" : "Còn trống"}>
+      <Tooltip title={isBooked ? "Đã đặt - Không thể chọn" : "Còn trống"}>
         <div
-          className={`ant-picker-cell-inner ${
-            isBooked ? "bg-red-300 text-white" : ""
+          className={`ant-picker-cell-inner flex items-center justify-center rounded-md ${
+            isBooked
+              ? "bg-red-500 text-white cursor-not-allowed" // Ngày đã đặt
+              : current.isBefore(new Date(), "day")
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed" // Ngày đã qua không thể chọn
+              : "bg-green-100 text-green-800 hover:bg-green-200" // Ngày có thể chọn
           }`}
+          style={{
+            border: isBooked
+              ? "2px solid #ff4d4f"
+              : current.isBefore(new Date(), "day")
+              ? "2px solid #d9d9d9"
+              : "2px solid #52c41a",
+            transition: "background 0.3s ease, transform 0.3s ease",
+          }}
         >
           {current.date()}
+          {!isBooked && !current.isBefore(new Date(), "day") && (
+            <span className="ml-1 text-xs">✔</span> // Chỉ biểu tượng cho ngày có thể chọn
+          )}
         </div>
       </Tooltip>
     );
