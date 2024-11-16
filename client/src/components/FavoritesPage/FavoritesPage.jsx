@@ -8,9 +8,7 @@ export default function FavoritesPage() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); 
-//ljigtsaretyguhjn
   useEffect(() => {
-    // Lấy dữ liệu khách sạn từ API
     axios.get('http://localhost:5000/api/searchhotel/Search')
       .then(response => {
         console.log(response.data); 
@@ -20,14 +18,18 @@ export default function FavoritesPage() {
       .catch(error => {
         console.error("Có lỗi khi tải dữ liệu khách sạn!", error);
         setError("Có lỗi khi tải dữ liệu, vui lòng thử lại sau.");
-        setLoading(false); // Đánh dấu là đã tải xong, dù có lỗi
+        setLoading(false); 
       });
   }, []);
 
   return (
+
+    <div>
+     
+     
     <div className="favorites-page">
+      <div className="favorites-main" >
       <HomeNavbar />
-      <div className="favorites-main">
         <h2 className="text-2xl font-bold mb-4" style={{ color: 'black' }}>Yêu thích</h2>
 
         {loading ? (
@@ -46,7 +48,7 @@ export default function FavoritesPage() {
                   />
                   <div className="hotel-info">
                     <div className="flex justify-between items-center">
-                      <h3 className="hotel-title">{hotel.name}</h3>
+                      <h3 className="hotel-title" style={{ color: 'black' }}>{hotel.name}</h3>
                       <span className="hotel-price">{hotel.lowestRoomPrice} VND</span>
                     </div>
                     <p className="text-gray-600 mt-2">📍{hotel.location}</p>
@@ -77,9 +79,13 @@ export default function FavoritesPage() {
             )}
           </div>
         )}
-      </div>
 
-      <Footer />
+      </div>
+      < Footer />
+
+      </div>
+ 
     </div>
+
   );
 }

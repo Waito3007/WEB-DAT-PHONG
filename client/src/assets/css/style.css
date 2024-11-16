@@ -29,7 +29,6 @@ body {
   align-items: center;
   padding: 20px 40px; /* Giảm padding để bố cục gọn gàng hơn */
   color: white;
-  position: fixed; /* Giữ navbar ở trên cùng khi cuộn */
   top: 0;
   width: 100%;
   z-index: 100; /* Đảm bảo navbar luôn nằm trên các phần tử khác */
@@ -532,9 +531,9 @@ select:focus {
   width:800px; /* Đặt chiều rộng toàn bộ */
   max-width: 900px; /* Chiều rộng tối đa của thẻ khách sạn */
   min-width: 500px;
-  margin: 1rem; /* Khoảng cách giữa các khách sạn */
-  height: 300px; /* Thêm chiều cao cố định cho thẻ khách sạn */
-  align-items: flex-start; /* Căn chỉnh nội dung ở đầu */
+  margin: 1rem; 
+  height: 300px;
+  align-items: flex-start;
 }
 .hotel-details{
   width:100%;
@@ -556,17 +555,16 @@ select:focus {
   cursor: pointer; /* Hiển thị con trỏ chuột khi di chuột qua nút */
   font-size: 1rem; /* Kích thước chữ */
   width: 100%; /* Đặt chiều rộng thành 100% */
-  transition: background-color 0.3s; /* Hiệu ứng chuyển màu nền */
+  transition: background-color 0.3s; 
 }
 .button-container {
-  display: flex; /* Đặt chế độ flex cho container */
-  margin-top: 0.5rem; /* Khoảng cách trên button */
-  align-self: flex-start; /* Đưa button sát vào ảnh */
+  display: flex; 
+  margin-top: 0.5rem; 
+  align-self: flex-start; 
   width: 100%;
 }
 /* oderroom*/
 .order-room-container {
-  margin-top: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -919,3 +917,4 @@ button:hover {
     margin-top: 1rem !important;
   }
 }
+

@@ -1,42 +1,182 @@
-/* Đảm bảo body và html chiếm toàn bộ chiều rộng và chiều cao màn hình */
 html, body {
-  width: 100%;  /* Chiều rộng đầy đủ */
-  height: 80%; /* Chiều cao đầy đủ */
+  width: 100%;
+  height: 80%;
   margin: 0;
   padding: 0;
+  font-family: Arial, sans-serif;
   box-sizing: border-box;
 }
 
-/* Đặt phần favorites-page chiếm toàn bộ chiều rộng và chiều cao */
 .favorites-page {
   display: flex;
-  flex-direction: column; /* Các phần tử được sắp xếp theo chiều dọc */
-  width: 100%; /* Chiều rộng đầy đủ */
-  height: 100%; /* Chiều cao đầy đủ */
+  flex-direction: column;
+  width: 100%;
+  height: 100%; 
   box-sizing: border-box;
 }
 
-/* Phần nội dung chính sẽ chiếm không gian còn lại */
 .favorites-main {
-  flex-grow: 1; /* Chiếm không gian còn lại giữa header và footer */
-  overflow-y: scroll; /* Cho phép cuộn nếu nội dung vượt quá chiều cao */
+  flex-grow: 1; 
   padding: 16px;
   box-sizing: border-box;
-  height: calc(100vh - 80px - 64px); /* Chiều cao lấy từ 100vh trừ đi chiều cao của Navbar và Footer */
-  margin-top: 80px;
 }
 
-/* Đảm bảo footer nằm ở cuối trang */
 .favorites-footer {
   margin-top: auto;
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  .favorites-page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  
+  .favorites-main {
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding: 16px;
+    box-sizing: border-box;
+    height: calc(100vh - 80px - 64px);
+    margin-top: 80px;
+  }
+  
+  .hotel-card {
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    padding: 16px;
+    margin-bottom: 24px;
+    flex-direction: row; 
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .hotel-image {
+    max-width: 250px;
+    height: auto;
+    border-radius: 8px;
+    max-height: 180px;
+    object-fit: cover;
+  }
+  
+  .hotel-info {
+ 
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .hotel-title {
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: black;
+  }
+  
+  .hotel-price {
+    color: hsl(0, 84%, 60%);
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  
+  .square {
+    margin-top: 8px;
+    width: 40px;
+    height: 40px;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #8DD3BB;
+    border-radius: 8px;
+    color: #000000;
+  }
+  
+  .my-line {
+    border: none;
+    height: 2px;
+    background-color: #000000;
+    width: 100%;
+    margin: 16px 0;
+  }
+  
+  @media (max-width: 768px) {
+    .hotel-card {
+      flex-direction: column; 
+      align-items: flex-start;
+    }
+  
+    .hotel-image {
+      max-width: 100%; 
+      height: auto; 
+    }
+  
+    .hotel-info {
+      padding: 8px 0;
+    }
+  
+    .hotel-title {
+      font-size: 1rem;
+    }
+  
+    .hotel-price {
+      font-size: 1rem;
+    }
+  
+    .square {
+      width: 40px;
+      height: 40px;
+      font-size: 16px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hotel-image {
+      max-width: 100%;
+      height: auto;
+    }
+    .favorites-main {
+      padding: 8px; 
+    }
+  
+    .hotel-title {
+      font-size: 0.875rem;
+    }
+  
+    .hotel-price {
+      font-size: 0.875rem;
+    }
+  
+    .square {
+      width: 35px;
+      height: 35px;
+      font-size: 14px;
+    }
+  
+    .hotel-card {
+      padding: 12px;
+    }
+  }
+  
   background-color: #000000;
   color: #ffffff;
   padding: 32px;
-  width: 100%;  /* Chiều rộng đầy đủ */
+  width: 100%;  
   box-sizing: border-box;
 }
 
-/* Các thẻ khách sạn */
 .hotel-card {
   background-color: #ffffff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -44,41 +184,36 @@ html, body {
   display: flex;
   padding: 16px;
   margin-bottom: 24px;
-  width: 100%;  /* Chiều rộng đầy đủ */
+  width: 100%;
   box-sizing: border-box;
-  max-width: 100%; /* Không giới hạn chiều rộng */
+  max-width: 100%; 
 }
 
-/* Hình ảnh khách sạn */
 .hotel-image {
-  width: 100%; /* Làm cho hình ảnh chiếm toàn bộ chiều rộng của thẻ */
-  height: auto; /* Giữ tỷ lệ hình ảnh */
-  max-width: 250px; /* Giới hạn chiều rộng tối đa của hình ảnh */
-  height: 150px; /* Giới hạn chiều cao của hình ảnh */
+  width: 100%; 
+  height: auto;
+  max-width: 250px;
+  height: 150px; 
   border-radius: 8px;
   object-fit: cover;
 }
 
-/* Thông tin khách sạn */
 .hotel-info {
   width: 100%;
   padding: 0 16px;
 }
 
-/* Tiêu đề khách sạn */
 .hotel-title {
   font-size: 1.25rem;
   font-weight: bold;
 }
 
-/* Giá khách sạn */
 .hotel-price {
   color: hsl(0, 84%, 60%);
   font-weight: 600;
   font-size: 1.125rem;
 }
 
-/* Đường gạch ngăn cách */
 .my-line {
   border: none;
   height: 2px;
@@ -87,7 +222,6 @@ html, body {
   margin: 20px 0;
 }
 
-/* Đánh giá sao */
 .square {
   display: flex;
   width: 50px;
@@ -99,4 +233,81 @@ html, body {
   justify-content: center;
   align-items: center;
   border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .favorites-page {
+    padding: 8px; 
+  }
+
+  .hotel-card {
+    flex-direction: column; 
+    padding: 12px;
+    align-items: center;
+  }
+
+  .hotel-image {
+    max-width: 100%; 
+    height: auto; 
+    border-radius: 8px;
+  }
+
+  .hotel-info {
+    width: 100%;
+    padding: 8px 0;
+  }
+
+  .hotel-title {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .hotel-price {
+    font-size: 0.875rem; 
+  }
+
+  .square {
+    width: 40px;
+    height: 40px;
+    font-size: 14px; 
+    margin-top: 8px;
+  }
+
+  .favorites-main {
+    padding: 8px;
+    overflow-y: auto; 
+  }
+
+  .my-line {
+    margin: 12px 0; 
+  }
+}
+
+@media (max-width: 480px) {
+  .hotel-card {
+    min-width: 0px;
+    margin: 0rem;
+    height: 400px;
+
+    padding: 8px;
+    margin-bottom: 16px;
+  }
+
+  .hotel-image {
+    max-height: 120px; 
+  }
+
+  .hotel-title {
+    font-size: 0.875rem; 
+  }
+
+  .hotel-price {
+    font-size: 0.75rem; 
+  }
+
+  .square {
+    width: 35px;
+    height: 35px;
+    font-size: 12px; 
+  }
 }
