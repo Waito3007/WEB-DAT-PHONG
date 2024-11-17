@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, Checkbox } from 'antd';
-import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import '../../assets/css/Register.css';
 
@@ -56,12 +55,12 @@ const Register = () => {
   return (
     <div className="absolute inset-0 flex flex-col md:flex-row justify-center items-start px-4 py-8 md:px-16 md:py-16 bg-gradient-to-r from-gray-100 to-white">
       <motion.div 
-        className="flex flex-col md:flex-row max-w-3xl gap-6 bg-white p-6 rounded-lg shadow-md"
+        className="register-form flex flex-col md:flex-row max-w-3xl gap-6 bg-white p-6 rounded-lg shadow-md"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="w-[350px] relative mr-8">
+        <div className="register-image w-[350px] relative mr-8">
           <img
             className="w-[100%] h-auto rounded-lg shadow-md"
             src="https://res.cloudinary.com/dackig67m/image/upload/v1728840647/register_srtwnf.png"

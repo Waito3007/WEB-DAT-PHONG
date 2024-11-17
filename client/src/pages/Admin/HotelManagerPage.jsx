@@ -37,11 +37,9 @@ const HotelManagerPage = () => {
     fetchData();
   }, []);
   
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
   return (
     <div className="flex-1 overflow-auto relative z-10">
       <Header title="Khách Sạn" />

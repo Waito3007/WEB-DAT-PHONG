@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { User, Heart, Calendar, Hotel, LogOut, Menu } from "lucide-react";
 import FavoriteRoomsDrawer from "../FavoritesPage/FavoritesPage"; // Import your drawer component
 import BookingCard from "../BookingStatus/BookingCard";
+import { Tooltip } from "antd";
+
 const HomeNavbar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -130,16 +132,27 @@ const HomeNavbar = () => {
       <div className="navbar-buttons hidden md:flex items-center relative">
       {user ? (
         <div className="flex items-center space-x-4">
-          {/* Nút Đặt phòng của bạn nằm bên trái Heart */}
-          <div className="calendar-button cursor-pointer"onClick={handleOpenBookingDrawer}>
+        {/* Nút Đặt phòng */}
+        <Tooltip 
+          title="Đặt phòng"
+          overlayInnerStyle={{ backgroundColor: "white", color: "black", borderRadius: "8px", padding: "6px 12px" }}
+        >
+          <div className="calendar-button cursor-pointer" onClick={handleOpenBookingDrawer}>
             <Calendar className="w-6 h-6 text-white hover:text-blue-700" />
           </div>
-          <BookingCard open={drawerbookingOpen} onClose={handleCloseBookingDrawer} />
-          {/* Nút Khách sạn yêu thích */}
+        </Tooltip>
+        <BookingCard open={drawerbookingOpen} onClose={handleCloseBookingDrawer} />
+      
+        {/* Nút Khách sạn yêu thích */}
+        <Tooltip 
+          title="Khách sạn yêu thích"
+          overlayInnerStyle={{ backgroundColor: "white", color: "black", borderRadius: "8px", padding: "6px 12px" }}
+        >
           <div className="favorite-button cursor-pointer" onClick={handleOpenDrawer}>
             <Heart className="w-6 h-6 text-white hover:text-blue-700" />
           </div>
-          <FavoriteRoomsDrawer open={drawerOpen} onClose={handleCloseDrawer} />
+        </Tooltip>
+        <FavoriteRoomsDrawer open={drawerOpen} onClose={handleCloseDrawer} />
 
           {/* Avatar người dùng và menu thả xuống */}
           <div className="user-avatar cursor-pointer" onClick={toggleMenu}>

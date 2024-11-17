@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Table, Button } from "antd";
+import { Table } from "antd";
 import { Eye, EyeOff } from "lucide-react";
-import RatingComponent from "./RatingComponent"; // Import component RatingComponent
 
 const BookingHistory = ({
   bookingHistory,
@@ -13,8 +12,6 @@ const BookingHistory = ({
   toggleOrderIdVisibility,
 }) => {
   const [filterCurrentBookings, setFilterCurrentBookings] = useState(false);
-  const [currentBooking, setCurrentBooking] = useState(null); // Track booking for rating
-  const [showRating, setShowRating] = useState(false); // To toggle visibility of RatingComponent
 
   // Hàm lọc các booking đang còn hiệu lực (chưa check out và chưa hoàn thành)
   const filteredBookings = filterCurrentBookings
@@ -27,13 +24,6 @@ const BookingHistory = ({
 
   // Cấu hình các cột của bảng
   const columns = [
-    {
-      title: "STT",
-      key: "stt",
-      render: (text, record, index) => (
-        <span>{(currentPage - 1) * itemsPerPage + index + 1}</span>
-      ),
-    },
     {
       title: (
         <div className="flex items-center justify-center space-x-2">
@@ -48,6 +38,12 @@ const BookingHistory = ({
       ),
       dataIndex: "orderId",
       key: "orderId",
+      filterMultiple: false,
+      onFilter: (value, record) => record.orderId.includes(value),
+      filters: bookingHistory.map((booking) => ({
+        text: booking.orderId,
+        value: booking.orderId,
+      })),
       render: (text) => (isOrderIdVisible ? text : "*********"),
     },
     {
@@ -58,6 +54,13 @@ const BookingHistory = ({
       ),
       dataIndex: ["room", "hotel", "name"],
       key: "hotelName",
+      filterMultiple: true,
+      onFilter: (value, record) => record.room.hotel.name.includes(value),
+      filters: Array.from(
+        new Set(bookingHistory.map((booking) => booking.room.hotel.name))
+      )
+        .sort()
+        .map((name) => ({ text: name, value: name })),
       render: (name) => name,
     },
     {
@@ -68,24 +71,51 @@ const BookingHistory = ({
       ),
       dataIndex: ["room", "type"],
       key: "roomType",
+      onFilter: (value, record) => record.room.type.includes(value),
+      filters: Array.from(
+        new Set(bookingHistory.map((booking) => booking.room.type))
+      )
+        .sort()
+        .map((type) => ({ text: type, value: type })),
       render: (type) => type,
     },
     {
-      title: "Ngày Nhận Phòng",
+      title: (
+        <div className="flex items-center justify-center space-x-2">
+          <span className="font-semibold text-gray-700">Ngày Nhận Phòng</span>
+        </div>
+      ),
       dataIndex: "checkInDate",
       key: "checkInDate",
       render: (date) => formatDate(date),
+      sorter: (a, b) => new Date(a.checkInDate) - new Date(b.checkInDate),
     },
     {
-      title: "Ngày Trả Phòng",
+      title: (
+        <div className="flex items-center justify-center space-x-2">
+          <span className="font-semibold text-gray-700">Ngày Trả Phòng</span>
+        </div>
+      ),
       dataIndex: "checkOutDate",
       key: "checkOutDate",
       render: (date) => formatDate(date),
+      sorter: (a, b) => new Date(a.checkOutDate) - new Date(b.checkOutDate),
     },
     {
-      title: "Tình Trạng",
+      title: (
+        <div className="flex items-center justify-center space-x-2">
+          <span className="font-semibold text-gray-700">Tình Trạng</span>
+        </div>
+      ),
       dataIndex: "paymentStatus",
       key: "paymentStatus",
+      onFilter: (value, record) => record.paymentStatus === value,
+      filters: [
+        { text: "Đã thanh toán", value: "Complete" },
+        { text: "Chưa thanh toán", value: "Pending" },
+        { text: "Nhận phòng", value: "CheckIn" },
+        { text: "Hoàn thành", value: "Done" },
+      ],
       render: (status) => {
         let color = "";
         let text = "";
@@ -124,35 +154,6 @@ const BookingHistory = ({
         );
       },
     },
-    {
-      title: "Đánh Giá",
-      key: "rating",
-      render: (text, record) => {
-        // Nếu trạng thái là "Hoàn thành" và chưa đánh giá, hiển thị nút "Đánh giá"
-        const userRating = record.rating; // Giả sử record có rating của người dùng
-        if (record.paymentStatus === "Done" && !userRating) {
-          return (
-            <Button
-              type="primary"
-              onClick={() => {
-                // Lưu bookingId vào trạng thái
-                setCurrentBooking(record);
-                setShowRating(true);
-
-                // Lấy hotelId từ booking và in ra
-                const hotelId = record?.room?.hotel?.id; // Lấy hotelId từ booking
-                console.log("Hotel ID:", hotelId);
-              }}
-            >
-              Đánh giá
-            </Button>
-          );
-        } else if (userRating) {
-          return <span>Đánh giá: {userRating}</span>;
-        }
-        return null;
-      },
-    },
   ];
 
   return (
@@ -184,13 +185,6 @@ const BookingHistory = ({
           scroll={{ x: "max-content" }} // Enable horizontal scroll on smaller screens
         />
       </div>
-
-      {showRating && currentBooking && (
-        <RatingComponent
-          hotelId={currentBooking?.room?.hotel?.id} // Truyền hotelId vào RatingComponent
-          onClose={() => setShowRating(false)}
-        />
-      )}
     </div>
   );
 };

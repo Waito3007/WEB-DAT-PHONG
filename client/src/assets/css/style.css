@@ -945,3 +945,37 @@ button:hover {
   padding-left: 8px;
   border-radius: 4px;
 }
+
+.ant-picker-cell-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.ant-picker-cell-inner:hover {
+  transform: scale(1.1);
+}
+.bg-red-500 {
+  background-color: #f5222d;
+}
+
+.bg-green-100 {
+  background-color: #f6ffed;
+}
+
+.bg-green-200 {
+  background-color: #d9f7be;
+}
+
+.text-white {
+  color: #fff;
+}
+
+.text-green-800 {
+  color: #237804;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}

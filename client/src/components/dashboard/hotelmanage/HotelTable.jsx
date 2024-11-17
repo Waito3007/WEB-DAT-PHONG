@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Edit, Trash2 } from 'lucide-react';
-import { Modal, Input, Button, message, Form, notification } from 'antd';
+import { Modal, Input, Button, Form, notification } from 'antd';
 import EditHotelModal from './EditHotelModal';
 
 

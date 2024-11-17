@@ -1,18 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Input } from 'antd';
+import { Input, Spin, notification } from 'antd'; // Import Spin component from Ant Design
 import { motion } from 'framer-motion';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
+  const [isCooldown, setIsCooldown] = useState(false); // Track cooldown state
+  const [countdown, setCountdown] = useState(30); // Track the countdown timer
+  const [isLoading, setIsLoading] = useState(false); // Track loading state
   const navigate = useNavigate();
+
+  // Start countdown when the user submits the email
+  useEffect(() => {
+    let timer;
+    if (isCooldown) {
+      timer = setInterval(() => {
+        setCountdown((prevCountdown) => {
+          if (prevCountdown <= 1) {
+            clearInterval(timer);
+            setIsCooldown(false);
+            setCountdown(30);
+          }
+          return prevCountdown - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isCooldown]);
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+
+    // If cooldown is active, prevent submission
+    if (isCooldown) {
+      setError('Vui lòng đợi ' + countdown + ' giây trước khi thử lại.');
+      return;
+    }
+
+    setIsLoading(true); // Start loading
 
     try {
       const response = await fetch('/api/profile/forgot-password', {
@@ -23,13 +52,22 @@ const ForgotPassword = () => {
 
       const data = await response.json();
       if (response.ok) {
-        setSuccess('Đã gửi liên kết đặt lại mật khẩu vào email của bạn.');
+        notification.success({
+          message: "Thành Công.",
+          description: "Đã gửi liên kết đặt lại mật khẩu vào email của bạn.",
+        });
+        setIsCooldown(true); // Start cooldown after successful request
       } else {
         setError(data.msg || 'Có lỗi xảy ra');
       }
     } catch (err) {
       console.error('Lỗi mạng hoặc server:', err);
-      setError('Có lỗi xảy ra, vui lòng thử lại sau.');
+      notification.error({
+        message: "Thất Bại.",
+        description: "Vui lòng thử lại sau.",
+      });
+        } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -68,8 +106,13 @@ const ForgotPassword = () => {
               <button 
                 type="submit" 
                 className="w-full h-12 bg-black text-white py-2 rounded-md text-lg hover:bg-gray-800 transition duration-300 ease-in-out"
+                disabled={isCooldown || isLoading} // Disable button if cooldown or loading is active
               >
-                Gửi
+                {isLoading ? (
+                  <Spin size="small" className="mr-2" /> // Show spinner when loading
+                ) : (
+                  isCooldown ? `Vui lòng đợi ${countdown} giây` : 'Gửi'
+                )}
               </button>
             </div>
           </form>

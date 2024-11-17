@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { UserCheck, UserPlus, UsersIcon, UserX } from "lucide-react";
+import { UserCheck, UserPlus, UsersIcon } from "lucide-react";
 import { motion } from "framer-motion";
 
 import Header from "../../components/dashboard/common/Header";
@@ -54,7 +54,6 @@ const UsersPage = () => {
 	return (
 		<div className='flex-1 overflow-auto relative z-10'>
 			<Header title='Người dùng' />
-
 			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
 				{/* STATS */}
 				<motion.div
@@ -77,7 +76,6 @@ const UsersPage = () => {
 						color='#F59E0B'
 					/>
 				</motion.div>
-
 				<UsersTable />
 
 				{/* USER CHARTS */}
