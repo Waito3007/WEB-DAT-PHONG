@@ -17,17 +17,6 @@ const BookingSchema = new mongoose.Schema({
   priceBooking: { type: Number, required: true },
 });
 
-// Middleware hoàn lại phòng khi cập nhật trạng thái đơn hàng thành 'Done'
-BookingSchema.post("findOneAndUpdate", async function (doc, next) {
-  if (doc.paymentStatus === "Done") {
-    const room = await mongoose.model("Room").findById(doc.room);
-    if (room) {
-      room.remainingRooms += 1;
-      await room.save();
-    }
-  }
-  next();
-});
 
 
 module.exports = mongoose.model("Booking", BookingSchema);
