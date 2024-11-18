@@ -165,8 +165,8 @@ Server frontend sẽ chạy tại `http://localhost:3000`.
 
 ## Contributors
 
-- **Sang Vu** - Student of HUFLIT
-- ** Nghia Le** - Student of HUFLIT
+- **Sang Vu** - Student of HUFLIT UNIVERSITY
+- **Nghia Le** - Student of HUFLIT UNIVERSITY
 
 ---
 
