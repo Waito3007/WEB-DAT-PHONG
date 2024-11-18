@@ -159,15 +159,14 @@ Server frontend sẽ chạy tại `http://localhost:3000`.
 
 ## Lưu ý
 
-- Liên hệ qua email nếu bạn gặp vấn đề: **support@example.com**.
-- Đóng góp hoặc báo cáo lỗi trên GitHub: [GitHub Issues](<github-repo-url>).
+- Liên hệ qua email nếu bạn gặp vấn đề: **vuphanhoaisang@gmail.com**.
 
 ---
 
 ## Contributors
 
-- **Your Name** - Developer
-- **Your Team** - Contributor
+- **Sang Vu** - Student of HUFLIT
+- ** Nghia Le** - Student of HUFLIT
 
 ---
 
