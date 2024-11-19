@@ -64,7 +64,7 @@ From the project root directory, run:
 ```bash
 node server.js
 ```
-The backend server will run on `http://localhost:3001` by default.
+The backend server will run on `http://localhost:5000` by default.
 
 ### Start the Frontend Server
 From the `client` directory, run:
