@@ -2,9 +2,9 @@
   "name": "webdatphong",
   "version": "1.0.0",
   "description": "webdatphongkhachsan",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
