@@ -59,7 +59,7 @@ const Payment = ({
       } else if (method === "TrucTiep") {
         const orderId = "TIENMAT" + Math.random().toString(36).substring(2, 15); // Tạo orderId ngẫu nhiên cho thanh toán tiền mặt
 
-        const response = await axios.post("/api/checkout/confirmpaid", {
+        const response = await axios.post("/api/checkout/confirm", {
           userId: userId || undefined,
           roomId: roomDetails._id,
           checkInDate,

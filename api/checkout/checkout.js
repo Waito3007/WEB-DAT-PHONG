@@ -4,6 +4,100 @@ const Room = require("../../models/Room"); // Model Room
 const Booking = require("../../models/Booking"); // Model Booking
 const axios = require("axios");
 const crypto = require("crypto");
+// API nhận callback từ MoMo (IPN hoặc redirect) và lưu booking khi thanh toán thành công
+router.post("/momo-callback", async (req, res) => {
+  // Tùy vào cấu trúc callback MoMo, bạn cần xác thực signature và kiểm tra trạng thái giao dịch
+  // Ví dụ: MoMo gửi về các trường như resultCode, orderId, amount, ...
+  const {
+    resultCode,
+    orderId,
+    amount,
+    userId,
+    roomId,
+    checkInDate,
+    checkOutDate,
+    phoneBooking,
+    emailBooking
+  } = req.body;
+
+  // Chỉ lưu booking nếu thanh toán thành công (resultCode === 0)
+  if (resultCode === 0) {
+    const newBooking = new Booking({
+      user: userId || undefined,
+      room: roomId,
+      bookingDate: new Date(),
+      checkInDate: new Date(checkInDate),
+      checkOutDate: new Date(checkOutDate),
+      phoneBooking: phoneBooking,
+      emailBooking: emailBooking,
+      paymentStatus: "Complete",
+      orderId: orderId,
+      priceBooking: amount,
+    });
+    try {
+      const savedBooking = await newBooking.save();
+      // Giảm remainingRooms của phòng khi booking được lưu thành công
+      const room = await Room.findById(roomId);
+      if (room && room.remainingRooms > 0) {
+        room.remainingRooms -= 1;
+        await room.save();
+      }
+      res.status(201).json({ message: "Đặt phòng thành công qua MoMo", bookingId: savedBooking._id });
+    } catch (error) {
+      console.error("Lỗi khi lưu booking MoMo:", error);
+      res.status(500).json({ message: "Có lỗi xảy ra khi lưu thông tin đặt phòng MoMo" });
+    }
+  } else {
+    res.status(400).json({ message: "Thanh toán MoMo chưa thành công" });
+  }
+});
+
+// API xác nhận và lưu booking cho thanh toán tiền mặt
+router.post("/confirmpaid", async (req, res) => {
+  const {
+    userId,
+    roomId,
+    checkInDate,
+    checkOutDate,
+    phoneBooking,
+    emailBooking,
+    paymentStatus,
+    orderId,
+    priceBooking,
+  } = req.body;
+
+  const newBooking = new Booking({
+    user: userId || undefined,
+    room: roomId,
+    bookingDate: new Date(),
+    checkInDate: new Date(checkInDate),
+    checkOutDate: new Date(checkOutDate),
+    phoneBooking: phoneBooking,
+    emailBooking: emailBooking,
+    paymentStatus: paymentStatus || "Pending",
+    orderId: orderId,
+    priceBooking: priceBooking,
+  });
+
+  try {
+    const savedBooking = await newBooking.save();
+
+    // Giảm remainingRooms của phòng khi booking được lưu thành công
+    const room = await Room.findById(roomId);
+    if (room && room.remainingRooms > 0) {
+      room.remainingRooms -= 1;
+      await room.save();
+    }
+    res
+      .status(201)
+      .json({ message: "Đặt phòng thành công", bookingId: savedBooking._id });
+  } catch (error) {
+    console.error("Lỗi khi lưu booking tiền mặt:", error);
+    res
+      .status(500)
+      .json({ message: "Có lỗi xảy ra khi lưu thông tin đặt phòng tiền mặt" });
+  }
+});
 
 // API lấy thông tin chi tiết phòng dựa trên roomId
 router.get("/:roomId", async (req, res) => {
@@ -70,25 +164,10 @@ router.post("/payment", async (req, res) => {
 
   try {
     const response = await axios(options);
-    const confirmResponse = await axios.post(
-      "http://localhost:5000/api/checkout/confirm",
-      {
-        userId: req.body.userId,
-        roomId: req.body.roomId,
-        checkInDate: req.body.checkInDate,
-        checkOutDate: req.body.checkOutDate,
-        phoneBooking: req.body.phoneBooking,
-        emailBooking: req.body.emailBooking,
-        paymentStatus: "Pending",
-        orderId: orderId,
-        priceBooking: req.body.amount, // Lưu giá vào booking
-      }
-    );
-
+    // Chỉ trả về payUrl và orderId, không lưu booking ở đây
     res.json({
       payUrl: response.data.payUrl,
-      orderId: orderId,
-      bookingId: confirmResponse.data.bookingId,
+      orderId: orderId
     });
   } catch (error) {
     console.error("Lỗi khi thanh toán:", error);
