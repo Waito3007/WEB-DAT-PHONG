@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/top-provinces', async (req, res) => {
     try {
         // Bước 1: Lấy danh sách tỉnh thành từ API
-        const provinceResponse = await axios.get('http://localhost:5000/api/tinhthanh');
+        const provinceResponse = await axios.get('https://web-dat-phong.onrender.com/api/tinhthanh');
         const provinces = provinceResponse.data.data;
 
         // Bước 2: Lấy danh sách khách sạn và tính toán số lượng theo tỉnh thành
