@@ -9,6 +9,8 @@ import SalesTrendChart from "../../components/dashboard/hotelmanage/SalesTrendCh
 import HotelTable from "../../components/dashboard/hotelmanage/HotelTable";
 import MyHotelTable from "../../components/dashboard/hotelmanage/MyHotelTable";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const HotelManagerPage = () => {
   const [role, setRole] = useState("");
   const [hotelCount, setHotelCount] = useState(0);
@@ -17,12 +19,12 @@ const HotelManagerPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userResponse = await axios.get("/api/profile/me", { withCredentials: true });
+        const userResponse = await axios.get(`${API_URL}/api/profile/me`, { withCredentials: true });
         setRole(userResponse.data.role);
   
         // Tải danh sách khách sạn theo vai trò
         const hotelsResponse = await axios.get(
-          userResponse.data.role === "Admin" ? "/api/hotel" : "/api/hotel/myhotels",
+          userResponse.data.role === "Admin" ? `${API_URL}/api/hotel` : `${API_URL}/api/hotel/myhotels`,
           { withCredentials: true }
         );
   

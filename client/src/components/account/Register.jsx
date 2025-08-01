@@ -4,6 +4,8 @@ import { Input, Checkbox } from 'antd';
 import { motion } from 'framer-motion';
 import '../../assets/css/Register.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const Register = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -32,9 +34,10 @@ const Register = () => {
     const name = `${firstName} ${lastName}`;
 
     try {
-      const response = await fetch('/api/users/register', {
+      const response = await fetch(`${API_URL}/api/users/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ name, email, password, registrationDate }),
       });
 

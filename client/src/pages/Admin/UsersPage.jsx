@@ -9,6 +9,8 @@ import UserGrowthChart from "../../components/dashboard/users/UserGrowthChart";
 // import UserActivityHeatmap from "../../components/dashboard/users/UserActivityHeatmap";
 // import UserDemographicsChart from "../../components/dashboard/users/UserDemographicsChart";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const UsersPage = () => {
 	const [userStats, setUserStats] = useState({
 		totalUsers: 0,
@@ -19,7 +21,9 @@ const UsersPage = () => {
 	useEffect(() => {
 		const fetchUserStats = async () => {
 			try {
-				const response = await fetch('/api/usertable');
+				const response = await fetch(`${API_URL}/api/usertable`, {
+					credentials: 'include'
+				});
 				if (!response.ok) throw new Error('Lỗi khi lấy dữ liệu người dùng');
 				const users = await response.json();
 

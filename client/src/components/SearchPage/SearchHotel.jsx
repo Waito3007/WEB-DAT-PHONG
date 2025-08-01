@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import 'antd/dist/antd'; // Ensure proper styling is imported
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function SearchHotel({ setFilteredHotels, setHotels, hotels }) {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -17,7 +19,9 @@ function SearchHotel({ setFilteredHotels, setHotels, hotels }) {
     const fetchData = async () => {
       try {
         // Fetch provinces
-        const provinceResponse = await fetch("/api/tinhthanh/top-provinces");
+        const provinceResponse = await fetch(`${API_URL}/api/tinhthanh/top-provinces`, {
+          credentials: 'include'
+        });
         const provinceData = await provinceResponse.json();
         if (provinceData.error === 0) {
           setProvinces(provinceData.data);
@@ -26,7 +30,9 @@ function SearchHotel({ setFilteredHotels, setHotels, hotels }) {
         }
 
         // Fetch hotels
-        const hotelResponse = await fetch("/api/searchhotel/Search");
+        const hotelResponse = await fetch(`${API_URL}/api/searchhotel/Search`, {
+          credentials: 'include'
+        });
         const hotelData = await hotelResponse.json();
         setHotels(hotelData);
         setFilteredHotels(hotelData);

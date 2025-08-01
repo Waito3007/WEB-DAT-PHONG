@@ -8,6 +8,8 @@ import SalesByCategoryChart from "../../components/dashboard/sales/SalesByCatego
 import DailySalesTrend from "../../components/dashboard/sales/DailySalesTrend";
 import axios from 'axios'; 
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const SalesPage = () => {
 	const [user, setUser] = useState(null);
 	const [bookings, setBookings] = useState([]);
@@ -20,7 +22,7 @@ const SalesPage = () => {
 
 	const fetchUser = async () => {
 		try {
-			const response = await fetch('/api/profile/me', {
+			const response = await fetch(`${API_URL}/api/profile/me`, {
 				method: 'GET',
 				credentials: 'include'
 			});

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Input, Spin, notification } from 'antd'; // Import Spin component from Ant Design
 import { motion } from 'framer-motion';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(null);
@@ -44,9 +46,10 @@ const ForgotPassword = () => {
     setIsLoading(true); // Start loading
 
     try {
-      const response = await fetch('/api/profile/forgot-password', {
+      const response = await fetch(`${API_URL}/api/profile/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email }),
       });
 

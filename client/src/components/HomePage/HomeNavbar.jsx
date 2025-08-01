@@ -5,6 +5,8 @@ import FavoriteRoomsDrawer from "../FavoritesPage/FavoritesPage"; // Import your
 import BookingCard from "../BookingStatus/BookingCard";
 import { Tooltip } from "antd";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const HomeNavbar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -28,7 +30,7 @@ const HomeNavbar = () => {
   };
   const fetchUser = async () => {
     try {
-      const response = await fetch('/api/profile/me', {
+      const response = await fetch(`${API_URL}/api/profile/me`, {
         method: 'GET',
         credentials: 'include'
       });
@@ -70,7 +72,7 @@ const HomeNavbar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/profile/logout', {
+      const response = await fetch(`${API_URL}/api/profile/logout`, {
         method: 'POST',
         credentials: 'include',
       });

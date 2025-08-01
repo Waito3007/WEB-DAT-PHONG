@@ -6,6 +6,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const { Meta } = Card;
 
 const PopularDestinations = () => {
@@ -17,7 +19,7 @@ const PopularDestinations = () => {
   useEffect(() => {
     const fetchTopHotels = async () => {
       try {
-        const response = await axios.get("/api/homepage/random-hotel");
+        const response = await axios.get(`${API_URL}/api/homepage/random-hotel`);
         setHotels(response.data);
         setLoading(false);
       } catch (err) {

@@ -9,6 +9,8 @@ import StatCard from "../../components/dashboard/common/StatCard";
 // import OrderDistribution from "../../components/dashboard/orders/OrderDistribution";
 import OrdersTable from "../../components/dashboard/orders/OrdersTable";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const OrdersPage = () => {
   const [orderStats, setOrderStats] = useState({
     totalOrders: "0",
@@ -21,7 +23,7 @@ const OrdersPage = () => {
     // Gọi API để lấy dữ liệu tổng quan
     const fetchOrderStats = async () => {
       try {
-        const response = await axios.get("/api/booking/booking/total");
+        const response = await axios.get(`${API_URL}/api/booking/booking/total`);
         const { totalBookings, pendingBookings, doneBookings, totalAmount } = response.data;
 
         // Chuyển totalAmount sang định dạng tiền tệ VND

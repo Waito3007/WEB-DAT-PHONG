@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function SearchPlaces() {
   const [provinces, setProvinces] = useState([]); // Tất cả các tỉnh thành
   const [filteredProvinces, setFilteredProvinces] = useState([]); // Tỉnh thành được lọc theo tìm kiếm
@@ -12,7 +14,7 @@ function SearchPlaces() {
   // Hàm fetch dữ liệu tỉnh thành hàng đầu
   const fetchTopProvinces = async () => {
     try {
-      const response = await fetch("/api/tinhthanh/top-provinces");
+      const response = await fetch(`${API_URL}/api/tinhthanh/top-provinces`);
       if (response.ok) {
         const result = await response.json();
         if (result.error === 0 && Array.isArray(result.data)) {

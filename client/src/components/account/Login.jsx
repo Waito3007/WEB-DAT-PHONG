@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Input } from 'antd';
 import { motion } from 'framer-motion';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,9 +15,10 @@ const Login = () => {
     e.preventDefault();
     setError(null);
     try {
-      const response = await fetch('/api/users/login', {
+      const response = await fetch(`${API_URL}/api/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();

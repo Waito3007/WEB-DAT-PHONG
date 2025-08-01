@@ -4,6 +4,8 @@ import { notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Modal, Button } from "@mui/material";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const Payment = ({
   roomDetails,
   checkInDate,
@@ -19,7 +21,7 @@ const Payment = ({
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get("/api/profile/me", {
+        const response = await axios.get(`${API_URL}/api/profile/me`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -45,7 +47,7 @@ const Payment = ({
 
     try {
       if (method === "Momo") {
-        const response = await axios.post("/api/checkout/payment", {
+        const response = await axios.post(`${API_URL}/api/checkout/payment`, {
           amount: totalPrice, // Giá tiền tổng
           checkInDate,
           checkOutDate,
@@ -59,7 +61,7 @@ const Payment = ({
       } else if (method === "TrucTiep") {
         const orderId = "TIENMAT" + Math.random().toString(36).substring(2, 15); // Tạo orderId ngẫu nhiên cho thanh toán tiền mặt
 
-        const response = await axios.post("/api/checkout/confirm", {
+        const response = await axios.post(`${API_URL}/api/checkout/confirm`, {
           userId: userId || undefined,
           roomId: roomDetails._id,
           checkInDate,

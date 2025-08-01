@@ -25,6 +25,33 @@ app.use(cookieParser()); // Đặt cookie-parser trước các route
 app.use(express.json()); // Để phân tích JSON trong request
 // Gọi dotenv
 dotenv.config();
+
+// CORS Configuration - Đặt trước các routes
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001', 
+  'https://web-dat-phong.onrender.com',
+  'https://web-dat-phong-frontend.vercel.app', // Thêm domain frontend nếu có
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Cho phép requests không có origin (mobile apps, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // Cho phép cookies và headers authentication
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 // Middleware
 app.use(express.json());
 // api
@@ -45,9 +72,6 @@ app.get('/', (req, res) => {
   res.send('Welcome to Hotel Booking API');
   
 });
-app.use(cors({
-  origin: 'http://localhost:3000' // Cho phép yêu cầu từ frontend
-}));
 // Lắng nghe trên cổng
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

@@ -7,6 +7,9 @@ import BookingDetailsModal from "./BookingDetailsModal";
 import UpdateStatusModal from "./UpdateStatusModal";
 import EditBookingModal from "./EditBookingModal";
 import DeleteBookingModal from "./DeleteModal";
+
+const API_URL = process.env.REACT_APP_API_URL;
+
 const OrderTable = () => {
   const [data, setData] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -24,7 +27,7 @@ const OrderTable = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   useEffect(() => {
     axios
-      .get("/api/booking/booking/manager")
+      .get(`${API_URL}/api/booking/booking/manager`)
       .then((response) => {
         setData(response.data);
         setFilteredBookings(response.data); // Lưu trữ toàn bộ dữ liệu
@@ -36,7 +39,7 @@ const OrderTable = () => {
 
   const loadBookings = () => {
     axios
-      .get("/api/booking/booking/manager")
+      .get(`${API_URL}/api/booking/booking/manager`)
       .then((response) => {
         setFilteredBookings(response.data); // Cập nhật lại filteredBookings với dữ liệu mới
       })

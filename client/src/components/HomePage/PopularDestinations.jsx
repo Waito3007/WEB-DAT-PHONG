@@ -6,6 +6,8 @@ import "antd/dist/antd";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const { Meta } = Card;
 
 const PopularDestinations = () => {
@@ -16,7 +18,7 @@ const PopularDestinations = () => {
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
-        const response = await fetch("/api/tinhthanh/top-provinces");
+        const response = await fetch(`${API_URL}/api/tinhthanh/top-provinces`);
         const data = await response.json();
 
         if (data.error === 0) {

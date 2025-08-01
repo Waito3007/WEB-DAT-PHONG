@@ -43,6 +43,12 @@ import FavoritesPage from "./components/FavoritesPage/FavoritesPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import BookingStatusPage from "./pages/BookingStatusPage";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
+// Configure axios defaults
+axios.defaults.baseURL = API_URL;
+axios.defaults.withCredentials = true;
+
 const AppContent = () => {
   const location = useLocation();
   const [role, setRole] = useState(""); // Lưu role người dùng
@@ -52,7 +58,7 @@ const AppContent = () => {
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
-        const response = await axios.get("/api/profile/me", {
+        const response = await axios.get(`${API_URL}/api/profile/me`, {
           withCredentials: true, // Gửi cookie để xác thực
         });
         const userRole = response.data.role;

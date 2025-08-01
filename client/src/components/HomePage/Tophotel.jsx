@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Card, Col, Row } from 'antd';
 import { useNavigate } from 'react-router-dom'; // Thêm import này
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const { Meta } = Card;
 
 const TopHotels = () => {
@@ -14,7 +16,7 @@ const TopHotels = () => {
   useEffect(() => {
     const fetchTopHotels = async () => {
       try {
-        const response = await axios.get('/api/homepage/top4hotel');
+        const response = await axios.get(`${API_URL}/api/homepage/top4hotel`);
         setHotels(response.data);
         setLoading(false);
       } catch (err) {
