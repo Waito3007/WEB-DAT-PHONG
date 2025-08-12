@@ -1,6 +1,8 @@
 // server.js
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression'); // Thêm compression
+const helmet = require('helmet'); // Thêm security headers
 const connectDB = require('./config/db');
 const userapi = require('./api/account/register'); // Nhập route người dùng
 const loginRoute = require('./api/account/login');
@@ -18,20 +20,52 @@ const tinhthanhvn = require('./api/tinhthanhvn');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const app = express();
+
+// Gọi dotenv trước tiên
+dotenv.config();
+
 // Kết nối đến MongoDB
 connectDB();
+
+// Security middleware
+app.use(helmet({
+  crossOriginEmbedderPolicy: false // Tắt COEP để tránh conflict với CORS
+}));
+
+// Compression middleware để giảm kích thước response
+app.use(compression());
+
+// Request timeout để tránh request bị treo
+app.use((req, res, next) => {
+  req.setTimeout(30000); // 30 seconds timeout
+  res.setTimeout(30000);
+  next();
+});
+
+// Rate limiting để tránh spam requests
+const rateLimit = require('express-rate-limit');
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 phút
+  max: 100, // Tối đa 100 requests mỗi phút
+  message: 'Quá nhiều requests, vui lòng thử lại sau.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/', limiter);
+
 // Sử dụng cookie-parser
 app.use(cookieParser()); // Đặt cookie-parser trước các route
-app.use(express.json()); // Để phân tích JSON trong request
-// Gọi dotenv
-dotenv.config();
+
+// JSON parsing với limit để tránh large payloads
+app.use(express.json({ limit: '10mb' })); // Để phân tích JSON trong request
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // CORS Configuration - Đặt trước các routes
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001', 
   'https://web-dat-phong.onrender.com',
-  'https://web-dat-phong-frontend.vercel.app', // Thêm domain frontend nếu có
+  'https://web-dat-phong.vercel.app', // Frontend domain chính
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
@@ -49,8 +83,18 @@ app.use(cors({
   },
   credentials: true, // Cho phép cookies và headers authentication
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400 // Cache preflight requests for 24 hours
 }));
+
+// Cache control middleware
+app.use((req, res, next) => {
+  // Cache static data for 5 minutes
+  if (req.method === 'GET' && !req.path.includes('/profile/me') && !req.path.includes('/booking')) {
+    res.set('Cache-Control', 'public, max-age=300'); // 5 minutes
+  }
+  next();
+});
 
 // Middleware
 app.use(express.json());

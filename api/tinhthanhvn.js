@@ -1,48 +1,64 @@
 const express = require('express');
 const Hotel = require('../models/Hotel');
 const Room = require('../models/Room');
-const axios = require('axios');
 const router = express.Router();
+
+// Cache cho province data để tránh tính toán lại
+let provincesCache = null;
+let cacheTimestamp = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 router.get('/top-provinces', async (req, res) => {
     try {
-        // Bước 1: Lấy danh sách tỉnh thành từ API
-        const provinceResponse = await axios.get('https://web-dat-phong.onrender.com/api/tinhthanh');
-        const provinces = provinceResponse.data.data;
+        // Check cache first
+        const now = Date.now();
+        if (provincesCache && cacheTimestamp && (now - cacheTimestamp < CACHE_DURATION)) {
+            res.set('Cache-Control', 'public, max-age=300');
+            return res.json(provincesCache);
+        }
 
-        // Bước 2: Lấy danh sách khách sạn và tính toán số lượng theo tỉnh thành
-        const hotels = await Hotel.find().populate('manager');
-        const hotelWithLowestPrice = await Promise.all(
-            hotels.map(async (hotel) => {
-                const rooms = await Room.find({ hotel: hotel._id });
-                const lowestRoomPrice = rooms.length > 0 ? Math.min(...rooms.map(room => room.price)) : null;
+        // Sử dụng aggregation pipeline tối ưu để lấy hotel với room prices
+        const hotelsWithPrices = await Hotel.aggregate([
+            {
+                $lookup: {
+                    from: 'rooms',
+                    localField: '_id',
+                    foreignField: 'hotel',
+                    as: 'rooms'
+                }
+            },
+            {
+                $project: {
+                    name: 1,
+                    location: 1,
+                    lowestRoomPrice: {
+                        $cond: {
+                            if: { $gt: [{ $size: '$rooms' }, 0] },
+                            then: { $min: '$rooms.price' },
+                            else: null
+                        }
+                    }
+                }
+            }
+        ]);
 
-                return {
-                    ...hotel.toObject(),
-                    lowestRoomPrice,
-                };
-            })
-        );
-
-        // Bước 3: Đếm số lượng khách sạn theo từng tỉnh thành
+        // Đếm số lượng khách sạn theo từng tỉnh thành
         const locationCount = {};
+        const provinces = provincesData.data;
 
-        hotelWithLowestPrice.forEach(hotel => {
-            const location = hotel.location; // Lấy chuỗi location
-
-            // Kiểm tra xem location có chứa tỉnh thành nào không
+        hotelsWithPrices.forEach(hotel => {
+            const location = hotel.location;
             provinces.forEach(province => {
-                if (location.includes(province.name)) { // So sánh tên tỉnh thành
-                    // Nếu có, tăng số lượng
+                if (location.includes(province.name)) {
                     if (locationCount[province.id]) {
                         locationCount[province.id].count++;
                     } else {
                         locationCount[province.id] = { 
                             ...province, 
                             count: 1, 
-                            locations: [] // Thêm mảng locations để chứa thông tin các khách sạn
+                            locations: []
                         };
                     }
-                    // Thêm thông tin khách sạn vào locations
                     locationCount[province.id].locations.push({
                         id: hotel._id,
                         name: hotel.name,
@@ -53,10 +69,8 @@ router.get('/top-provinces', async (req, res) => {
             });
         });
 
-        // Bước 4: Chuyển đổi kết quả sang mảng và sắp xếp
         const allLocations = Object.values(locationCount).sort((a, b) => b.count - a.count);
 
-        // Bước 5: Định dạng kết quả trả về
         const result = {
             error: 0,
             error_text: "Lấy dữ liệu tỉnh thành thành công..! ",
@@ -70,11 +84,16 @@ router.get('/top-provinces', async (req, res) => {
                 latitude: location.latitude || "",
                 longitude: location.longitude || "",
                 image: location.image || "",
-                count: location.count, // Số lượng khách sạn theo tỉnh
-                locations: location.locations // Thông tin khách sạn
+                count: location.count,
+                locations: location.locations
             }))
         };
 
+        // Cache the result
+        provincesCache = result;
+        cacheTimestamp = now;
+
+        res.set('Cache-Control', 'public, max-age=300');
         res.json(result);
     } catch (error) {
         console.error("Error fetching hotels or provinces:", error);

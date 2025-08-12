@@ -1,64 +1,171 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo, useMemo, useCallback } from "react";
+import { Spin, Empty, Button, Alert } from "antd";
+import { ReloadOutlined, HomeOutlined } from '@ant-design/icons';
 import HotelItem from "./HotelItem";
 
-const HotelList = ({ hotels = [] }) => {
-  const [visibleHotels, setVisibleHotels] = useState(2); // Hiển thị khách sạn ban đầu
+const HotelList = memo(({ hotels = [] }) => {
+  const [visibleHotels, setVisibleHotels] = useState(6);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Hàm xử lý khi người dùng cuộn trang
-  const handleScroll = () => {
-    const bottom = Math.ceil(window.innerHeight + document.documentElement.scrollTop) === document.documentElement.offsetHeight;
-    if (bottom && visibleHotels < hotels.length) {
-      // Nếu người dùng cuộn đến đáy trang và còn khách sạn chưa được tải
-      setVisibleHotels((prevVisibleHotels) => prevVisibleHotels + 3); // Tải thêm khách sạn
+  // Throttle scroll handler để tránh gọi quá nhiều
+  const handleScroll = useCallback(() => {
+    if (isLoading) return;
+    
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = window.innerHeight;
+    
+    // Load more khi còn 200px nữa đến cuối
+    if (scrollTop + clientHeight >= scrollHeight - 200 && visibleHotels < hotels.length) {
+      setIsLoading(true);
+      setTimeout(() => {
+        setVisibleHotels((prev) => Math.min(prev + 6, hotels.length));
+        setIsLoading(false);
+      }, 300);
     }
-  };
+  }, [visibleHotels, hotels.length, isLoading]);
 
-  // Thêm event listener khi component được mount
+  // Throttled scroll listener
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-
-    // Cleanup event listener khi component unmount
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
+    let timeoutId = null;
+    const throttledScroll = () => {
+      if (timeoutId) return;
+      timeoutId = setTimeout(() => {
+        handleScroll();
+        timeoutId = null;
+      }, 100);
     };
-  }, [visibleHotels, hotels.length]);
 
-  // Lấy danh sách khách sạn cần hiển thị
-  const currentHotels = hotels.slice(0, visibleHotels);
+    window.addEventListener("scroll", throttledScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", throttledScroll);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [handleScroll]);
+
+  // Reset visible hotels when hotels list changes
+  useEffect(() => {
+    setVisibleHotels(6);
+  }, [hotels]);
+
+  // Memoize current hotels để tránh re-render không cần thiết
+  const currentHotels = useMemo(() => {
+    return hotels.slice(0, visibleHotels);
+  }, [hotels, visibleHotels]);
+
+  // Memoize hotel items để tránh re-render
+  const hotelItems = useMemo(() => {
+    return currentHotels.map((hotel, index) => (
+      <HotelItem
+        key={hotel._id || `hotel-${index}`}
+        hotel={hotel}
+      />
+    ));
+  }, [currentHotels]);
 
   return (
-    <div className="container">
-      <div className="flex">
-        <div className="hotel-list w-full">
-          <div className="grid grid-cols-1 gap-4">
-            {Array.isArray(currentHotels) && currentHotels.length > 0 ? (
-              currentHotels.map((hotel) => {
-                const lowestRoomPrice =
-                  hotel.rooms && hotel.rooms.length > 0
-                    ? Math.min(...hotel.rooms.map((room) => room.price))
-                    : null;
-
-                return (
-                  <HotelItem
-                    key={hotel._id}
-                    hotel={hotel}
-                    lowestRoomPrice={lowestRoomPrice}
-                  />
-                );
-              })
-            ) : (
-              <p>Không có khách sạn nào được tìm thấy.</p>
-            )}
+    <div className="w-full">
+      <div className="space-y-6">
+        {/* Results Header */}
+        {hotels.length > 0 && (
+          <div className="border-b border-gray-200 pb-4">
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
+              Kết quả tìm kiếm
+            </h2>
+            <p className="text-sm text-gray-600 mt-1">
+              Tìm thấy {hotels.length} khách sạn
+            </p>
           </div>
+        )}
 
-          {/* Thông báo khi không còn khách sạn */}
-          {visibleHotels >= hotels.length && (
-            <div className="text-center py-4">Không còn khách sạn nào để tải thêm.</div>
-          )}
-        </div>
+        {/* Loading State */}
+        {hotels.length === 0 && isLoading ? (
+          <div className="space-y-6">
+            {/* Loading skeleton */}
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="animate-pulse">
+                  <div className="flex flex-col lg:flex-row">
+                    <div className="w-full lg:w-80 h-48 lg:h-56 bg-gray-200"></div>
+                    <div className="flex-1 p-6 space-y-4">
+                      <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                      <div className="space-y-2">
+                        <div className="h-3 bg-gray-200 rounded"></div>
+                        <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                      </div>
+                      <div className="flex justify-between items-center pt-4">
+                        <div className="h-8 bg-gray-200 rounded w-32"></div>
+                        <div className="h-10 bg-gray-200 rounded w-24"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="flex justify-center py-8">
+              <Spin size="large" tip="Đang tải khách sạn...">
+                <div className="w-full h-20" />
+              </Spin>
+            </div>
+          </div>
+        ) : hotels.length === 0 ? (
+          /* Empty State */
+          <Empty
+            image={<HomeOutlined style={{ fontSize: 64, color: '#d9d9d9' }} />}
+            imageStyle={{ height: 100 }}
+            description={
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Không tìm thấy khách sạn nào
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc của bạn
+                </p>
+              </div>
+            }
+          >
+            <Button 
+              type="primary"
+              icon={<ReloadOutlined />}
+              onClick={() => window.location.reload()}
+            >
+              Thử lại
+            </Button>
+          </Empty>
+        ) : (
+          /* Hotel List */
+          <>
+            <div className="grid grid-cols-1 gap-6">
+              {hotelItems}
+            </div>
+
+            {/* Loading more indicator */}
+            {isLoading && (
+              <div className="flex justify-center py-8">
+                <Spin size="large" tip="Đang tải thêm khách sạn...">
+                  <div className="w-full h-20" />
+                </Spin>
+              </div>
+            )}
+
+            {/* End message */}
+            {!isLoading && visibleHotels >= hotels.length && hotels.length > 6 && (
+              <Alert
+                message="Đã hiển thị tất cả khách sạn"
+                description={`Bạn đã xem hết ${hotels.length} khách sạn. Sử dụng bộ lọc để tìm kiếm chính xác hơn.`}
+                type="info"
+                showIcon
+                className="text-center"
+              />
+            )}
+          </>
+        )}
       </div>
     </div>
   );
-};
+});
+
+HotelList.displayName = 'HotelList';
 
 export default HotelList;

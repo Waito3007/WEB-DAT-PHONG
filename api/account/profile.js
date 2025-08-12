@@ -160,7 +160,7 @@ router.post('/forgot-password', async (req, res) => {
 
     // Tạo transporter để gửi email
     const transporter = nodemailer.createTransport({
-      service: 'Gmail', // hoặc một dịch vụ email khác
+      service: 'Gmail', 
       auth: {
         user: 'minhnguyen11234321@gmail.com',
         pass: 'joddlkxcfnuabcpi', // Mật khẩu ứng dụng

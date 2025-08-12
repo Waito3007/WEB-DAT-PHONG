@@ -42,6 +42,7 @@ import HotelImage from "./components/DetailHotel/HotelImage";
 import FavoritesPage from "./components/FavoritesPage/FavoritesPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import BookingStatusPage from "./pages/BookingStatusPage";
+import FullPageLoader from "./components/common/FullPageLoader";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -58,13 +59,29 @@ const AppContent = () => {
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setIsLoading(false);
+          return;
+        }
+        
         const response = await axios.get(`${API_URL}/api/profile/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
           withCredentials: true, // Gửi cookie để xác thực
         });
         const userRole = response.data.role;
         setRole(userRole);
       } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng:", error);
+        // Không log lỗi 401 - đây là trường hợp bình thường khi user chưa login
+        if (error.response?.status !== 401) {
+          console.error("Lỗi khi lấy thông tin người dùng:", error);
+        }
+        // Clear invalid token
+        if (error.response?.status === 401) {
+          localStorage.removeItem('token');
+        }
       } finally {
         setIsLoading(false); // Tắt loading khi hoàn thành
       }
@@ -90,7 +107,12 @@ const AppContent = () => {
   ].includes(location.pathname);
 
   if (isLoading) {
-    return <div>Loading...</div>; // Hiển thị loading trong khi chờ dữ liệu
+    return (
+      <FullPageLoader 
+        title="Dữ liệu từ máy chủ đang được tải, vui lòng đợi..."
+        subtitle="Máy chủ miễn phí có thể 'ngủ' khi rảnh; lần truy cập đầu sẽ hơi chậm."
+      />
+    );
   }
 
   // Nếu không phải Admin hoặc HotelManager mà truy cập vào trang admin
@@ -146,7 +168,7 @@ const AppContent = () => {
         <Route path="/success" element={<Success/>} />
         <Route path="/confirmpayment" element={<ConfirmPayment/>} />
         <Route path="/bookingstatus" element={<BookingStatusPage/>} />
-        <Route path="/favorites" element={<FavoritesPage/>} /> //
+        <Route path="/favorites" element={<FavoritesPage/>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

@@ -1,32 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo, useMemo, useCallback } from 'react';
 import axios from 'axios';
-import { Card, Col, Row } from 'antd';
-import { useNavigate } from 'react-router-dom'; // Thêm import này
+import { Card, Col, Row, Skeleton } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const { Meta } = Card;
 
-const TopHotels = () => {
+const TopHotels = memo(() => {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Khởi tạo useNavigate
+  const navigate = useNavigate();
+
+  const fetchTopHotels = useCallback(async () => {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+      
+      const response = await axios.get(`${API_URL}/api/homepage/top4hotel`, {
+        signal: controller.signal,
+        timeout: 8000
+      });
+      
+      clearTimeout(timeoutId);
+      setHotels(response.data);
+    } catch (err) {
+      if (err.name === 'AbortError' || err.code === 'ECONNABORTED') {
+        setError('Kết nối quá chậm, vui lòng thử lại');
+      } else {
+        setError('Có lỗi xảy ra khi tải dữ liệu khách sạn');
+      }
+      console.error('Error fetching hotels:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchTopHotels = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/api/homepage/top4hotel`);
-        setHotels(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError('Có lỗi xảy ra khi tải dữ liệu khách sạn');
-        setLoading(false);
-      }
-    };
-
     fetchTopHotels();
-  }, []);
+  }, [fetchTopHotels]);
 
   if (loading) {
     return <div>Đang tải...</div>;
@@ -85,6 +98,6 @@ const TopHotels = () => {
       </div>
     </section>
   );
-};
+});
 
 export default TopHotels;

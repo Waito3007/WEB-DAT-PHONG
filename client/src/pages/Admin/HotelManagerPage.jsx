@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import Header from "../../components/dashboard/common/Header";
+import FullPageLoader from "../../components/common/FullPageLoader";
 import StatCard from "../../components/dashboard/common/StatCard";
 import { HomeIcon, AlertTriangle, DollarSign, TrendingUp } from "lucide-react";
 import CategoryDistributionChart from "../../components/dashboard/overview/CategoryDistributionChart";
@@ -40,7 +41,12 @@ const HotelManagerPage = () => {
   }, []);
   
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <FullPageLoader 
+        title="Dữ liệu từ máy chủ đang được tải, vui lòng đợi..."
+        subtitle="Máy chủ miễn phí có thể 'ngủ' khi rảnh, khởi động sẽ mất vài chục giây."
+      />
+    );
   }
   return (
     <div className="flex-1 overflow-auto relative z-10">
