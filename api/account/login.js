@@ -36,8 +36,23 @@ router.post('/login', async (req, res) => {
 
     // Gửi token cho client qua cookie
     res.cookie('token', token, { httpOnly: true, maxAge: 365 * 24 * 60 * 60 * 1000 });
-    // Trả về thông báo đăng nhập thành công
-    res.json({ msg: 'Đăng nhập thành công' });
+    // Trả về thông báo đăng nhập thành công cùng token và thông tin user
+    // Lưu ý: không trả về mật khẩu
+    const safeUser = {
+      id: user._id,
+      email: user.email,
+      name: user.name || '',
+      role: user.role || 'User',
+    };
+
+    console.log('Login successful for:', user.email);
+    console.log('Generated token:', token);
+
+    res.json({
+      msg: 'Đăng nhập thành công',
+      token: token,
+      user: safeUser,
+    });
 
   } catch (err) {
     console.error("Lỗi server:", err.message);
