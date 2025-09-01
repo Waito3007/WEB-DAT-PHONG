@@ -110,29 +110,35 @@ const HotelList = memo(({ hotels = [] }) => {
             </div>
           </div>
         ) : hotels.length === 0 ? (
-          /* Empty State */
-          <Empty
-            image={<HomeOutlined style={{ fontSize: 64, color: '#d9d9d9' }} />}
-            imageStyle={{ height: 100 }}
-            description={
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Không tìm thấy khách sạn nào
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Thử thay đổi từ khóa tìm kiếm hoặc bộ lọc của bạn
-                </p>
+          <div className="space-y-6">
+            {/* Loading skeleton */}
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="animate-pulse">
+                  <div className="flex flex-col lg:flex-row">
+                    <div className="w-full lg:w-80 h-48 lg:h-56 bg-gray-200"></div>
+                    <div className="flex-1 p-6 space-y-4">
+                      <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                      <div className="space-y-2">
+                        <div className="h-3 bg-gray-200 rounded"></div>
+                        <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                      </div>
+                      <div className="flex justify-between items-center pt-4">
+                        <div className="h-8 bg-gray-200 rounded w-32"></div>
+                        <div className="h-10 bg-gray-200 rounded w-24"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            }
-          >
-            <Button 
-              type="primary"
-              icon={<ReloadOutlined />}
-              onClick={() => window.location.reload()}
-            >
-              Thử lại
-            </Button>
-          </Empty>
+            ))}
+            <div className="flex justify-center py-8">
+              <Spin size="large" tip="Đang tải khách sạn...">
+                <div className="w-full h-20" />
+              </Spin>
+            </div>
+          </div>
         ) : (
           /* Hotel List */
           <>
