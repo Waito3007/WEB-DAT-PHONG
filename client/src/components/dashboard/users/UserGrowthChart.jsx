@@ -5,9 +5,11 @@ import { motion } from "framer-motion";
 const UserGrowthChart = () => {
     const [userGrowthData, setUserGrowthData] = useState([]);
 
+    const API_URL = process.env.REACT_APP_API_URL;
+
     const fetchUserGrowthData = async () => {
         try {
-            const response = await fetch('/api/usertable/growth');
+            const response = await fetch(`${API_URL}/api/usertable/growth`, { credentials: 'include' });
             if (!response.ok) throw new Error('Lỗi khi lấy dữ liệu tăng trưởng người dùng');
             const data = await response.json();
             setUserGrowthData(data);

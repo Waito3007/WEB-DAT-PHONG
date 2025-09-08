@@ -7,6 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import axios from "axios";
+import BackendLoader from "./components/common/BackendLoader";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/account/Login";
@@ -177,9 +178,11 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <BackendLoader>
+      <Router>
+        <AppContent />
+      </Router>
+    </BackendLoader>
   );
 };
 

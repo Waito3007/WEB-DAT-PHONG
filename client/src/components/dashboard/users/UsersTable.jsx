@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { Modal, notification } from 'antd';
 import { Search, Edit, Trash2, X, Save, Mail, User, Users } from "lucide-react";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const UsersTable = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [users, setUsers] = useState([]);
@@ -11,10 +13,11 @@ const UsersTable = () => {
 	const [usersPerPage] = useState(5);
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [editForm, setEditForm] = useState({ name: '', email: '', role: '' });
+	const [isUpdating, setIsUpdating] = useState(false);
 
 	const fetchUsers = async () => {
 		try {
-			const response = await fetch('/api/usertable');
+					const response = await fetch(`${API_URL}/api/usertable`, { credentials: 'include' });
 			if (!response.ok) throw new Error('Lỗi khi lấy dữ liệu');
 			const data = await response.json();
 			setUsers(data);
@@ -53,9 +56,10 @@ const UsersTable = () => {
 		  onOk: async () => {
 			try {
 			  // Thực hiện yêu cầu xóa
-			  const response = await fetch(`/api/usertable/${userId}`, {
-				method: 'DELETE',
-			  });
+						const response = await fetch(`${API_URL}/api/usertable/${userId}`, {
+							method: 'DELETE',
+							credentials: 'include',
+						});
 	  
 			  if (!response.ok) throw new Error('Lỗi khi xóa người dùng');
 			  
@@ -91,19 +95,40 @@ const UsersTable = () => {
 	};
 
 	const handleUpdate = async () => {
+		if (!selectedUser) return;
+		setIsUpdating(true);
 		try {
-			const response = await fetch(`/api/usertable/${selectedUser._id}`, {
+			console.log('Updating user', selectedUser._id, 'with', editForm);
+			const response = await fetch(`${API_URL}/api/usertable/${selectedUser._id}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
 				},
+				credentials: 'include',
 				body: JSON.stringify(editForm),
 			});
-			if (!response.ok) throw new Error('Lỗi khi cập nhật người dùng');
-			fetchUsers();
+			if (!response.ok) {
+				const errText = await response.text().catch(() => null);
+				console.error('Update failed:', response.status, errText);
+				throw new Error('Lỗi khi cập nhật người dùng');
+			}
+			// await refresh
+			await fetchUsers();
 			setSelectedUser(null);
+			notification.success({
+				message: 'Cập nhật thành công',
+				description: 'Thông tin người dùng đã được cập nhật.',
+				placement: 'topRight',
+			});
 		} catch (error) {
 			console.error('Lỗi:', error);
+			notification.error({
+				message: 'Lỗi cập nhật',
+				description: error.message || 'Không thể cập nhật người dùng',
+				placement: 'topRight',
+			});
+		} finally {
+			setIsUpdating(false);
 		}
 	};
 
@@ -250,12 +275,13 @@ const UsersTable = () => {
 
       {/* Các nút Cập nhật và Hủy */}
       <div className='flex justify-end mt-6 space-x-4'>
-        <button 
-          onClick={handleUpdate} 
-          className='flex items-center bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-500 transition duration-300 transform hover:scale-105 shadow-md hover:shadow-lg'
-        >
-          <Save className='mr-2' size={20} /> Cập nhật
-        </button>
+				<button 
+					onClick={handleUpdate}
+					disabled={isUpdating}
+					className={`flex items-center p-3 rounded-lg transition duration-300 transform hover:scale-105 shadow-md ${isUpdating ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-500'}`}
+				>
+					<Save className='mr-2' size={20} /> {isUpdating ? 'Đang cập nhật...' : 'Cập nhật'}
+				</button>
         <button 
           onClick={() => setSelectedUser(null)} 
           className='flex items-center bg-gray-600 text-white p-3 rounded-lg hover:bg-gray-500 transition duration-300 transform hover:scale-105 shadow-md hover:shadow-lg'

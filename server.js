@@ -7,6 +7,7 @@ const connectDB = require('./config/db');
 const userapi = require('./api/account/register'); // Nhập route người dùng
 const loginRoute = require('./api/account/login');
 const userTableRouter = require('./api/dashboard/usertable');
+const healthRouter = require('./api/health'); // Health check
 const hotelapi = require('./api/hotel_manager/hotel');
 const Room = require('./api/hotel_manager/room'); 
 const Profile = require('./api/account/profile'); 
@@ -99,6 +100,7 @@ app.use((req, res, next) => {
 // Middleware
 app.use(express.json());
 // api
+app.use('/api/health', healthRouter); // Health check endpoint
 app.use('/api/users', userapi); // Đăng ký route
 app.use('/api/users', loginRoute); // Route cho đăng nhập
 app.use('/api/profile', Profile);
