@@ -1,8 +1,8 @@
 import React, { useEffect, useCallback, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Typography, message, Spin, Button, Modal, Input, Upload, Form } from 'antd';
-import { useParams } from 'react-router-dom';
-import {  UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined } from '@ant-design/icons';
 
 const { Title, Paragraph } = Typography;
 

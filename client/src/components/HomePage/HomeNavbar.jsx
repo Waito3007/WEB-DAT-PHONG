@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Heart, Calendar, Hotel, LogOut, Menu } from "lucide-react";
-import { Layout, Button, Avatar, Dropdown, Space, Tooltip, Drawer } from "antd";
+import { User, Heart, Calendar, Hotel, LogOut, Menu, X, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import FavoriteRoomsDrawer from "../FavoritesPage/FavoritesPage";
 import BookingCard from "../BookingStatus/BookingCard";
+import './HomeNavbar.css';
 
-const { Header } = Layout;
 const API_URL = process.env.REACT_APP_API_URL;
 
 const HomeNavbar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerbookingOpen, setDrawerbookingOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   // Functions to open and close the drawer
   const handleOpenDrawer = () => {
@@ -29,6 +31,15 @@ const HomeNavbar = () => {
   const handleCloseBookingDrawer = () => {
     setDrawerbookingOpen(false);
   };
+
+  // Scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const fetchUser = async () => {
     try {
@@ -95,345 +106,330 @@ const HomeNavbar = () => {
     }
   };
 
-  // User dropdown menu items
-  const userMenuItems = [
-    {
-      key: 'profile',
-      icon: <User className="w-4 h-4" />,
-      label: 'Hồ sơ cá nhân',
-      onClick: handleProfile,
-    },
-    ...(user?.role === "Admin" || user?.role === "HotelManager" ? [{
-      key: 'manage',
-      icon: <Hotel className="w-4 h-4" />,
-      label: 'Quản lý khách sạn',
-      onClick: handleManageHotel,
-    }] : []),
-    {
-      type: 'divider',
-    },
-    {
-      key: 'logout',
-      icon: <LogOut className="w-4 h-4" />,
-      label: 'Đăng xuất',
-      onClick: handleLogout,
-      danger: true,
-    },
-  ];
-
-  // Mobile menu items
-  const mobileMenuItems = [
-    {
-      label: 'Trang chủ',
-      onClick: handleHome,
-    },
-    {
-      label: 'Đặt Phòng',
-      onClick: () => navigate("/searchpage"),
-    },
-    {
-      label: 'Liên hệ',
-      onClick: () => window.open("https://www.facebook.com/waito.sv", '_blank'),
-    },
-  ];
-
   return (
-    <Header 
-      className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-gray-900 shadow-lg"
-      style={{ 
-        padding: '0 24px',
-        height: '80px',
-        lineHeight: '80px',
-        backgroundColor: '#000',
-      }}
+    <motion.nav 
+      className={`navbar-gradient fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? 'backdrop-blur-lg bg-black/80' : 'bg-gradient-to-r from-gray-900/95 to-black/95'
+      }`}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="flex justify-between items-center h-full max-w-7xl mx-auto" style={{ width: '100%' }}>
-        {/* Logo */}
-        <div 
-          className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={handleHome}
-          style={{ flexShrink: 0 }}
-        >
-          <img
-            src="https://res.cloudinary.com/dackig67m/image/upload/v1730387091/logovip_qp8hz1.png"
-            alt="Stay Night Logo"
-            className="h-10"
-          />
-        </div>
-
-        {/* Desktop Navigation Links - Centered */}
-        <div className="hidden md:flex items-center space-x-8" style={{ flex: 1, justifyContent: 'center' }}>
-          <Button 
-            type="text" 
-            className="text-white font-medium transition-transform duration-200 hover:scale-110 hover:text-white hover:border-white hover:border"
-            style={{ fontSize: '1.1rem', height: '56px', borderRadius: '12px', background: 'transparent', border: '2px solid transparent', WebkitTextStroke: '0px', transition: 'all 0.2s' }}
-            onMouseEnter={e => {
-              e.target.style.WebkitTextStroke = '1px white';
-              e.target.style.textShadow = '0 0 2px white, 0 0 6px white';
-            }}
-            onMouseLeave={e => {
-              e.target.style.WebkitTextStroke = '0px';
-              e.target.style.textShadow = 'none';
-            }}
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+        <div className="flex justify-between items-center h-16 sm:h-20">
+          {/* Logo */}
+          <motion.div 
+            className="logo-container cursor-pointer"
             onClick={handleHome}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            Trang chủ
-          </Button>
-          <Button 
-            type="text" 
-            className="text-white font-medium transition-transform duration-200 hover:scale-110 hover:text-white hover:border-white hover:border"
-            style={{ fontSize: '1.1rem', height: '56px', borderRadius: '12px', background: 'transparent', border: '2px solid transparent', WebkitTextStroke: '0px', transition: 'all 0.2s' }}
-            onMouseEnter={e => {
-              e.target.style.WebkitTextStroke = '1px white';
-              e.target.style.textShadow = '0 0 2px white, 0 0 6px white';
-            }}
-            onMouseLeave={e => {
-              e.target.style.WebkitTextStroke = '0px';
-              e.target.style.textShadow = 'none';
-            }}
-            onClick={() => navigate("/searchpage")}
-          >
-            Đặt Phòng
-          </Button>
-          <Button 
-            type="text" 
-            className="text-white font-medium transition-transform duration-200 hover:scale-110 hover:text-white hover:border-white hover:border"
-            style={{ fontSize: '1.1rem', height: '56px', borderRadius: '12px', background: 'transparent', border: '2px solid transparent', WebkitTextStroke: '0px', transition: 'all 0.2s' }}
-            onMouseEnter={e => {
-              e.target.style.WebkitTextStroke = '1px white';
-              e.target.style.textShadow = '0 0 2px white, 0 0 6px white';
-            }}
-            onMouseLeave={e => {
-              e.target.style.WebkitTextStroke = '0px';
-              e.target.style.textShadow = 'none';
-            }}
-            onClick={() => window.open("https://www.facebook.com/waito.sv", '_blank')}
-          >
-            Liên hệ
-          </Button>
-        </div>
+            <img
+              src="https://res.cloudinary.com/dackig67m/image/upload/v1730387091/logovip_qp8hz1.png"
+              alt="Stay Night Logo"
+              className="h-10 sm:h-12 w-auto"
+            />
+          </motion.div>
 
-        {/* Desktop User Controls - Right aligned */}
-        <div className="hidden md:flex items-center space-x-4" style={{ flexShrink: 0 }}>
-          {user ? (
-            <Space size="middle">
-              {/* Booking Button */}
-              <Tooltip title="Đặt phòng của tôi" placement="bottom">
-                <Button
-                  type="text"
-                  icon={<Calendar className="w-5 h-5" />}
-                  className="text-white hover:text-blue-400 hover:bg-gray-700 border-none"
-                  onClick={handleOpenBookingDrawer}
-                />
-              </Tooltip>
-
-              {/* Favorites Button */}
-              <Tooltip title="Khách sạn yêu thích" placement="bottom">
-                <Button
-                  type="text"
-                  icon={<Heart className="w-5 h-5" />}
-                  className="text-white hover:text-red-400 hover:bg-gray-700 border-none"
-                  onClick={handleOpenDrawer}
-                />
-              </Tooltip>
-
-              {/* User Avatar Dropdown */}
-              <Dropdown
-                menu={{ items: userMenuItems }}
-                placement="bottomRight"
-                trigger={['click']}
-                overlayClassName="user-dropdown"
-              >
-                <Avatar
-                  src={user.avatar || "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3485.jpg"}
-                  className="cursor-pointer hover:opacity-80 transition-opacity border-2 border-gray-600 hover:border-blue-400"
-                  size="large"
-                />
-              </Dropdown>
-            </Space>
-          ) : (
-            <div className="flex gap-3">
-              <Button
-                type="default"
-                className="font-medium text-base bg-white text-gray-900 border border-gray-300 rounded-xl px-6 py-2 h-12 shadow-sm transition-colors duration-200 hover:bg-gray-100 hover:text-black focus:outline-none"
-                style={{ minWidth: '110px', borderRadius: '14px', height: '48px', fontSize: '1.05rem', boxSizing: 'border-box' }}
-                onClick={handleLogin}
-              >
-                Đăng nhập
-              </Button>
-              <Button
-                type="primary"
-                className="font-medium text-base bg-blue-600 text-white border border-blue-600 rounded-xl px-6 py-2 h-12 shadow-sm transition-colors duration-200 hover:bg-blue-700 focus:outline-none"
-                style={{ minWidth: '110px', borderRadius: '14px', height: '48px', fontSize: '1.05rem', boxSizing: 'border-box' }}
-                onClick={handleSignUp}
-              >
-                Đăng ký
-              </Button>
-            </div>
-          )}
-        </div>
-
-        {/* Mobile Menu Icon */}
-        <div className="md:hidden">
-          <Button
-            type="text"
-            icon={<Menu className="w-6 h-6 text-white" />}
-            className="border-none"
-            onClick={() => setMobileMenuOpen(true)}
-          />
-        </div>
-
-        {/* Mobile Drawer */}
-        <Drawer
-          title={
-            <div className="flex items-center space-x-3">
-              <img
-                src="https://res.cloudinary.com/dackig67m/image/upload/v1730387091/logovip_qp8hz1.png"
-                alt="Stay Night Logo"
-                className="h-8"
-              />
-              <span className="text-gray-800 font-semibold">Stay Night</span>
-            </div>
-          }
-          placement="right"
-          onClose={() => setMobileMenuOpen(false)}
-          open={mobileMenuOpen}
-          width={300}
-          className="mobile-menu-drawer"
-        >
-          <div className="flex flex-col space-y-4">
-            {/* Navigation Links */}
-            {mobileMenuItems.map((item, index) => (
-              <Button
-                key={index}
-                type="text"
-                size="large"
-                className="text-left justify-start h-12"
-                onClick={() => {
-                  item.onClick();
-                  setMobileMenuOpen(false);
-                }}
-              >
-                {item.label}
-              </Button>
-            ))}
-
-            <div className="border-t border-gray-200 pt-4 mt-4">
-              {user ? (
-                <div className="space-y-4">
-                  {/* User Info */}
-                  <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                    <Avatar
-                      src={user.avatar || "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3485.jpg"}
-                      size="large"
-                    />
-                    <div>
-                      <div className="font-semibold text-gray-800">{user.fullName || user.username}</div>
-                      <div className="text-sm text-gray-500">{user.email}</div>
-                    </div>
-                  </div>
-
-                  {/* User Actions */}
-                  <div className="space-y-2">
-                    <Button
-                      type="text"
-                      size="large"
-                      icon={<Calendar className="w-4 h-4" />}
-                      className="w-full text-left justify-start"
-                      onClick={() => {
-                        handleOpenBookingDrawer();
-                        setMobileMenuOpen(false);
-                      }}
-                    >
-                      Đặt phòng của tôi
-                    </Button>
-                    <Button
-                      type="text"
-                      size="large"
-                      icon={<Heart className="w-4 h-4" />}
-                      className="w-full text-left justify-start"
-                      onClick={() => {
-                        handleOpenDrawer();
-                        setMobileMenuOpen(false);
-                      }}
-                    >
-                      Khách sạn yêu thích
-                    </Button>
-                    <Button
-                      type="text"
-                      size="large"
-                      icon={<User className="w-4 h-4" />}
-                      className="w-full text-left justify-start"
-                      onClick={() => {
-                        handleProfile();
-                        setMobileMenuOpen(false);
-                      }}
-                    >
-                      Hồ sơ cá nhân
-                    </Button>
-                    {(user.role === "Admin" || user.role === "HotelManager") && (
-                      <Button
-                        type="text"
-                        size="large"
-                        icon={<Hotel className="w-4 h-4" />}
-                        className="w-full text-left justify-start"
-                        onClick={() => {
-                          handleManageHotel();
-                          setMobileMenuOpen(false);
-                        }}
-                      >
-                        Quản lý khách sạn
-                      </Button>
-                    )}
-                    <Button
-                      type="text"
-                      size="large"
-                      icon={<LogOut className="w-4 h-4" />}
-                      className="w-full text-left justify-start text-red-500 hover:text-red-600"
-                      onClick={() => {
-                        handleLogout();
-                        setMobileMenuOpen(false);
-                      }}
-                    >
-                      Đăng xuất
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <Button 
-                    type="default"
-                    size="large"
-                    className="w-full"
-                    onClick={() => {
-                      handleLogin();
-                      setMobileMenuOpen(false);
-                    }}
-                  >
-                    Đăng nhập
-                  </Button>
-                  <Button 
-                    type="primary"
-                    size="large"
-                    className="w-full"
-                    onClick={() => {
-                      handleSignUp();
-                      setMobileMenuOpen(false);
-                    }}
-                  >
-                    Đăng ký
-                  </Button>
-                </div>
-              )}
-            </div>
+          {/* Desktop Navigation */}
+          <div className="desktop-nav">
+            {['Trang chủ', 'Đặt Phòng', 'Liên hệ'].map((item, index) => {
+              const actions = [handleHome, () => navigate("/searchpage"), () => window.open("https://www.facebook.com/waito.sv", '_blank')];
+              return (
+                <motion.button
+                  key={item}
+                  onClick={actions[index]}
+                  className="nav-link nav-button text-white font-medium"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ y: 0 }}
+                >
+                  {item}
+                  <span className="nav-underline"></span>
+                </motion.button>
+              );
+            })}
           </div>
-        </Drawer>
 
-        {/* Drawers */}
-        <FavoriteRoomsDrawer open={drawerOpen} onClose={handleCloseDrawer} />
-        <BookingCard open={drawerbookingOpen} onClose={handleCloseBookingDrawer} />
+          {/* Desktop User Controls */}
+          <div className="desktop-user-controls">
+            {user ? (
+              <>
+                {/* Action Buttons */}
+                <motion.button
+                  onClick={handleOpenBookingDrawer}
+                  className="p-3 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-all duration-300"
+                  whileHover={{ scale: 1.1, backgroundColor: "rgba(59, 130, 246, 0.3)" }}
+                  whileTap={{ scale: 0.95 }}
+                  title="Đặt phòng của tôi"
+                >
+                  <Calendar className="w-5 h-5" />
+                </motion.button>
+
+                <motion.button
+                  onClick={handleOpenDrawer}
+                  className="p-3 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-all duration-300"
+                  whileHover={{ scale: 1.1, backgroundColor: "rgba(239, 68, 68, 0.3)" }}
+                  whileTap={{ scale: 0.95 }}
+                  title="Khách sạn yêu thích"
+                >
+                  <Heart className="w-5 h-5" />
+                </motion.button>
+
+                {/* User Dropdown */}
+                <div className="relative">
+                  <motion.button
+                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                    className="flex items-center space-x-3 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all duration-300"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <img
+                      src={user.avatar || "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3485.jpg"}
+                      alt="User Avatar"
+                      className="w-10 h-10 rounded-full border-2 border-white/30"
+                    />
+                    <motion.div
+                      animate={{ rotate: userDropdownOpen ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ChevronDown className="w-4 h-4 text-white" />
+                    </motion.div>
+                  </motion.button>
+
+                  {/* Dropdown Menu */}
+                  <AnimatePresence>
+                    {userDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="user-dropdown"
+                      >
+                        <div className="p-4 border-b border-gray-200">
+                          <div className="flex items-center space-x-3">
+                            <img
+                              src={user.avatar || "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3485.jpg"}
+                              alt="User Avatar"
+                              className="w-12 h-12 rounded-full"
+                            />
+                            <div>
+                              <div className="font-semibold text-gray-800">{user.fullName || user.username}</div>
+                              <div className="text-sm text-gray-500">{user.email}</div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="py-2">
+                          <button
+                            onClick={() => { handleProfile(); setUserDropdownOpen(false); }}
+                            className="w-full px-4 py-3 text-left flex items-center space-x-3 hover:bg-gray-100 transition-colors"
+                          >
+                            <User className="w-4 h-4 text-gray-600" />
+                            <span className="text-gray-700">Hồ sơ cá nhân</span>
+                          </button>
+                          
+                          {(user.role === "Admin" || user.role === "HotelManager") && (
+                            <button
+                              onClick={() => { handleManageHotel(); setUserDropdownOpen(false); }}
+                              className="w-full px-4 py-3 text-left flex items-center space-x-3 hover:bg-gray-100 transition-colors"
+                            >
+                              <Hotel className="w-4 h-4 text-gray-600" />
+                              <span className="text-gray-700">Quản lý khách sạn</span>
+                            </button>
+                          )}
+                          
+                          <div className="border-t border-gray-200 my-2"></div>
+                          
+                          <button
+                            onClick={() => { handleLogout(); setUserDropdownOpen(false); }}
+                            className="w-full px-4 py-3 text-left flex items-center space-x-3 hover:bg-red-50 text-red-600 transition-colors"
+                          >
+                            <LogOut className="w-4 h-4" />
+                            <span>Đăng xuất</span>
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </>
+            ) : (
+              <div className="flex space-x-3">
+                <motion.button
+                  onClick={handleLogin}
+                  className="px-6 py-2.5 rounded-full border border-white/30 text-white font-medium hover:bg-white hover:text-gray-900 transition-all duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Đăng nhập
+                </motion.button>
+                <motion.button
+                  onClick={handleSignUp}
+                  className="px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Đăng ký
+                </motion.button>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <motion.button
+            onClick={() => setMobileMenuOpen(true)}
+            className="mobile-menu-button p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+            whileTap={{ scale: 0.95 }}
+          >
+            <Menu className="w-6 h-6" />
+          </motion.button>
+        </div>
       </div>
-    </Header>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mobile-menu-overlay"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="mobile-menu-container"
+            >
+              <div className="p-4 sm:p-6 h-full overflow-y-auto">
+                {/* Mobile Header */}
+                <div className="flex items-center justify-between mb-6 sm:mb-8">
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src="https://res.cloudinary.com/dackig67m/image/upload/v1730387091/logovip_qp8hz1.png"
+                      alt="Stay Night Logo"
+                      className="h-6 sm:h-8"
+                    />
+                    <span className="text-lg sm:text-xl font-bold text-gray-800">Stay Night</span>
+                  </div>
+                  <motion.button
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+                  </motion.button>
+                </div>
+
+                {/* Navigation Links */}
+                <div className="space-y-2 sm:space-y-4 mb-6 sm:mb-8">
+                  {[
+                    { label: 'Trang chủ', action: handleHome },
+                    { label: 'Đặt Phòng', action: () => navigate("/searchpage") },
+                    { label: 'Liên hệ', action: () => window.open("https://www.facebook.com/waito.sv", '_blank') }
+                  ].map((item, index) => (
+                    <motion.button
+                      key={item.label}
+                      onClick={() => { item.action(); setMobileMenuOpen(false); }}
+                      className="w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg text-gray-700 font-medium hover:bg-gray-100 transition-colors text-sm sm:text-base"
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {item.label}
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* User Section */}
+                <div className="border-t border-gray-200 pt-4 sm:pt-6">
+                  {user ? (
+                    <div className="space-y-3 sm:space-y-4">
+                      {/* User Info */}
+                      <div className="flex items-center space-x-3 p-3 sm:p-4 bg-gray-50 rounded-xl">
+                        <img
+                          src={user.avatar || "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3485.jpg"}
+                          alt="User Avatar"
+                          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-gray-800 text-sm sm:text-base truncate">{user.fullName || user.username}</div>
+                          <div className="text-xs sm:text-sm text-gray-500 truncate">{user.email}</div>
+                        </div>
+                      </div>
+
+                      {/* User Actions */}
+                      <div className="space-y-1 sm:space-y-2">
+                        {[
+                          { icon: Calendar, label: 'Đặt phòng của tôi', action: handleOpenBookingDrawer },
+                          { icon: Heart, label: 'Khách sạn yêu thích', action: handleOpenDrawer },
+                          { icon: User, label: 'Hồ sơ cá nhân', action: handleProfile },
+                          ...(user.role === "Admin" || user.role === "HotelManager" ? [
+                            { icon: Hotel, label: 'Quản lý khách sạn', action: handleManageHotel }
+                          ] : []),
+                          { icon: LogOut, label: 'Đăng xuất', action: handleLogout, danger: true }
+                        ].map((item, index) => (
+                          <motion.button
+                            key={item.label}
+                            onClick={() => { item.action(); setMobileMenuOpen(false); }}
+                            className={`w-full flex items-center space-x-3 py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg transition-colors text-sm sm:text-base ${
+                              item.danger 
+                                ? 'text-red-600 hover:bg-red-50' 
+                                : 'text-gray-700 hover:bg-gray-100'
+                            }`}
+                            initial={{ opacity: 0, x: 50 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: (index + 3) * 0.1 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <item.icon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                            <span className="font-medium">{item.label}</span>
+                          </motion.button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-2 sm:space-y-3">
+                      <motion.button
+                        onClick={() => { handleLogin(); setMobileMenuOpen(false); }}
+                        className="w-full py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors text-sm sm:text-base"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Đăng nhập
+                      </motion.button>
+                      <motion.button
+                        onClick={() => { handleSignUp(); setMobileMenuOpen(false); }}
+                        className="w-full py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 text-sm sm:text-base"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Đăng ký
+                      </motion.button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Drawers */}
+      <FavoriteRoomsDrawer open={drawerOpen} onClose={handleCloseDrawer} />
+      <BookingCard open={drawerbookingOpen} onClose={handleCloseBookingDrawer} />
+    </motion.nav>
   );
 };
 
