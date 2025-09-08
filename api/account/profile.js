@@ -63,15 +63,8 @@ const updateUserAvatar = async (userId, { imageUrl }) => {
 // Route Lấy thông tin người dùng
 router.get('/me',auth, async (req, res) => {
   try {
-    // Lấy token từ cookie
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ msg: 'Không tìm thấy token' });
-    }
-
-    // Xác thực token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId).select('-password'); // Lấy thông tin người dùng trừ mật khẩu
+    // Token đã được xác thực trong middleware auth
+    const user = await User.findById(req.userId).select('-password'); // Lấy thông tin người dùng trừ mật khẩu
     if (!user) {
       return res.status(404).json({ msg: 'Người dùng không tồn tại' });
     }
@@ -86,15 +79,8 @@ router.get('/me',auth, async (req, res) => {
 
 // API chỉnh sửa hồ sơ người dùng
 router.patch('/edit', auth, async (req, res) => {
-  const token = req.cookies.token;
-  if (!token) {
-    return res.status(401).json({ msg: 'Không tìm thấy token' });
-  }
-
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
   try {
-    const updatedUser = await User.findByIdAndUpdate(decoded.userId, req.body, { new: true, runValidators: true }).select('-password');
+    const updatedUser = await User.findByIdAndUpdate(req.userId, req.body, { new: true, runValidators: true }).select('-password');
     if (!updatedUser) {
       return res.status(404).json({ msg: 'Người dùng không tồn tại' });
     }
@@ -107,16 +93,10 @@ router.patch('/edit', auth, async (req, res) => {
 
 // API để thay đổi mật khẩu
 router.patch('/change-password', auth, async (req, res) => {
-  const token = req.cookies.token;
-  if (!token) {
-    return res.status(401).json({ msg: 'Không tìm thấy token' });
-  }
-
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
   const { currentPassword, newPassword } = req.body;
 
   try {
-    const user = await User.findById(decoded.userId);
+    const user = await User.findById(req.userId);
     if (!user) {
       return res.status(404).json({ msg: 'Người dùng không tồn tại' });
     }

@@ -43,19 +43,36 @@ const HomeNavbar = () => {
 
   const fetchUser = async () => {
     try {
+      // First try with token from localStorage (for production)
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${API_URL}/api/profile/me`, {
         method: 'GET',
+        headers,
         credentials: 'include'
       });
 
       if (response.ok) {
         const userData = await response.json();
         setUser(userData);
+      } else if (response.status === 401) {
+        // If unauthorized, clear any stored token and user data
+        localStorage.removeItem('token');
+        setUser(null);
+        console.log("User not authenticated - token may be expired or invalid");
       } else {
         console.error("Error fetching user data:", response.status);
       }
     } catch (error) {
       console.error("Network error:", error);
+      // Don't clear user data on network errors, might be temporary
     }
   };
 
@@ -81,19 +98,38 @@ const HomeNavbar = () => {
 
   const handleLogout = async () => {
     try {
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${API_URL}/api/profile/logout`, {
         method: 'POST',
+        headers,
         credentials: 'include',
       });
 
+      // Always clear local data regardless of server response
+      localStorage.removeItem('token');
+      setUser(null);
+
       if (response.ok) {
-        setUser(null);
-        navigate("/login");
+        console.log("Logout successful");
       } else {
-        console.error("Logout error:", response.status);
+        console.log("Server logout failed, but local data cleared");
       }
+      
+      navigate("/login");
     } catch (error) {
       console.error("Logout error:", error);
+      // Still clear local data even if network error
+      localStorage.removeItem('token');
+      setUser(null);
+      navigate("/login");
     }
   };
 
