@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import axios from "axios";
 import BackendLoader from "./components/common/BackendLoader";
+import BackendStatus from "./components/common/BackendStatus";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Login from "./components/account/Login";
@@ -179,6 +180,7 @@ const AppContent = () => {
 const App = () => {
   return (
     <BackendLoader>
+      <BackendStatus />
       <Router>
         <AppContent />
       </Router>

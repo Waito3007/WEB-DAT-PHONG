@@ -12,6 +12,13 @@
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   min-height: 80px;
+  /* Ensure navbar stays below backend status banner */
+  top: 0;
+}
+
+/* When backend status is shown, adjust navbar position */
+.navbar-with-status {
+  top: 56px; /* Height of status banner */
 }
 
 @keyframes gradientShift {
