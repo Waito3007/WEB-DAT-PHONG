@@ -5,7 +5,7 @@ const Success = ({ orderId }) => {
   useEffect(() => {
     const confirmPayment = async () => {
       try {
-        const response = await axios.post('http://localhost:5000/api/checkout/confirm', { orderId });
+        const response = await axios.post('https://web-dat-phong.onrender.com/api/checkout/confirm', { orderId });
         console.log(response.data.message);
       } catch (error) {
         console.error('Lỗi khi xác nhận thanh toán:', error);

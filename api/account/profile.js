@@ -173,7 +173,7 @@ router.post('/forgot-password', async (req, res) => {
       to: email,
       subject: 'Đặt lại mật khẩu',
       text: `Vui lòng nhấn vào liên kết sau để đặt lại mật khẩu của bạn: \n\n
-             http://localhost:3000/ResetPassword/${resetToken} \n\n
+             https://web-dat-phong.vercel.app/ResetPassword/${resetToken} \n\n
              Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.`,
     };
 

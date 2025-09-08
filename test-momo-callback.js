@@ -13,7 +13,7 @@ const testData = {
   emailBooking: 'test@example.com'
 };
 
-axios.post('http://localhost:5000/api/checkout/momo-callback', testData)
+axios.post('https://web-dat-phong.onrender.com/api/checkout/momo-callback', testData)
   .then(res => {
     console.log('Kết quả:', res.data);
   })
